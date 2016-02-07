@@ -1,0 +1,40 @@
+# q0000006.txt
+
+# Name
+Q:$6:N:The Tower 2
+Q:6:N:塔
+
+# Definition
+Q:$6:Q:8:0:0:0:10:0:0:0:11
+Q:6:Q:8:0:0:0:10:0:0:0:11
+
+# Random Monsters Levels +2
+F:1:FLOOR:8:*2
+
+# Nexious fume
+F:2:FLOOR:8:884
+
+# Mature green dragon
+F:d:FLOOR:8:561
+
+
+# Quest down to Town
+F:>:QUEST_DOWN:8
+
+# Quest up to quest 7
+F:<:QUEST_UP:8:0:0:0:0:NONE:7
+
+# Dungeon
+D:XXXXXXXXX
+D:X.1.....X
+D:X.XXXXX.X
+D:X.X..1XdX
+D:X.X.X.X.X
+D:X1X>X.X.X
+D:X.XXX.X.X
+D:X.2...X<X
+D:XXXXXXXXX
+
+# Starting position when coming from level 1 of the tower (quest 5)
+?:[EQU $LEAVING_QUEST 5]
+P:5:3
