@@ -341,12 +341,12 @@ U:TELEPORT
 
 # Stupidity, Naviety, Ugliness -> combined to Fool
 
-N:36:イークの
+N:36:道化師の
 E:of Fool
-X:33:20
-C:0:0:0:2
-W:0:18:0:0
-F:STR | CON | CHR | CURSED | IM_ACID
+X:33:0
+C:0:0:0:5
+W:0:36:0:0
+F:INT | WIS | CHR | CURSED
 
 N:37:バジリスクの
 E:of Basilisk
@@ -365,13 +365,13 @@ F:RES_COLD | RES_POIS | RES_NEXUS | RES_NETHER |
 F:SH_COLD | SEE_INVIS | LITE_M1 | XTRA_H_RES | XTRA_POWER | ADD_H_CURSE |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:39:ゾンビの
+N:39:疾病の
 E:of Sickliness
-X:33:20
-C:0:0:0:6
-W:0:18:0:0
-F:INT | WIS | CHR | CURSED | RES_COLD | RES_POIS | RES_NETHER | 
-F:HOLD_EXP | SLOW_DIGEST | SEE_INVIS
+X:33:0
+C:0:0:0:5
+W:0:36:0:0
+F:STR | DEX | CON | CURSED
+
 
 ### Cloaks ###
 
