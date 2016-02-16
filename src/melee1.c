@@ -77,7 +77,7 @@ static int check_hit(int power, int level, int stun)
 	if (k < 10) return (k < 5);
 
 	/* Calculate the "attack quality" */
-	i = (power + (level * 3));
+	i = (power + (level * 12)); /* 3 > 12 */
 
 	/* Total armor */
 	ac = p_ptr->ac + p_ptr->to_a;
@@ -603,7 +603,7 @@ bool make_attack_normal(int m_idx)
 
 				case RBE_SUPERHURT:
 				{
-					if (((randint1(rlev*2+300) > (ac+200)) || one_in_(13)) && !CHECK_MULTISHADOW())
+					if (((randint1(rlev*8+300) > (ac+200)) || one_in_(13)) && !CHECK_MULTISHADOW()) /* rlev*2 > rlev8 */
 					{
 						int tmp_damage = damage - (damage * ((ac < 150) ? ac : 150) / 250);
 						msg_print(_("痛恨の一撃！", "It was a critical hit!"));
@@ -635,7 +635,7 @@ bool make_attack_normal(int m_idx)
 					/* Take "poison" effect */
 					if (!(p_ptr->resist_pois || IS_OPPOSE_POIS()) && !CHECK_MULTISHADOW())
 					{
-						if (set_poisoned(p_ptr->poisoned + randint1(rlev) + 5))
+						if (set_poisoned(p_ptr->poisoned + randint1(rlev * 4) + 5)) /* rlev > rlev*4 */
 						{
 							obvious = TRUE;
 						}
@@ -1086,7 +1086,7 @@ bool make_attack_normal(int m_idx)
 					/* Increase "blind" */
 					if (!p_ptr->resist_blind && !CHECK_MULTISHADOW())
 					{
-						if (set_blind(p_ptr->blind + 10 + randint1(rlev)))
+						if (set_blind(p_ptr->blind + 10 + randint1(rlev*4))) /* rlev > rlev*4 */
 						{
 #ifdef JP
 							if (m_ptr->r_idx == MON_DIO) msg_print("どうだッ！この血の目潰しはッ！");
@@ -1114,7 +1114,7 @@ bool make_attack_normal(int m_idx)
 					/* Increase "confused" */
 					if (!p_ptr->resist_conf && !CHECK_MULTISHADOW())
 					{
-						if (set_confused(p_ptr->confused + 3 + randint1(rlev)))
+						if (set_confused(p_ptr->confused + 3 + randint1(rlev*4))) /* rlev > rlev*4 */
 						{
 							obvious = TRUE;
 						}
@@ -1150,7 +1150,7 @@ bool make_attack_normal(int m_idx)
 					}
 					else
 					{
-						if (set_afraid(p_ptr->afraid + 3 + randint1(rlev)))
+						if (set_afraid(p_ptr->afraid + 3 + randint1(rlev*4))) /* rlev > rlev*4 */
 						{
 							obvious = TRUE;
 						}
@@ -1188,7 +1188,7 @@ bool make_attack_normal(int m_idx)
 					{
 						if (!p_ptr->paralyzed)
 						{
-							if (set_paralyzed(3 + randint1(rlev)))
+							if (set_paralyzed(3 + randint1(rlev*4))) /* rlev > rlev*4 */
 							{
 								obvious = TRUE;
 							}
@@ -1391,7 +1391,7 @@ bool make_attack_normal(int m_idx)
 					/* Take "poison" effect */
 					if (!(p_ptr->resist_pois || IS_OPPOSE_POIS()))
 					{
-						if (set_poisoned(p_ptr->poisoned + randint1(rlev) + 5))
+						if (set_poisoned(p_ptr->poisoned + randint1(rlev*4) + 5)) /* rlev > rlev*4 */
 						{
 							obvious = TRUE;
 						}

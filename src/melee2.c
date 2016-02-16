@@ -1761,7 +1761,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 				break;
 
 			case RBE_SUPERHURT:
-				if ((randint1(rlev*2+250) > (ac+200)) || one_in_(13))
+				if ((randint1(rlev*8+250) > (ac+200)) || one_in_(13)) /* rlev*2 > rlev*8 */
 				{
 					int tmp_damage = damage - (damage * ((ac < 150) ? ac : 150) / 250);
 					damage = MAX(damage, tmp_damage * 2);
@@ -4178,7 +4178,7 @@ static void process_monsters_mtimed_aux(int m_idx, int mtimed_idx)
 
 	case MTIMED_MONFEAR:
 		/* Reduce the fear */
-		if (set_monster_monfear(m_idx, MON_MONFEAR(m_ptr) - randint1(r_info[m_ptr->r_idx].level / 20 + 1)))
+		if (set_monster_monfear(m_idx, MON_MONFEAR(m_ptr) - randint1(r_info[m_ptr->r_idx].level / 5 + 1))) /* 20 > 5 */
 		{
 			/* Visual note */
 			if (is_seen(m_ptr))
