@@ -1609,7 +1609,7 @@ bool make_attack_spell(int m_idx)
 	reset_target(m_ptr);
 
 	/* Extract the monster level */
-	rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
+	rlev = (((r_ptr->level >= 1) ? r_ptr->level : 1) * 4 ); /* rlev > rlev*4 */
 
 	/* Forbid inate attacks sometimes */
 	if (no_inate)
