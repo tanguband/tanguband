@@ -1311,14 +1311,18 @@ s16b get_mon_num(int level)
 	if (level > MAX_DEPTH - 1) level = MAX_DEPTH - 1;
 
 	pls_kakuritu = MAX(NASTY_MON_MAX, NASTY_MON_BASE - ((dungeon_turn / (TURNS_PER_TICK * 2500L) - hoge / 10)));
+	pls_level    = MIN(NASTY_MON_PLUS_MAX, dungeon_turn / (TURNS_PER_TICK * 20000L) - hoge / 40 + MIN(1, level / 10)) ;
+
+	/*tang 召喚レベル調整
 	pls_level    = MIN(NASTY_MON_PLUS_MAX, 3 + dungeon_turn / (TURNS_PER_TICK * 20000L) - hoge / 40 + MIN(5, level / 10)) ;
+	*/
 
 	if (d_info[dungeon_type].flags1 & DF1_MAZE)
 	{
 		pls_kakuritu = MIN(pls_kakuritu / 2, pls_kakuritu - 10);
-		if (pls_kakuritu < 2) pls_kakuritu = 2;
-		pls_level += 2;
-		level += 3;
+		if (pls_kakuritu < 2) pls_kakuritu = 1; /*tang 2 > 1 */
+		pls_level += 1; /*tang 2 > 1 */
+		level += 1; /*tang 3 > 1 */
 	}
 
 	/* Boost the level */
