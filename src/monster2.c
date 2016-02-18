@@ -1311,7 +1311,7 @@ s16b get_mon_num(int level)
 	if (level > MAX_DEPTH - 1) level = MAX_DEPTH - 1;
 
 	pls_kakuritu = MAX(NASTY_MON_MAX, NASTY_MON_BASE - ((dungeon_turn / (TURNS_PER_TICK * 2500L) - hoge / 10)));
-	pls_level    = MIN(NASTY_MON_PLUS_MAX, 3 + dungeon_turn / (TURNS_PER_TICK * 20000L) - hoge / 40 + MIN(5, level / 10)) ;
+	pls_level    = MIN(NASTY_MON_PLUS_MAX,  dungeon_turn / (TURNS_PER_TICK * 20000L) - hoge / 40 + MIN(5, level / 10)) ;
 
 	/*tang 召喚レベル調整
 	pls_level    = MIN(NASTY_MON_PLUS_MAX, 3 + dungeon_turn / (TURNS_PER_TICK * 20000L) - hoge / 40 + MIN(5, level / 10)) ;
@@ -1321,8 +1321,8 @@ s16b get_mon_num(int level)
 	{
 		pls_kakuritu = MIN(pls_kakuritu / 2, pls_kakuritu - 10); /*tang 2 > 4  10 > 20*/
 		if (pls_kakuritu < 2) pls_kakuritu = 2; /*tang 2 > 4  2 > 0 */
-		pls_level += 2; /*tang 2 > 0 */
-		level += 3; /*tang 3 > 0 */
+		pls_level += 1; /*tang 2 > 0 */
+		level += 1; /*tang 3 > 0 */
 	}
 
 	/* Boost the level */
