@@ -4105,7 +4105,7 @@ bool summon_specific(int who, int y1, int x1, int lev, int type, u32b mode)
 	r_idx = get_mon_num((dun_level + lev) / 2 + 5);
 	*/
 	
-	r_idx = get_mon_num((dun_level + lev) / 3 ); /*tang 召喚レベル調整*/
+	r_idx = get_mon_num( dun_level + 1 ); /*tang 召喚レベル調整*/
 
 
 	/* Handle failure */
