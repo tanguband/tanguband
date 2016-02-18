@@ -1311,7 +1311,7 @@ s16b get_mon_num(int level)
 	if (level > MAX_DEPTH - 1) level = MAX_DEPTH - 1;
 
 	pls_kakuritu = MAX(NASTY_MON_MAX, NASTY_MON_BASE - ((dungeon_turn / (TURNS_PER_TICK * 2500L) - hoge / 10)));
-	pls_level    = MIN(NASTY_MON_PLUS_MAX, dungeon_turn / (TURNS_PER_TICK * 20000L) - hoge / 40 + MIN(1, level / 10)) ;
+	pls_level    = MIN(NASTY_MON_PLUS_MAX, 3 + dungeon_turn / (TURNS_PER_TICK * 20000L) - hoge / 40 + MIN(5, level / 10)) ;
 
 	/*tang 召喚レベル調整
 	pls_level    = MIN(NASTY_MON_PLUS_MAX, 3 + dungeon_turn / (TURNS_PER_TICK * 20000L) - hoge / 40 + MIN(5, level / 10)) ;
@@ -1319,10 +1319,10 @@ s16b get_mon_num(int level)
 
 	if (d_info[dungeon_type].flags1 & DF1_MAZE)
 	{
-		pls_kakuritu = MIN(pls_kakuritu / 2, pls_kakuritu - 10);
-		if (pls_kakuritu < 2) pls_kakuritu = 1; /*tang 2 > 1 */
-		pls_level += 1; /*tang 2 > 1 */
-		level += 1; /*tang 3 > 1 */
+		pls_kakuritu = MIN(pls_kakuritu / 2, pls_kakuritu - 10); /*tang 2 > 4  10 > 20*/
+		if (pls_kakuritu < 2) pls_kakuritu = 2; /*tang 2 > 4  2 > 0 */
+		pls_level += 2; /*tang 2 > 0 */
+		level += 3; /*tang 3 > 0 */
 	}
 
 	/* Boost the level */
@@ -1413,7 +1413,7 @@ s16b get_mon_num(int level)
 	p = randint0(100);
 
 	/* Try for a "harder" monster once (50%) or twice (10%) */
-	if (p < 60)
+	if (p < 60) /* 60 > 10*/
 	{
 		/* Save old */
 		j = i;
@@ -1436,7 +1436,7 @@ s16b get_mon_num(int level)
 	}
 
 	/* Try for a "harder" monster twice (10%) */
-	if (p < 10)
+	if (p < 10) /* 10 > 1*/
 	{
 		/* Save old */
 		j = i;
@@ -4105,7 +4105,7 @@ bool summon_specific(int who, int y1, int x1, int lev, int type, u32b mode)
 	r_idx = get_mon_num((dun_level + lev) / 2 + 5);
 	*/
 	
-	r_idx = get_mon_num((dun_level + lev) / 2 + 1); /*　召喚レベル調整　*/
+	r_idx = get_mon_num((dun_level + lev) / 3 ); /*tang 召喚レベル調整*/
 
 
 	/* Handle failure */
