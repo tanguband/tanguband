@@ -26,6 +26,8 @@ doxygen/html/
 # Windows binary
 tanguband.exe
 
+tanguband
+
 # game data files auto generated
 tanguband.INI
 lib/user/
@@ -221,3 +223,5 @@ $RECYCLE.BIN/
 
 .gitignore
 qs.sh
+miproj
+.svn/

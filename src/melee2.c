@@ -457,7 +457,8 @@ static int mon_will_run(int m_idx)
 	m_val = (m_lev * m_mhp) + (m_chp << 2); /* div m_mhp */
 
 	/* Strong players scare strong monsters */
-	if (p_val * m_mhp > m_val * p_mhp) return (TRUE);
+	if (p_val * m_mhp > m_val * p_mhp) return (FALSE);	/* #tang TRUE > FALSE モンスター逃げないように変更 */
+
 
 #endif
 
