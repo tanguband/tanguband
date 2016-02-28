@@ -436,13 +436,9 @@ static int mon_will_run(int m_idx)
 	m_lev = r_ptr->level + (m_idx & 0x08) + 25;
 
 	/* Optimize extreme cases below */
-/*	
+
 	if (m_lev > p_lev + 4) return (FALSE);
-	if (m_lev + 4 <= p_lev) return (TRUE);
-*/
-	/* tangubandモンスター逃げないように変更*/
-	if (m_lev > p_lev + 4) return (FALSE);
-	if (m_lev + 4 <= p_lev) return (FALSE);
+	if (m_lev + 4 <= p_lev) return (FALSE);	/* #tang TRUE > FALSE モンスター逃げないように変更 */
 
 	/* Examine player health */
 	p_chp = p_ptr->chp;

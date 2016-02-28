@@ -2596,16 +2596,16 @@ bool py_attack(int y, int x, int mode)
 			int targetlevel = r_ptr->level;
 			int inc = 0;
 
-			if ((cur / 200 - 5) < targetlevel)
-				inc += 1;
+			if ((cur / 200 - 5) < targetlevel * 4) /* #tang targetlevel -> targetlevel*4 */
+				inc += 10; /* #tang 1 -> 10 */
 
 			/* Extra experience */
-			if ((cur / 100) < ridinglevel)
+			if ((cur / 100) < ridinglevel * 4) /* #tang ridinglevel -> ridinglevel*4 */
 			{
-				if ((cur / 100 + 15) < ridinglevel)
-					inc += 1 + (ridinglevel - (cur / 100 + 15));
+				if ((cur / 100 + 15) < ridinglevel * 4) /* #tang ridinglevel -> ridinglevel*4 */
+					inc += 10 + (ridinglevel * 4 - (cur / 100 + 15)); /* #tang 1 -> 10 , ridinglevel -> ridinglevel*4 */
 				else
-					inc += 1;
+					inc += 10; /* #tang 1 -> 10 */
 			}
 
 			p_ptr->skill_exp[GINOU_RIDING] = MIN(max, cur + inc);

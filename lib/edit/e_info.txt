@@ -84,7 +84,7 @@ F:IGNORE_FIRE | XTRA_RES
 N:6:(真世界)
 E:of Druid
 X:31:10
-W:20:36:0:50000
+W:20:36:0:100000
 C:0:0:20:3
 F:STR | DEX | CON | WIS | INT | CHR |
 F:IM_ELEC | IM_FIRE | IM_COLD |
@@ -109,7 +109,7 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | XTRA_H_RES
 
 # OnePower
 
-N:9:ハイエルフの
+N:9:(ハイエルフ)
 E:of Elvenkind
 X:31:20
 W:0:15:0:15000
@@ -216,7 +216,7 @@ W:1:18:0:8000
 C:0:0:9:0
 F:RES_LITE | RES_DARK | XTRA_H_RES
 
-N:238:骸骨の
+N:238:(骸骨)
 E:of Protection
 X:25:20
 W:0:18:0:15000
@@ -224,7 +224,7 @@ C:0:0:15:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD |
 F:RES_COLD | RES_POIS | RES_SHARDS | SEE_INVIS | HOLD_EXP |
 
-N:239:ニーベルングの
+N:239:(ニーベルング)
 E:of Dwarven
 X:25:20
 W:0:18:0:20000
@@ -234,10 +234,10 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD |
 
 ### Crowns and Helms ###
 
-N:23:暗黒の
+N:23:(暗黒)
 E:of Darkness
 X:33:20
-W:0:18:0:800
+W:0:18:0:1500
 F:LITE_M1 | RES_DARK
 
 # intelligence, wisdom, beauty -> combined to brilliance
@@ -246,17 +246,18 @@ N:24:(兄者)
 E:of Brilliance
 X:33:20
 C:0:0:0:4
-W:0:18:0:25000
+W:0:18:0:30000
 F:INT | WIS | SUST_INT | SUST_WIS | 
 F:TELEPATHY | SEE_INVIS
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:25:コボルドの
+N:25:(コボルド)
 E:of Protection
 X:33:20
 C:0:0:30:2
 W:0:18:0:5000
 F:RES_POIS | STR | DEX | 
+F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 N:26:悪魔の
 E:of Demon
@@ -289,10 +290,10 @@ W:0:18:0:10000
 C:0:0:0:4
 F:STR | DEX | CON | SUST_STR | SUST_DEX | SUST_CON | FREE_ACT | XTRA_H_RES
 
-N:29:アルコンの
+N:29:(アルコン)
 E:of Lordliness
 X:33:20
-W:0:18:0:10000
+W:0:18:0:5000
 C:0:0:0:6
 F:WIS | CHR | SUST_WIS | SUST_CHR | 
 F:SEE_INVIS | LEVITATION | XTRA_H_RES | XTRA_L_RES
@@ -304,7 +305,7 @@ W:0:18:0:1000
 C:0:0:0:6
 F:SEARCH | RES_BLIND | SEE_INVIS
 
-N:31:ドゥナダンの
+N:31:(ドゥナダン)
 E:of Infravision
 X:33:20
 W:0:18:0:15000
@@ -313,7 +314,7 @@ F:STR | DEX | CON | INT | WIS | CHR | XTRA_H_RES
 F:SUST_STR | SUST_DEX | SUST_CON | SUST_INT | SUST_WIS | SUST_CHR
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:32:タイタンの
+N:32:(タイタン)
 E:of Light
 X:33:20
 W:0:18:0:5000
@@ -326,7 +327,7 @@ X:33:20
 W:0:18:0:15000
 #F:TELEPATHY
 
-N:34:クターの
+N:34:(クター)
 E:of Regeneration
 X:33:20
 W:0:18:0:5000
@@ -376,7 +377,7 @@ F:STR | DEX | CON | CURSED
 
 ### Cloaks ###
 
-N:40:守りの
+N:40:(守り)
 E:of Protection
 X:32:20
 W:0:18:0:5000
@@ -386,7 +387,7 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD | XTRA_H_RES
 #J0#
 #J0# 岸さんの訳です
 #J0#
-N:41:忍びの
+N:41:(忍び)
 E:of Stealth
 X:32:20
 W:0:18:0:5000
@@ -395,7 +396,7 @@ F:STEALTH | XTRA_H_RES
 
 # OnePower
 
-N:42:至福の地アマンの
+N:42:(至福の地アマン)
 E:of Aman
 X:32:20
 W:0:18:0:15000
@@ -405,12 +406,12 @@ F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 # Aura, Fire
 #JZ#
-N:43:吸血鬼の
+N:43:(吸血鬼)
 E:of Immolation
 X:32:20
 W:0:18:0:15000
-C:0:0:15:0
-F:RES_COLD | RES_POIS | RES_DARK | RES_NETHER | LEVITATION
+C:0:0:15:4
+F:STEALTH | RES_COLD | RES_POIS | RES_DARK | RES_NETHER | LEVITATION
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
 #J0#
@@ -460,11 +461,11 @@ U:WRAITH
 
 ### Gloves ###
 
-N:48:ノームの
+N:48:(ノーム)
 E:of Free Action
 X:34:11
 F:FREE_ACT | XTRA_H_RES
-W:0:2:0:1000
+W:0:2:0:2000
 
 N:49:殺戮の
 E:of Slaying
@@ -494,7 +495,7 @@ W:0:36:0:50000
 C:9:9:0:6
 F:DEX | SHOW_MODS | HIDE_TYPE
 
-N:53:イスタリの
+N:53:(イスタリ)
 E:of Magic Mastery
 X:34:20
 W:0:24:0:50000
@@ -521,7 +522,7 @@ F:DEX
 ### Boots ###
 
 #JZ#
-N:56:影フェアリーの
+N:56:(影フェアリー)
 E:of Levitation
 X:35:20
 W:0:10:0:5000
@@ -531,7 +532,7 @@ F:LEVITATION | STEALTH | FREE_ACT
 #J0#
 #J0# 岸さんの訳です
 #J0#
-N:57:妖精の
+N:57:(妖精)
 E:of Stealth
 X:35:20
 W:0:18:0:25000
@@ -539,7 +540,7 @@ C:0:0:0:4
 F:STEALTH | SPEED | INT | WIS | DEX | RES_LITE | LEVITATION
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:58:クラッコンの
+N:58:(クラッコン)
 E:of Free Action
 X:35:20
 W:0:18:0:25000
@@ -700,7 +701,7 @@ F:CHAOTIC | RES_CHAOS | IGNORE_ELEC | IGNORE_ACID | IGNORE_FIRE | XTRA_RES
 N:78:(旧支配者)
 E:of Sharpness
 X:24:20
-W:20:24:0:25000
+W:20:24:0:100000
 C:20:9:0:3
 F:BLOWS | SPEED |
 F:STR | CON | DEX
@@ -887,7 +888,7 @@ C:30:0:0:4
 F:SPEED | DEX | STEALTH | RES_FEAR | RES_CONF |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:105:エルフの
+N:105:(エルフ)
 E:of Velocity
 X:26:20
 W:0:18:0:10000
@@ -898,7 +899,7 @@ F:INT | CHR | STEALTH | XTRA_H_RES
 
 # 107 (unused)
 
-N:108:ハイエルフの
+N:108:(ハイエルフ)
 E:of Extra Might
 X:26:20
 W:0:18:0:10000
@@ -906,7 +907,7 @@ C:9:9:0:2
 F:XTRA_MIGHT | XTRA_H_RES | STR | DEX | CON |
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
-N:109:ダークエルフの
+N:109:(ダークエルフ)
 E:of Extra Shots
 X:26:20
 C:9:9:0:4
@@ -1015,7 +1016,7 @@ C:0:0:10:0
 N:128:(解放者)
 E:of Freezing
 X:32:10
-W:20:24:0:50000
+W:20:24:0:100000
 C:0:0:9:0
 F:IGNORE_ACID | IGNORE_COLD | IGNORE_FIRE | IGNORE_ELEC |
 F:SH_COLD | IM_COLD
@@ -1052,7 +1053,7 @@ W:0:18:0:3000
 C:0:0:0:0
 F:SH_FIRE | IGNORE_FIRE | RES_FIRE |
 
-N:143:明晰の
+N:143:(明晰)
 E:of Infravision
 X:30:20
 W:0:18:0:5000

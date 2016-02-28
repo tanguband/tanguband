@@ -68,7 +68,7 @@ int monster_level_idx(int m_idx)
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
 
-	int rlev = 4 *((r_ptr->level >= 1) ? r_ptr->level : 1);/* tang rlev > rlev*4 */
+	int rlev = 4 *((r_ptr->level >= 1) ? r_ptr->level : 1);/* #tang rlev -> rlev * 4 */
 
     return rlev;
 }
