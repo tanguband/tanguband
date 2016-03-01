@@ -1462,7 +1462,7 @@ void spell_RF5_SCARE(int m_idx, int t_idx, int TARGET_TYPE)
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_fear;
-        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
+        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何かをつぶやくと、恐ろしげな音が聞こえた。", "%^s mumbles, and you hear scary noises."),
             _("%^sが恐ろしげな幻覚を作り出した。", "%^s casts a fearful illusion."),
@@ -1480,7 +1480,7 @@ void spell_RF5_SCARE(int m_idx, int t_idx, int TARGET_TYPE)
     else if (TARGET_TYPE == MONSTER_TO_MONSTER)
     {
         resist = tr_ptr->flags3 & RF3_NO_FEAR;
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
 
         spell_badstatus_message(m_idx, t_idx, 
             _("%^sが恐ろしげな幻覚を作り出した。", "%^s casts a fearful illusion in front of %s."),
@@ -1512,7 +1512,7 @@ void spell_RF5_BLIND(int m_idx, int t_idx, int TARGET_TYPE)
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_blind;
-        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
+        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何かをつぶやいた。", "%^s mumbles."),
             _("%^sが呪文を唱えてあなたの目をくらました！", "%^s casts a spell, burning your eyes!"),
@@ -1543,7 +1543,7 @@ void spell_RF5_BLIND(int m_idx, int t_idx, int TARGET_TYPE)
         }
 
         resist = tr_ptr->flags3 & RF3_NO_CONF;
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
 
         spell_badstatus_message(m_idx, t_idx,
             msg1,
@@ -1575,7 +1575,7 @@ void spell_RF5_CONF(int m_idx, int t_idx, int TARGET_TYPE)
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_conf;
-        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
+        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何かをつぶやくと、頭を悩ます音がした。", "%^s mumbles, and you hear puzzling noises."),
             _("%^sが誘惑的な幻覚を作り出した。", "%^s creates a mesmerising illusion."),
@@ -1593,7 +1593,7 @@ void spell_RF5_CONF(int m_idx, int t_idx, int TARGET_TYPE)
     else if (TARGET_TYPE == MONSTER_TO_MONSTER)
     {
         resist = tr_ptr->flags3 & RF3_NO_CONF;
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
 
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが%sの前に幻惑的な幻をつくり出した。", "%^s casts a mesmerizing illusion in front of %s."),
@@ -1625,7 +1625,7 @@ void spell_RF5_SLOW(int m_idx, int t_idx, int TARGET_TYPE)
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_conf;
-        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
+        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
         spell_badstatus_message(m_idx, t_idx,
             _("%^sがあなたの筋力を吸い取ろうとした！", "%^s drains power from your muscles!"),
             _("%^sがあなたの筋力を吸い取ろうとした！", "%^s drains power from your muscles!"),
@@ -1656,7 +1656,7 @@ void spell_RF5_SLOW(int m_idx, int t_idx, int TARGET_TYPE)
         }
 
         resist = tr_ptr->flags1 & RF1_UNIQUE;
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
 
         spell_badstatus_message(m_idx, t_idx,
             msg1,
@@ -1688,7 +1688,7 @@ void spell_RF5_HOLD(int m_idx, int t_idx, int TARGET_TYPE)
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->free_act;
-        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
+        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何かをつぶやいた。", "%^s mumbles."),
             _("%^sがあなたの目をじっと見つめた！", "%^s stares deep into your eyes!"),
@@ -1706,7 +1706,7 @@ void spell_RF5_HOLD(int m_idx, int t_idx, int TARGET_TYPE)
     else if (TARGET_TYPE == MONSTER_TO_MONSTER)
     {
         resist = (tr_ptr->flags1 & RF1_UNIQUE) || (tr_ptr->flags3 & RF3_NO_STUN);
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
 
         spell_badstatus_message(m_idx, t_idx,
             _("%^sは%sをじっと見つめた。", "%^s stares intently at %s."),
@@ -1807,7 +1807,7 @@ void spell_RF6_HEAL(int m_idx, int t_idx, int TARGET_TYPE)
         p_ptr->blind, TARGET_TYPE);
 
     /* Heal some */
-    m_ptr->hp += (rlev * 6);
+    m_ptr->hp += (rlev * 24); /* #tang rlev*6 -> rlev*24 */
 
     /* Fully healed */
     if (m_ptr->hp >= m_ptr->maxhp)
@@ -2328,7 +2328,7 @@ void spell_RF6_TELE_LEVEL(int m_idx, int t_idx, int TARGET_TYPE)
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_nexus;
-        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
+        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何か奇妙な言葉をつぶやいた。", "%^s mumbles strangely."),
             _("%^sがあなたの足を指さした。", "%^s gestures at your feet."),
@@ -2347,7 +2347,7 @@ void spell_RF6_TELE_LEVEL(int m_idx, int t_idx, int TARGET_TYPE)
     {
         resist = tr_ptr->flagsr & (RFR_EFF_RES_NEXU_MASK | RFR_RES_TELE);
         saving_throw = (tr_ptr->flags1 & RF1_QUESTOR) ||
-			           (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+			           (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
 
         spell_badstatus_message(m_idx, t_idx, 
             _("%^sが%sの足を指さした。", "%^s gestures at %s's feet."),
@@ -2507,7 +2507,7 @@ void spell_RF6_FORGET(int m_idx)
     msg_format(_("%^sがあなたの記憶を消去しようとしている。",
         "%^s tries to blank your mind."), m_name);
 
-    if (randint0(100 + rlev / 2) < p_ptr->skill_sav)
+    if (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav) /* #tang rlev -> rlev*3 */
     {
         msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
     }
