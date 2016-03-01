@@ -1620,25 +1620,25 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
 	if (!o_ptr->k_idx) /* Empty hand */
 	{
-		if ((r_ptr->level + 10) > p_ptr->lev)
+		if ((r_ptr->level + 10) / 3 > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level + 10)/3 */
 		{
 			if (p_ptr->skill_exp[GINOU_SUDE] < s_info[p_ptr->pclass].s_max[GINOU_SUDE])
 			{
 				if (p_ptr->skill_exp[GINOU_SUDE] < WEAPON_EXP_BEGINNER)
-					p_ptr->skill_exp[GINOU_SUDE] += 40;
+					p_ptr->skill_exp[GINOU_SUDE] += 200; /* #tang 40 -> 200 */
 				else if ((p_ptr->skill_exp[GINOU_SUDE] < WEAPON_EXP_SKILLED))
-					p_ptr->skill_exp[GINOU_SUDE] += 5;
+					p_ptr->skill_exp[GINOU_SUDE] += 25; /* #tang 5 -> 25 */
 				else if ((p_ptr->skill_exp[GINOU_SUDE] < WEAPON_EXP_EXPERT) && (p_ptr->lev > 19))
-					p_ptr->skill_exp[GINOU_SUDE] += 1;
+					p_ptr->skill_exp[GINOU_SUDE] += 5; /* #tang 1 -> 5 */
 				else if ((p_ptr->lev > 34))
-					if (one_in_(3)) p_ptr->skill_exp[GINOU_SUDE] += 1;
+					if (one_in_(3)) p_ptr->skill_exp[GINOU_SUDE] += 5; /* #tang 1 -> 5 */
 				p_ptr->update |= (PU_BONUS);
 			}
 		}
 	}
 	else if (object_is_melee_weapon(o_ptr))
 	{
-		if ((r_ptr->level + 10) > p_ptr->lev)
+		if ((r_ptr->level + 10) / 3 > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level + 10)/3 */
 		{
 			int tval = inventory[INVEN_RARM+hand].tval - TV_WEAPON_BEGIN;
 			int sval = inventory[INVEN_RARM+hand].sval;
@@ -1646,10 +1646,10 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 			if (now_exp < s_info[p_ptr->pclass].w_max[tval][sval])
 			{
 				int amount = 0;
-				if (now_exp < WEAPON_EXP_BEGINNER) amount = 80;
-				else if (now_exp < WEAPON_EXP_SKILLED) amount = 10;
-				else if ((now_exp < WEAPON_EXP_EXPERT) && (p_ptr->lev > 19)) amount = 1;
-				else if ((p_ptr->lev > 34) && one_in_(2)) amount = 1;
+				if (now_exp < WEAPON_EXP_BEGINNER) amount = 400; /* #tang 80 -> 400 */
+				else if (now_exp < WEAPON_EXP_SKILLED) amount = 50; /* #tang 10 -> 50 */
+				else if ((now_exp < WEAPON_EXP_EXPERT) && (p_ptr->lev > 19)) amount = 5; /* #tang 1 -> 5 */
+				else if ((p_ptr->lev > 34) && one_in_(2)) amount = 5; /* #tang 1 -> 5 */
 				p_ptr->weapon_exp[tval][sval] += amount;
 				p_ptr->update |= (PU_BONUS);
 			}
@@ -2570,16 +2570,16 @@ bool py_attack(int y, int x, int mode)
 
 	if (p_ptr->migite && p_ptr->hidarite)
 	{
-		if ((p_ptr->skill_exp[GINOU_NITOURYU] < s_info[p_ptr->pclass].s_max[GINOU_NITOURYU]) && ((p_ptr->skill_exp[GINOU_NITOURYU] - 1000) / 200 < r_ptr->level))
+		if ((p_ptr->skill_exp[GINOU_NITOURYU] < s_info[p_ptr->pclass].s_max[GINOU_NITOURYU]) && ((p_ptr->skill_exp[GINOU_NITOURYU] - 1000) / 600 < r_ptr->level)) /* #tang 200 -> 600 */
 		{
 			if (p_ptr->skill_exp[GINOU_NITOURYU] < WEAPON_EXP_BEGINNER)
-				p_ptr->skill_exp[GINOU_NITOURYU] += 80;
+				p_ptr->skill_exp[GINOU_NITOURYU] += 400; /* #tang 80 -> 400 */
 			else if(p_ptr->skill_exp[GINOU_NITOURYU] < WEAPON_EXP_SKILLED)
-				p_ptr->skill_exp[GINOU_NITOURYU] += 4;
+				p_ptr->skill_exp[GINOU_NITOURYU] += 20; /* #tang 4 -> 20 */
 			else if(p_ptr->skill_exp[GINOU_NITOURYU] < WEAPON_EXP_EXPERT)
-				p_ptr->skill_exp[GINOU_NITOURYU] += 1;
+				p_ptr->skill_exp[GINOU_NITOURYU] += 5; /* #tang 1 -> 5 */
 			else if(p_ptr->skill_exp[GINOU_NITOURYU] < WEAPON_EXP_MASTER)
-				if (one_in_(3)) p_ptr->skill_exp[GINOU_NITOURYU] += 1;
+				if (one_in_(3)) p_ptr->skill_exp[GINOU_NITOURYU] += 5; /* #tang 1 -> 5 */
 			p_ptr->update |= (PU_BONUS);
 		}
 	}
@@ -2596,14 +2596,14 @@ bool py_attack(int y, int x, int mode)
 			int targetlevel = r_ptr->level;
 			int inc = 0;
 
-			if ((cur / 200 - 5) < targetlevel * 4) /* #tang targetlevel -> targetlevel*4 */
+			if ((cur / 200 - 5) < targetlevel * 3) /* #tang targetlevel -> targetlevel*3 */
 				inc += 10; /* #tang 1 -> 10 */
 
 			/* Extra experience */
-			if ((cur / 100) < ridinglevel * 4) /* #tang ridinglevel -> ridinglevel*4 */
+			if ((cur / 100) < ridinglevel * 3) /* #tang ridinglevel -> ridinglevel*3 */
 			{
-				if ((cur / 100 + 15) < ridinglevel * 4) /* #tang ridinglevel -> ridinglevel*4 */
-					inc += 10 + (ridinglevel * 4 - (cur / 100 + 15)); /* #tang 1 -> 10 , ridinglevel -> ridinglevel*4 */
+				if ((cur / 100 + 15) < ridinglevel * 3) /* #tang ridinglevel -> ridinglevel*3 */
+					inc += 10 + (ridinglevel * 3 - (cur / 100 + 15)); /* #tang 1 -> 10 , ridinglevel -> ridinglevel*3 */
 				else
 					inc += 10; /* #tang 1 -> 10 */
 			}

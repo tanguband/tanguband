@@ -1114,7 +1114,7 @@ static bool cmd_racial_power_aux(s32b command)
 			monster_desc(m_name, m_ptr, 0);
 			msg_format(_("%sに乗った。", "You ride on %s."),m_name);
 			if (is_pet(m_ptr)) break;
-			rlev = r_ptr->level;
+			rlev = r_ptr->level * 3; /* #tang r_ptr->level -> r_ptr->level*3 */
 			if (r_ptr->flags1 & RF1_UNIQUE) rlev = rlev * 3 / 2;
 			if (rlev > 60) rlev = 60+(rlev-60)/2;
 			if ((randint1(p_ptr->skill_exp[GINOU_RIDING] / 120 + p_ptr->lev * 2 / 3) > rlev)

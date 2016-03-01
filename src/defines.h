@@ -589,7 +589,7 @@
  */
 #define NASTY_MON_BASE     25
 #define NASTY_MON_MAX      3	/*! 深層モンスターが1フロアに生成される最大数  */
-#define NASTY_MON_PLUS_MAX 4	/*! 深層モンスターの階層加算最大量 */
+#define NASTY_MON_PLUS_MAX 4	/*! 深層モンスターの階層加算最大量 */ /* #tang 25 -> 4 */
 
 #define PENETRATE_INVULNERABILITY 13 /*! 無敵化が破られる確率(1/x) / 1/x chance of hurting even if invulnerable! */
 

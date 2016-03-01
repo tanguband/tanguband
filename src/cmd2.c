@@ -3482,16 +3482,16 @@ void do_cmd_fire_aux(int item, object_type *j_ptr)
 				if (!(r_ptr->flags3 & RF3_EVIL) || one_in_(5)) chg_virtue(V_HONOUR, -1);
 			}
 
-			if ((r_ptr->level + 10) > p_ptr->lev)
+			if ((r_ptr->level + 10) / 3 > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level + 10)/3 */
 			{
 				int now_exp = p_ptr->weapon_exp[0][j_ptr->sval];
 				if (now_exp < s_info[p_ptr->pclass].w_max[0][j_ptr->sval])
 				{
 					int amount = 0;
-					if (now_exp < WEAPON_EXP_BEGINNER) amount = 80;
-					else if (now_exp < WEAPON_EXP_SKILLED) amount = 25;
-					else if ((now_exp < WEAPON_EXP_EXPERT) && (p_ptr->lev > 19)) amount = 10;
-					else if (p_ptr->lev > 34) amount = 2;
+					if (now_exp < WEAPON_EXP_BEGINNER) amount = 400; /* #tang 80 -> 400 */
+					else if (now_exp < WEAPON_EXP_SKILLED) amount = 125; /* #tang 25 -> 125 */
+					else if ((now_exp < WEAPON_EXP_EXPERT) && (p_ptr->lev > 19)) amount = 50; /* #tang 10 -> 50 */
+					else if (p_ptr->lev > 34) amount = 10; /* #tang 2 -> 10 */
 					p_ptr->weapon_exp[0][j_ptr->sval] += amount;
 					p_ptr->update |= (PU_BONUS);
 				}
@@ -3500,7 +3500,7 @@ void do_cmd_fire_aux(int item, object_type *j_ptr)
 			if (p_ptr->riding)
 			{
 				if ((p_ptr->skill_exp[GINOU_RIDING] < s_info[p_ptr->pclass].s_max[GINOU_RIDING])
-					&& ((p_ptr->skill_exp[GINOU_RIDING] - (RIDING_EXP_BEGINNER * 2)) / 200 < r_info[m_list[p_ptr->riding].r_idx].level)
+					&& ((p_ptr->skill_exp[GINOU_RIDING] - (RIDING_EXP_BEGINNER * 2)) / 600 < r_info[m_list[p_ptr->riding].r_idx].level) /* #tang 200 -> 600 */
 					&& one_in_(2))
 				{
 					p_ptr->skill_exp[GINOU_RIDING] += 1;

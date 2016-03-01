@@ -1432,21 +1432,21 @@ msg_format("その%sを%sのに十分なマジックポイントがない。",pr
 			s16b exp_gain = 0;
 
 			if (cur_exp < SPELL_EXP_BEGINNER)
-				exp_gain += 60;
+				exp_gain += 300; /* #tang 60 -> 300*/
 			else if (cur_exp < SPELL_EXP_SKILLED)
 			{
-				if ((dun_level > 4) && ((dun_level + 10) > p_ptr->lev))
-					exp_gain = 8;
+				if ((dun_level > 2) && ((dun_level * 3 + 10) > p_ptr->lev)) /* #tang 4 -> 2 , dun_level -> dun_level*3 */
+					exp_gain = 40; /* #tang 8 -> 40*/
 			}
 			else if (cur_exp < SPELL_EXP_EXPERT)
 			{
-				if (((dun_level + 5) > p_ptr->lev) && ((dun_level + 5) > s_ptr->slevel))
-					exp_gain = 2;
+				if (((dun_level * 3 + 5) > p_ptr->lev) && ((dun_level * 3 + 5) > s_ptr->slevel)) /* #tang dun_level -> dun_level*3 */
+					exp_gain = 10; /* #tang 2 -> 10*/
 			}
 			else if ((cur_exp < SPELL_EXP_MASTER) && !increment)
 			{
-				if (((dun_level + 5) > p_ptr->lev) && (dun_level > s_ptr->slevel))
-					exp_gain = 1;
+				if (((dun_level * 3 + 5) > p_ptr->lev) && (dun_level * 3 > s_ptr->slevel)) /* #tang dun_level -> dun_level*3 */
+					exp_gain = 5; /* #tang 1 -> 5*/
 			}
 			p_ptr->spell_exp[(increment ? 32 : 0) + spell] += exp_gain;
 		}
@@ -1857,10 +1857,10 @@ bool rakuba(int dam, bool force)
 		{
 			int cur = p_ptr->skill_exp[GINOU_RIDING];
 			int max = s_info[p_ptr->pclass].s_max[GINOU_RIDING];
-			int ridinglevel = r_ptr->level;
+			int ridinglevel = r_ptr->level * 3; /* #tang r_ptr->level -> r_ptr->level*3 */
 
 			/* 落馬のしやすさ */
-			int rakubalevel = r_ptr->level;
+			int rakubalevel = r_ptr->level * 3; /* #tang r_ptr->level -> r_ptr->level*3 */
 			if (p_ptr->riding_ryoute) rakubalevel += 20;
 
 			if ((cur < max) && (max > 1000) &&
@@ -2073,7 +2073,7 @@ bool do_riding(bool force)
 
 			return FALSE;
 		}
-		if (r_info[m_ptr->r_idx].level > randint1((p_ptr->skill_exp[GINOU_RIDING] / 50 + p_ptr->lev / 2 + 20)))
+		if (r_info[m_ptr->r_idx].level * 3 > randint1((p_ptr->skill_exp[GINOU_RIDING] / 50 + p_ptr->lev / 2 + 20))) /* #tang r_info[m_ptr->r_idx].level -> r_info[m_ptr->r_idx].level*3 */
 		{
 			msg_print(_("うまく乗れなかった。", "You failed to ride."));
 			p_ptr->energy_use = 100;

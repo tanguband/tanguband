@@ -2965,7 +2965,7 @@ E:Haste Monster:Molybdenum
 G:-:W
 I:65:1:6
 W:1:0:10:1
-A:1/8:10/255
+A:1/1:15/255
 P:0:1d1:0:0:0
 D:$It hastes a monster when you use it.
 D:それは使うと1体のモンスターを加速させる。
@@ -3317,8 +3317,8 @@ N:309:スピード・モンスター:ユーカリの
 E:Haste Monsters:Eucalyptus
 G:_:U
 I:55:2:12
-W:110:0:50:0
-A:10/255
+W:1:0:50:0
+A:1/1:15/255
 P:0:1d2:0:0:0
 D:$It hastes all monsters in sight when you use it.
 D:それは使うと視界内のモンスターを加速させる。
