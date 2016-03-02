@@ -178,6 +178,7 @@ F:LOS | PROJECT | MOVE | PLACE | NOTICE | REMEMBER | STAIRS | LESS |
 F:PERMANENT | CAN_FLY | SHAFT | TELEPORTABLE
 
 # 0x0D --> down stairs (perm)
+#tang SHAFT -> none
 
 N:14:SHAFT_DOWN
 J:下り坑道
@@ -185,7 +186,7 @@ E:shaft down
 G:>:U:LIT
 W:35
 F:LOS | PROJECT | MOVE | PLACE | NOTICE | REMEMBER | STAIRS | MORE |
-F:PERMANENT | CAN_FLY | SHAFT | TELEPORTABLE
+F:PERMANENT | CAN_FLY | TELEPORTABLE
 
 # 0x10 --> visible trap -- trap door
 

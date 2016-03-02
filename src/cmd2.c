@@ -169,7 +169,7 @@ void do_cmd_go_up(void)
 			/* Create a way back */
 			prepare_change_floor_mode(CFM_SAVE_FLOORS | CFM_UP | CFM_SHAFT);
 
-			up_num = 2;
+			up_num = 1; /* #tang 2 -> 1 */
 		}
 		else
 		{
@@ -317,7 +317,7 @@ void do_cmd_go_down(void)
 		if (autosave_l) do_cmd_save_game(TRUE);
 
 		/* Go down */
-		if (have_flag(f_ptr->flags, FF_SHAFT)) down_num += 2;
+		if (have_flag(f_ptr->flags, FF_SHAFT)) down_num += 1; /* #tang 2 -> 1 */
 		else down_num += 1;
 
 		if (!dun_level)

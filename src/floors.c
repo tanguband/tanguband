@@ -1552,13 +1552,13 @@ void stair_creation(void)
 	if (up)
 	{
 		cave_set_feat(p_ptr->y, p_ptr->x,
-			(dest_sf_ptr->last_visit && (dest_sf_ptr->dun_level <= dun_level - 2)) ?
+			(dest_sf_ptr->last_visit && (dest_sf_ptr->dun_level <= dun_level - 1)) ? /* #tang 2 -> 1 */
 			feat_state(feat_up_stair, FF_SHAFT) : feat_up_stair);
 	}
 	else
 	{
 		cave_set_feat(p_ptr->y, p_ptr->x,
-			(dest_sf_ptr->last_visit && (dest_sf_ptr->dun_level >= dun_level + 2)) ?
+			(dest_sf_ptr->last_visit && (dest_sf_ptr->dun_level >= dun_level + 1)) ? /* #tang 2 -> 1 */
 			feat_state(feat_down_stair, FF_SHAFT) : feat_down_stair);
 	}
 
