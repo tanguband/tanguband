@@ -67,8 +67,11 @@ int monster_level_idx(int m_idx)
 {
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
-
-	int rlev = 4 *((r_ptr->level >= 1) ? r_ptr->level : 1);/* #tang rlev -> rlev * 4 */
+	/*
+	int rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
+	tangubandモンスターの魔法の威力のためレベル変更
+	*/
+    int rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
 
     return rlev;
 }
@@ -1456,13 +1459,13 @@ void spell_RF5_SCARE(int m_idx, int t_idx, int TARGET_TYPE)
 {
     monster_type    *t_ptr = &m_list[t_idx];
     monster_race    *tr_ptr = &r_info[t_ptr->r_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool resist, saving_throw;
 
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_fear;
-        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
+        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何かをつぶやくと、恐ろしげな音が聞こえた。", "%^s mumbles, and you hear scary noises."),
             _("%^sが恐ろしげな幻覚を作り出した。", "%^s casts a fearful illusion."),
@@ -1480,7 +1483,7 @@ void spell_RF5_SCARE(int m_idx, int t_idx, int TARGET_TYPE)
     else if (TARGET_TYPE == MONSTER_TO_MONSTER)
     {
         resist = tr_ptr->flags3 & RF3_NO_FEAR;
-        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
+        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
 
         spell_badstatus_message(m_idx, t_idx, 
             _("%^sが恐ろしげな幻覚を作り出した。", "%^s casts a fearful illusion in front of %s."),
@@ -1506,13 +1509,13 @@ void spell_RF5_BLIND(int m_idx, int t_idx, int TARGET_TYPE)
 {
     monster_type    *t_ptr = &m_list[t_idx];
     monster_race    *tr_ptr = &r_info[t_ptr->r_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool resist, saving_throw;
 
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_blind;
-        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
+        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何かをつぶやいた。", "%^s mumbles."),
             _("%^sが呪文を唱えてあなたの目をくらました！", "%^s casts a spell, burning your eyes!"),
@@ -1543,7 +1546,7 @@ void spell_RF5_BLIND(int m_idx, int t_idx, int TARGET_TYPE)
         }
 
         resist = tr_ptr->flags3 & RF3_NO_CONF;
-        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
+        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
 
         spell_badstatus_message(m_idx, t_idx,
             msg1,
@@ -1569,13 +1572,13 @@ void spell_RF5_CONF(int m_idx, int t_idx, int TARGET_TYPE)
 {
     monster_type    *t_ptr = &m_list[t_idx];
     monster_race    *tr_ptr = &r_info[t_ptr->r_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool resist, saving_throw;
 
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_conf;
-        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
+        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何かをつぶやくと、頭を悩ます音がした。", "%^s mumbles, and you hear puzzling noises."),
             _("%^sが誘惑的な幻覚を作り出した。", "%^s creates a mesmerising illusion."),
@@ -1593,7 +1596,7 @@ void spell_RF5_CONF(int m_idx, int t_idx, int TARGET_TYPE)
     else if (TARGET_TYPE == MONSTER_TO_MONSTER)
     {
         resist = tr_ptr->flags3 & RF3_NO_CONF;
-        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
+        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
 
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが%sの前に幻惑的な幻をつくり出した。", "%^s casts a mesmerizing illusion in front of %s."),
@@ -1619,13 +1622,13 @@ void spell_RF5_SLOW(int m_idx, int t_idx, int TARGET_TYPE)
 {
     monster_type    *t_ptr = &m_list[t_idx];
     monster_race    *tr_ptr = &r_info[t_ptr->r_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool resist, saving_throw;
 
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_conf;
-        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
+        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
         spell_badstatus_message(m_idx, t_idx,
             _("%^sがあなたの筋力を吸い取ろうとした！", "%^s drains power from your muscles!"),
             _("%^sがあなたの筋力を吸い取ろうとした！", "%^s drains power from your muscles!"),
@@ -1656,7 +1659,7 @@ void spell_RF5_SLOW(int m_idx, int t_idx, int TARGET_TYPE)
         }
 
         resist = tr_ptr->flags1 & RF1_UNIQUE;
-        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
+        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
 
         spell_badstatus_message(m_idx, t_idx,
             msg1,
@@ -1682,13 +1685,13 @@ void spell_RF5_HOLD(int m_idx, int t_idx, int TARGET_TYPE)
 {
     monster_type    *t_ptr = &m_list[t_idx];
     monster_race    *tr_ptr = &r_info[t_ptr->r_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool resist, saving_throw;
 
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->free_act;
-        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
+        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何かをつぶやいた。", "%^s mumbles."),
             _("%^sがあなたの目をじっと見つめた！", "%^s stares deep into your eyes!"),
@@ -1706,7 +1709,7 @@ void spell_RF5_HOLD(int m_idx, int t_idx, int TARGET_TYPE)
     else if (TARGET_TYPE == MONSTER_TO_MONSTER)
     {
         resist = (tr_ptr->flags1 & RF1_UNIQUE) || (tr_ptr->flags3 & RF3_NO_STUN);
-        saving_throw = (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
+        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
 
         spell_badstatus_message(m_idx, t_idx,
             _("%^sは%sをじっと見つめた。", "%^s stares intently at %s."),
@@ -1791,7 +1794,7 @@ int spell_RF6_HAND_DOOM(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_HEAL(int m_idx, int t_idx, int TARGET_TYPE)
 {
     monster_type    *m_ptr = &m_list[m_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool seen = (!p_ptr->blind && m_ptr->ml);
 	char m_name[80];
     monster_name(m_idx, m_name);
@@ -1807,7 +1810,7 @@ void spell_RF6_HEAL(int m_idx, int t_idx, int TARGET_TYPE)
         p_ptr->blind, TARGET_TYPE);
 
     /* Heal some */
-    m_ptr->hp += (rlev * 24); /* #tang rlev*6 -> rlev*24 */
+    m_ptr->hp += (rlev * 6);
 
     /* Fully healed */
     if (m_ptr->hp >= m_ptr->maxhp)
@@ -2322,13 +2325,13 @@ void spell_RF6_TELE_LEVEL(int m_idx, int t_idx, int TARGET_TYPE)
 {
     monster_type    *t_ptr = &m_list[t_idx];
     monster_race    *tr_ptr = &r_info[t_ptr->r_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool resist, saving_throw;
 
     if (TARGET_TYPE == MONSTER_TO_PLAYER)
     {
         resist = p_ptr->resist_nexus;
-        saving_throw = (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav); /* #tang rlev -> rlev*3 */
+        saving_throw = (randint0(100 + rlev / 2) < p_ptr->skill_sav);
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが何か奇妙な言葉をつぶやいた。", "%^s mumbles strangely."),
             _("%^sがあなたの足を指さした。", "%^s gestures at your feet."),
@@ -2347,7 +2350,7 @@ void spell_RF6_TELE_LEVEL(int m_idx, int t_idx, int TARGET_TYPE)
     {
         resist = tr_ptr->flagsr & (RFR_EFF_RES_NEXU_MASK | RFR_RES_TELE);
         saving_throw = (tr_ptr->flags1 & RF1_QUESTOR) ||
-			           (tr_ptr->level > randint1((rlev - 3) < 1 ? 1 : (rlev - 3)) + 3); /* #tang 10 -> 3 , 10 -> 3 , 10 -> 3 */
+			           (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
 
         spell_badstatus_message(m_idx, t_idx, 
             _("%^sが%sの足を指さした。", "%^s gestures at %s's feet."),
@@ -2498,7 +2501,7 @@ void spell_RF6_TRAPS(int y, int x, int m_idx)
 */
 void spell_RF6_FORGET(int m_idx)
 {
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
 	char m_name[80];
     monster_name(m_idx, m_name);
 
@@ -2507,7 +2510,7 @@ void spell_RF6_FORGET(int m_idx)
     msg_format(_("%^sがあなたの記憶を消去しようとしている。",
         "%^s tries to blank your mind."), m_name);
 
-    if (randint0(100 + rlev * 3 / 2) < p_ptr->skill_sav) /* #tang rlev -> rlev*3 */
+    if (randint0(100 + rlev / 2) < p_ptr->skill_sav)
     {
         msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
     }
@@ -2693,7 +2696,7 @@ void spell_RF6_S_KIN(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     int count = 0;
 	char m_name[80], t_name[80], m_poss[80];
     monster_name(m_idx, m_name);
@@ -2782,7 +2785,7 @@ void spell_RF6_S_CYBER(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0;
     monster_type    *m_ptr = &m_list[m_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
 	
@@ -2820,7 +2823,7 @@ void spell_RF6_S_CYBER(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_MONSTER(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
 	
@@ -2858,7 +2861,7 @@ void spell_RF6_S_MONSTER(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_MONSTERS(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
 	
@@ -2896,7 +2899,7 @@ void spell_RF6_S_MONSTERS(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_ANT(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
 	
@@ -2932,7 +2935,7 @@ void spell_RF6_S_SPIDER(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
     int count = 0, k;
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
 	
 	monspell_message(m_idx, t_idx,
 		_("%^sが何かをつぶやいた。", "%^s mumbles."),
@@ -2964,7 +2967,7 @@ void spell_RF6_S_SPIDER(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_HOUND(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
 	
@@ -2998,7 +3001,7 @@ void spell_RF6_S_HOUND(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_HYDRA(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
 	
@@ -3035,7 +3038,7 @@ void spell_RF6_S_ANGEL(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
     int num = 1;
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
 	
 	monspell_message(m_idx, t_idx,
@@ -3081,7 +3084,7 @@ void spell_RF6_S_ANGEL(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_DEMON(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
 	
 	monspell_message(m_idx, t_idx,
@@ -3114,7 +3117,7 @@ void spell_RF6_S_DEMON(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_UNDEAD(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
 	
 	monspell_message(m_idx, t_idx,
@@ -3147,7 +3150,7 @@ void spell_RF6_S_UNDEAD(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_DRAGON(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
 	
 	monspell_message(m_idx, t_idx,
@@ -3240,7 +3243,7 @@ void spell_RF6_S_HI_UNDEAD(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
     monster_type    *m_ptr = &m_list[m_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     int k, count = 0;
 	char m_name[80];
     monster_name(m_idx, m_name);
@@ -3291,7 +3294,7 @@ void spell_RF6_S_HI_UNDEAD(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_HI_DRAGON(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
 	
@@ -3331,7 +3334,7 @@ void spell_RF6_S_HI_DRAGON(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 void spell_RF6_S_AMBERITES(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
 	
@@ -3368,7 +3371,7 @@ void spell_RF6_S_UNIQUE(int y, int x, int m_idx, int t_idx, int TARGET_TYPE)
 {
     int count = 0, k;
     monster_type    *m_ptr = &m_list[m_idx];
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) *4 ; /* rlev > rlev*4 */
     bool mon_to_mon = (TARGET_TYPE == MONSTER_TO_MONSTER);
     bool mon_to_player = (TARGET_TYPE == MONSTER_TO_PLAYER);
     bool uniques_are_summoned = FALSE;
@@ -3783,7 +3786,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
         /* RF4_BA_NUKE */
     case MS_BALL_NUKE:
         mult = powerful ? 2 : 1;
-        dam = rlev * (mult / div);
+        dam = rlev * 4 * (mult / div); /* rlev > rlev*4 */
         dice_num = 10;
         dice_side = 6;
         break;
@@ -3795,7 +3798,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
 
         /* RF4_BA_CHAO */
     case MS_BALL_CHAOS:
-        dam = (powerful ? (rlev * 3) : (rlev * 2));
+        dam = (powerful ? (rlev * 12) : (rlev * 8)); /* rlev3,2 > rlev*12,8 */
         dice_num = 10;
         dice_side = 10;
         break;
@@ -3809,7 +3812,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
     case MS_BALL_ACID:
         if (powerful)
         {
-            dam = (rlev * 4) + 50;
+            dam = (rlev * 16) + 50; /* rlev4 > rlev*16 */
             dice_num = 10;
             dice_side = 10;
         }
@@ -3817,7 +3820,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
         {
             dam = 15;
             dice_num = 1;
-            dice_side = rlev * 3;
+            dice_side = rlev * 12; /* rlev3 > rlev*12 */
         }
         break;
 
@@ -3825,7 +3828,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
     case MS_BALL_ELEC:
         if (powerful)
         {
-            dam = (rlev * 4) + 50;
+            dam = (rlev * 16) + 50; /* rlev4 > rlev*16 */
             dice_num = 10;
             dice_side = 10;
         }
@@ -3833,7 +3836,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
         {
             dam = 8;
             dice_num = 1;
-            dice_side = rlev * 3 / 2;
+            dice_side = rlev * 12 / 2; /* rlev3 > rlev*12 */
         }
         break;
 
@@ -3841,7 +3844,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
     case MS_BALL_FIRE:
         if (powerful)
         {
-            dam = (rlev * 4) + 50;
+            dam = (rlev * 16) + 50; /* rlev4 > rlev16 */
             dice_num = 10;
             dice_side = 10;
         }
@@ -3849,7 +3852,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
         {
             dam = 10;
             dice_num = 1;
-            dice_side = rlev * 7 / 2;
+            dice_side = rlev * 28 / 2; /* rlev7 > rlev28 */
         }
         break;
 
@@ -3857,7 +3860,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
     case MS_BALL_COLD:
         if (powerful)
         {
-            dam = (rlev * 4) + 50;
+            dam = (rlev * 16) + 50; /* rlev4 > rlev16 */
             dice_num = 10;
             dice_side = 10;
         }
@@ -3865,7 +3868,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
         {
             dam = 10;
             dice_num = 1;
-            dice_side = rlev * 3 / 2;
+            dice_side = rlev * 12 / 2; /* rlev3 > rlev12 */
         }
         break;
 
@@ -3878,7 +3881,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
 
         /* RF5_BA_NETH */
     case MS_BALL_NETHER:
-        dam = 50 + rlev * (powerful ? 2 : 1);
+        dam = 50 + rlev * 4 * (powerful ? 2 : 1); /* rlev > rlev*4 */
         dice_num = 10;
         dice_side = 10;
         break;
@@ -3887,21 +3890,21 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
     case MS_BALL_WATER:
         dam = 50;
         dice_num = 1;
-        dice_side = powerful ? (rlev * 3) : (rlev * 2);
+        dice_side = powerful ? (rlev * 12) : (rlev * 8); /* rlev3,2 > rlev12,8 */
         break;
 
         /* RF5_BA_MANA */
         /* RF5_BA_DARK */
     case MS_BALL_MANA:
     case MS_BALL_DARK:
-        dam = (rlev * 4) + 50;
+        dam = (rlev * 16) + 50; /* rlev4 > rlev16 */
         dice_num = 10;
         dice_side = 10;
         break;
 
         /* RF5_DRAIN_MANA */
     case MS_DRAIN_MANA:
-        dam = rlev;
+        dam = rlev * 4; /* rlev > rlev*4 */
         div = 1;
         dice_num = 1;
         dice_side = rlev;
@@ -3946,7 +3949,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
         /* RF5_BO_ACID */
     case MS_BOLT_ACID:
         mult = powerful ? 2 : 1;
-        dam = rlev / 3 * (mult / div);
+        dam = rlev * 4 / 3 * (mult / div); /* rlev > rlev*4 */
         dice_num = 7;
         dice_side = 8;
         break;
@@ -3954,7 +3957,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
         /* RF5_BO_ELEC */
     case MS_BOLT_ELEC:
         mult = powerful ? 2 : 1;
-        dam = rlev / 3 * (mult / div);
+        dam = rlev * 4 / 3 * (mult / div); /* rlev > rlev*4 */
         dice_num = 4;
         dice_side = 8;
         break;
@@ -3962,7 +3965,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
         /* RF5_BO_FIRE */
     case MS_BOLT_FIRE:
         mult = powerful ? 2 : 1;
-        dam = rlev / 3 * (mult / div);
+        dam = rlev * 4 / 3 * (mult / div); /* rlev > rlev*4 */
         dice_num = 9;
         dice_side = 8;
         break;
@@ -3970,28 +3973,28 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
         /* RF5_BO_COLD */
     case MS_BOLT_COLD:
         mult = powerful ? 2 : 1;
-        dam = rlev / 3 * (mult / div);
+        dam = rlev * 4 / 3 * (mult / div); /* rlev > rlev*4 */
         dice_num = 6;
         dice_side = 8;
         break;
 
         /* RF5_BA_LITE */
     case MS_STARBURST:
-        dam = (rlev * 4) + 50;
+        dam = (rlev * 16) + 50; /* rlev4 > rlev16 */
         dice_num = 10;
         dice_side = 10;
         break;
 
         /* RF5_BO_NETH */
     case MS_BOLT_NETHER:
-        dam = 30 + (rlev * 4) / (powerful ? 2 : 3);
+        dam = 30 + (rlev * 16) / (powerful ? 2 : 3); /* rlev4 > rlev16 */
         dice_num = 5;
         dice_side = 5;
         break;
 
         /* RF5_BO_WATE */
     case MS_BOLT_WATER:
-        dam = (rlev * 3 / (powerful ? 2 : 3));
+        dam = (rlev * 12 / (powerful ? 2 : 3)); /* rlev3 > rlev12 */
         dice_num = 10;
         dice_side = 10;
         break;
@@ -4000,26 +4003,26 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
     case MS_BOLT_MANA:
         dam = 50;
         dice_num = 1;
-        dice_side = rlev * 7 / 2;
+        dice_side = rlev * 28 / 2; /* rlev7 > rlev28 */
         break;
 
         /* RF5_BO_PLAS */
     case MS_BOLT_PLASMA:
-        dam = 10 + (rlev * 3 / (powerful ? 2 : 3));
+        dam = 10 + (rlev * 12 / (powerful ? 2 : 3)); /* rlev3 > rlev12 */
         dice_num = 8;
         dice_side = 7;
         break;
 
         /* RF5_BO_ICEE */
     case MS_BOLT_ICE:
-        dam = (rlev * 3 / (powerful ? 2 : 3));
+        dam = (rlev * 12 / (powerful ? 2 : 3)); /* rlev3 > rlev12 */
         dice_num = 6;
         dice_side = 6;
         break;
 
         /* RF5_MISSILE */
     case MS_MAGIC_MISSILE:
-        dam = (rlev / 3);
+        dam = (rlev * 4 / 3); /* rlev > rlev*4 */
         dice_num = 2;
         dice_side = 6;
         break;
@@ -4054,7 +4057,7 @@ int monspell_damage_base(int SPELL_NUM, int hp, int rlev, bool powerful, int sho
     case MS_PSY_SPEAR:
         dam = powerful ? 150 : 100;
         dice_num = 1;
-        dice_side = powerful ? (rlev * 2) : (rlev * 3 / 2);
+        dice_side = powerful ? (rlev * 4) : (rlev * 6); /* rlev2,3/2 > rlev8,6 */
         break;
 
     case MS_DARKNESS: return -1;   /* RF6_DARKNESS */
@@ -4095,7 +4098,7 @@ int monspell_damage(int SPELL_NUM, int m_idx, int TYPE)
     monster_type    *m_ptr = &m_list[m_idx];
     monster_race    *r_ptr = &r_info[m_ptr->r_idx];
     int hp;
-    int rlev = monster_level_idx(m_idx);
+    int rlev = monster_level_idx(m_idx) ; /* rlev > rlev*4 */
     int shoot_dd = r_ptr->blow[0].d_dice;
     int shoot_ds = r_ptr->blow[0].d_side;
 
@@ -4120,7 +4123,7 @@ int monspell_damage(int SPELL_NUM, int m_idx, int TYPE)
 int monspell_race_damage(int SPELL_NUM, int r_idx, int TYPE)
 {
     monster_race    *r_ptr = &r_info[r_idx];
-    int rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1);
+    int rlev = ((r_ptr->level >= 1) ? r_ptr->level : 1) ; /* rlev > rlev*4 */
     bool powerful = r_ptr->flags2 & RF2_POWERFUL ? TRUE : FALSE;
     u32b hp = r_ptr->hdice * (ironman_nightmare ? 2 : 1) * r_ptr->hside;
     int shoot_dd = r_ptr->blow[0].d_dice;
