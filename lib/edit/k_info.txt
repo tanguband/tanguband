@@ -960,7 +960,7 @@ E:& Seeker Arrow~
 G:{:G
 I:17:2:0
 W:10:0:2:20
-A:10/1
+A:10/1:11/1
 P:0:6d4:0:0:0
 F:SHOW_MODS
 F:IGNORE_ACID | IGNORE_COLD | IGNORE_FIRE | IGNORE_ELEC
@@ -985,7 +985,7 @@ E:& Seeker Bolt~
 G:{:B
 I:18:2:0
 W:10:0:3:25
-A:10/1
+A:10/1:11/1
 P:0:6d5:0:0:0
 F:SHOW_MODS
 F:IGNORE_ACID | IGNORE_COLD | IGNORE_FIRE | IGNORE_ELEC
@@ -2568,7 +2568,7 @@ E:New Life:Dark Red
 G:!:r
 I:75:63:100
 W:12:0:4:25000
-A:12/4
+A:12/1
 P:0:1d1:0:0:0
 D:$It changes your life rating and max of all your stats and cures all 
 D:$mutations when you quaff it.
@@ -5098,7 +5098,7 @@ E:Resistance:Copper
 G:":U
 I:40:15:0
 W:10:0:3:25000
-A:10/4
+A:10/3
 F:RES_ACID | RES_ELEC | RES_FIRE | RES_COLD
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 

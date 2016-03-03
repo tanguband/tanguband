@@ -5610,7 +5610,7 @@ int activate_hi_summon(int y, int x, bool can_pet)
 int summon_cyber(int who, int y, int x)
 {
 	int i;
-	int max_cyber = (easy_band ? 1 : (dun_level / 50) + randint1(2));
+	int max_cyber = (easy_band ? 1 : (dun_level / 24) + randint1(2)); /* #tang 50 -> 24 */
 	int count = 0;
 	u32b mode = PM_ALLOW_GROUP;
 
