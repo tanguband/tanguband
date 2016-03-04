@@ -2832,7 +2832,7 @@ static void process_monster(int m_idx)
 			do_move = FALSE;
 
 			/* Break the ward */
-			if (!is_pet(m_ptr) && (randint1(BREAK_GLYPH) < r_ptr->level))
+			if (!is_pet(m_ptr) && (randint1(BREAK_GLYPH) < r_ptr->level * 4)) /* #tang r_ptr->level -> r_ptr->level*4 */
 			{
 				/* Describe observable breakage */
 				if (c_ptr->info & CAVE_MARK)
@@ -2864,7 +2864,7 @@ static void process_monster(int m_idx)
 			if (!is_pet(m_ptr))
 			{
 				/* Break the ward */
-				if (randint1(BREAK_MINOR_GLYPH) > r_ptr->level)
+				if (randint1(BREAK_MINOR_GLYPH) > r_ptr->level *4) /* #tang r_ptr->level -> r_ptr->level*4 */
 				{
 					/* Describe observable breakage */
 					if (c_ptr->info & CAVE_MARK)

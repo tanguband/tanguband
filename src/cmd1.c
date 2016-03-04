@@ -2228,7 +2228,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 					msg_format(_("%^sには効果がなかった。", "%^s is unaffected."), m_name);
 
 				}
-				else if (randint0(100) < r_ptr->level)
+				else if (randint0(25) < r_ptr->level) /* #tang 100 -> 25 */
 				{
 					msg_format(_("%^sには効果がなかった。", "%^s is unaffected."), m_name);
 				}
@@ -2251,7 +2251,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 						msg_format(_("%^sには効果がなかった。", "%^s is unaffected!"), m_name);
 						resists_tele = TRUE;
 					}
-					else if (r_ptr->level > randint1(100))
+					else if (r_ptr->level > randint1(25)) /* #tang 100 -> 25 */
 					{
 						if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= RFR_RES_TELE;
 						msg_format(_("%^sは抵抗力を持っている！", "%^s resists!"), m_name);
@@ -2268,7 +2268,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 				}
 			}
 
-			else if ((chaos_effect == 5) && (randint1(90) > r_ptr->level))
+			else if ((chaos_effect == 5) && (randint1(22) > r_ptr->level)) /* #tang 90 -> 22 */
 			{
 				if (!(r_ptr->flags1 & (RF1_UNIQUE | RF1_QUESTOR)) &&
 				    !(r_ptr->flagsr & RFR_EFF_RES_CHAO_MASK))
