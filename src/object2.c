@@ -4306,13 +4306,13 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
 	if (lev > MAX_DEPTH - 1) lev = MAX_DEPTH - 1;
 
 	/* Base chance of being "good" */
-	f1 = lev + 10;
+	f1 = lev + 10; /* #tang 10 -> 40 */
 
 	/* Maximal chance of being "good" */
 	if (f1 > d_info[dungeon_type].obj_good) f1 = d_info[dungeon_type].obj_good;
 
 	/* Base chance of being "great" */
-	f2 = f1 * 2 / 3;
+	f2 = f1 * 2 / 3; /* #tang 2 -> 4 */
 
 	/* Maximal chance of being "great" */
 	if ((p_ptr->pseikaku != SEIKAKU_MUNCHKIN) && (f2 > d_info[dungeon_type].obj_great))
@@ -4320,8 +4320,8 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
 
 	if (p_ptr->muta3 & MUT3_GOOD_LUCK)
 	{
-		f1 += 5;
-		f2 += 2;
+		f1 += 5; /* #tang 5 -> 10 */
+		f2 += 2; /* #tang 2 -> 6 */
 	}
 	else if(p_ptr->muta3 & MUT3_BAD_LUCK)
 	{
@@ -4341,7 +4341,7 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
 		/* Roll for "great" */
 		if ((mode & AM_GREAT) || magik(f2))
 		{
-			power = 2;
+			power = (randint0(100) > 75 ? 3 : 2); /* #tang 2 -> (randint0(100) > 75 ? 3 : 2) */
 
 			/* Roll for "special" */
 			if (mode & AM_SPECIAL) power = 3;
