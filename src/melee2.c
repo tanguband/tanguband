@@ -4157,7 +4157,7 @@ static void process_monsters_mtimed_aux(int m_idx, int mtimed_idx)
 
 	case MTIMED_CONFUSED:
 		/* Reduce the confusion */
-		if (set_monster_confused(m_idx, MON_CONFUSED(m_ptr) - randint1(r_info[m_ptr->r_idx].level / 20 + 1)))
+		if (set_monster_confused(m_idx, MON_CONFUSED(m_ptr) - randint1(r_info[m_ptr->r_idx].level / 5 + 1))) /* #tang 20 -> 5 */
 		{
 			/* Message if visible */
 			if (is_seen(m_ptr))
@@ -4175,7 +4175,7 @@ static void process_monsters_mtimed_aux(int m_idx, int mtimed_idx)
 
 	case MTIMED_MONFEAR:
 		/* Reduce the fear */
-		if (set_monster_monfear(m_idx, MON_MONFEAR(m_ptr) - randint1(r_info[m_ptr->r_idx].level / 5 + 1))) /* 20 > 5 */
+		if (set_monster_monfear(m_idx, MON_MONFEAR(m_ptr) - randint1(r_info[m_ptr->r_idx].level / 5 + 1))) /* #tang 20 -> 5 */
 		{
 			/* Visual note */
 			if (is_seen(m_ptr))
