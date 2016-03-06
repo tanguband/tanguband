@@ -3,7 +3,7 @@
  * @brief ダンジョン生成処理のヘッダーファイル
  * @date 2014/08/08
  * @author
- * 不明(短愚蛮怒スタッフ？)
+ * 不明(変愚蛮怒スタッフ？)
  */
 
 #define ALLOW_CAVERNS_AND_LAKES
