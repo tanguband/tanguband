@@ -1483,7 +1483,7 @@ void spell_RF5_SCARE(int m_idx, int t_idx, int TARGET_TYPE)
     else if (TARGET_TYPE == MONSTER_TO_MONSTER)
     {
         resist = tr_ptr->flags3 & RF3_NO_FEAR;
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level * 4 > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10); /* tr_ptr->level > tr_ptr->level*4 */
 
         spell_badstatus_message(m_idx, t_idx, 
             _("%^sが恐ろしげな幻覚を作り出した。", "%^s casts a fearful illusion in front of %s."),
@@ -1546,7 +1546,7 @@ void spell_RF5_BLIND(int m_idx, int t_idx, int TARGET_TYPE)
         }
 
         resist = tr_ptr->flags3 & RF3_NO_CONF;
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level * 4 > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10); /* tr_ptr->level > tr_ptr->level*4 */
 
         spell_badstatus_message(m_idx, t_idx,
             msg1,
@@ -1596,7 +1596,7 @@ void spell_RF5_CONF(int m_idx, int t_idx, int TARGET_TYPE)
     else if (TARGET_TYPE == MONSTER_TO_MONSTER)
     {
         resist = tr_ptr->flags3 & RF3_NO_CONF;
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level * 4 > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10); /* tr_ptr->level > tr_ptr->level*4 */
 
         spell_badstatus_message(m_idx, t_idx,
             _("%^sが%sの前に幻惑的な幻をつくり出した。", "%^s casts a mesmerizing illusion in front of %s."),
@@ -1659,7 +1659,7 @@ void spell_RF5_SLOW(int m_idx, int t_idx, int TARGET_TYPE)
         }
 
         resist = tr_ptr->flags1 & RF1_UNIQUE;
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level * 4 > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10); /* tr_ptr->level > tr_ptr->level*4 */
 
         spell_badstatus_message(m_idx, t_idx,
             msg1,
@@ -1709,7 +1709,7 @@ void spell_RF5_HOLD(int m_idx, int t_idx, int TARGET_TYPE)
     else if (TARGET_TYPE == MONSTER_TO_MONSTER)
     {
         resist = (tr_ptr->flags1 & RF1_UNIQUE) || (tr_ptr->flags3 & RF3_NO_STUN);
-        saving_throw = (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+        saving_throw = (tr_ptr->level * 4 > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10); /* tr_ptr->level > tr_ptr->level*4 */
 
         spell_badstatus_message(m_idx, t_idx,
             _("%^sは%sをじっと見つめた。", "%^s stares intently at %s."),
@@ -2350,7 +2350,7 @@ void spell_RF6_TELE_LEVEL(int m_idx, int t_idx, int TARGET_TYPE)
     {
         resist = tr_ptr->flagsr & (RFR_EFF_RES_NEXU_MASK | RFR_RES_TELE);
         saving_throw = (tr_ptr->flags1 & RF1_QUESTOR) ||
-			           (tr_ptr->level > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10);
+			           (tr_ptr->level * 4 > randint1((rlev - 10) < 1 ? 1 : (rlev - 10)) + 10); /* tr_ptr->level > tr_ptr->level*4 */
 
         spell_badstatus_message(m_idx, t_idx, 
             _("%^sが%sの足を指さした。", "%^s gestures at %s's feet."),
