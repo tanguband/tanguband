@@ -1620,7 +1620,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
 	if (!o_ptr->k_idx) /* Empty hand */
 	{
-		if ((r_ptr->level + 10) / 3 > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level + 10)/3 */
+		if ((r_ptr->level * 3 + 10) > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level * 3 + 10) */
 		{
 			if (p_ptr->skill_exp[GINOU_SUDE] < s_info[p_ptr->pclass].s_max[GINOU_SUDE])
 			{
@@ -1638,7 +1638,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 	}
 	else if (object_is_melee_weapon(o_ptr))
 	{
-		if ((r_ptr->level + 10) / 3 > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level + 10)/3 */
+		if ((r_ptr->level * 3 + 10) > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level * 3 + 10) */
 		{
 			int tval = inventory[INVEN_RARM+hand].tval - TV_WEAPON_BEGIN;
 			int sval = inventory[INVEN_RARM+hand].sval;

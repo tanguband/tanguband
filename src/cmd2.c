@@ -3482,7 +3482,7 @@ void do_cmd_fire_aux(int item, object_type *j_ptr)
 				if (!(r_ptr->flags3 & RF3_EVIL) || one_in_(5)) chg_virtue(V_HONOUR, -1);
 			}
 
-			if ((r_ptr->level + 10) / 3 > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level + 10)/3 */
+			if ((r_ptr->level * 3 + 10)  > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level * 3 + 10) */
 			{
 				int now_exp = p_ptr->weapon_exp[0][j_ptr->sval];
 				if (now_exp < s_info[p_ptr->pclass].w_max[0][j_ptr->sval])
