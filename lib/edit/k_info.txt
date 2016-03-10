@@ -1954,7 +1954,7 @@ N:177:*鑑定*:刀 鳴 故幻
 E:*Identify*:triapp trolpet
 G:?:w
 I:70:13:0
-W:5:0:5:1500
+W:5:0:5:500
 A:5/1:6/1:7/1:8/1
 D:$It reveals all information about an item when you read it.
 D:それは読むと1個のアイテムの能力を完全に知る。

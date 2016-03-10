@@ -499,7 +499,7 @@ B:1:N:村長:ナヴェスン:ハイ=エルフ
 B:$1:A:0:Request quest:0:0:q:6:0
 B:1:A:0:クエスト:0:0:q:6:0
 B:$1:A:1:Research item:1000:1000:a:1:0
-B:1:A:1:アイテム調査:500:500:a:1:0
+B:1:A:1:アイテム調査:300:300:a:1:0
 
 #j
 B:$9:N:Beastmaster:Draxle:Draconian
