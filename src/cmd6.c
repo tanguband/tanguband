@@ -3081,7 +3081,7 @@ static int rod_effect(int sval, int dir, bool *use_charge, bool powerful, bool m
 			if (powerful) {
 				if (!identify_fully(FALSE)) *use_charge = FALSE;
 			} else {
-				if (!ident_spell(FALSE)) *use_charge = FALSE;
+				if (!ident_spell(FALSE)) *use_charge = FALSE; /* #tang ident_spell -> identify_fully */
 			}
 			ident = TRUE;
 			break;

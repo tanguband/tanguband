@@ -886,7 +886,7 @@ E:& Short Bow~
 G:}:U
 I:19:12:0
 W:2:0:30:50
-A:2/1
+A:2/1:3/1
 F:SHOW_MODS
 D:$The traditional hunter's weapon, this light bow is easily drawn.
 D:伝統的に狩人に用いられる武器だ。この軽い弓は簡単に引く事ができる。
@@ -896,7 +896,7 @@ E:& Long Bow~
 G:}:U
 I:19:13:0
 W:7:0:40:400
-A:7/1
+A:7/1:8/1
 F:SHOW_MODS
 D:$As tall as a man, the longbow can drive an arrow through the heaviest 
 D:$armour.
@@ -907,7 +907,7 @@ E:& Light Crossbow~
 G:}:s
 I:19:23:0
 W:2:0:110:140
-A:2/1
+A:2/1:3/1
 F:SHOW_MODS
 D:$A mechanical bow made of wood, it is cocked to augment the strength of 
 D:$its wielder.
@@ -919,7 +919,7 @@ E:& Heavy Crossbow~
 G:}:s
 I:19:24:0
 W:7:0:200:500
-A:7/1
+A:7/1:8/1
 F:SHOW_MODS
 # Not all heavy crossbow is the arbalest with a crank!
 #D:$The arbalest is so powerful it has to be reinforced with metal and 
@@ -934,7 +934,7 @@ E:& Sling~
 G:}:u
 I:19:2:0
 W:1:0:5:5
-A:1/1
+A:1/1:2/1
 F:SHOW_MODS
 D:$A loop of leather and cords able to hurl stones or shot with tremendous 
 D:$velocity.
@@ -1107,7 +1107,7 @@ E:& Pair~ of Soft Leather Boots
 G:]:U
 I:30:2:0
 W:1:0:20:7
-A:1/1
+A:1/1:2/1
 P:2:1d1:0:0:0
 D:$These are calf-high boots of flexible leather, laced from heel to calf.
 D:ふくらはぎの高さまでの柔軟な革のブーツだ。
@@ -1118,7 +1118,7 @@ E:& Pair~ of Hard Leather Boots
 G:]:U
 I:30:3:0
 W:2:0:40:12
-A:2/1
+A:2/1:3/1
 P:3:1d1:0:0:0
 D:$A set of sturdy leather boots that will last many weary miles.
 D:長い旅路でも良く保つ丈夫な革製のブーツだ。
@@ -1128,7 +1128,7 @@ E:& Pair~ of Metal Shod Boots
 G:]:s
 I:30:6:0
 W:3:0:80:50
-A:3/1
+A:3/1:4/1
 P:6:1d1:0:0:0
 D:$A set of double-lined leather boots, with toes and heels reinforced with 
 D:$iron.
@@ -1139,7 +1139,7 @@ E:& Hard Leather Cap~
 G:]:u
 I:32:2:0
 W:1:0:15:12
-A:1/1
+A:1/1:2/1
 P:2:0d0:0:0:0
 D:$A padded skullcap of boiled leather.
 D:煮固めた革製の詰め物入りの帽子だ。
@@ -1149,7 +1149,7 @@ E:& Metal Cap~
 G:]:s
 I:32:3:0
 W:2:0:20:30
-A:2/1:10/255
+A:2/1:3/1
 P:3:1d1:0:0:0
 D:$A pot-helm of steel that protects the skull.
 D:頭部を保護する鋼鉄の帽子だ。
@@ -1159,7 +1159,7 @@ E:& Iron Helm~
 G:]:s
 I:32:5:0
 W:3:0:75:75
-A:3/1
+A:3/1:4/1
 P:5:1d3:0:0:0
 D:$A mighty helmet of heavy iron, completely enclosing the head.
 D:頭部を完全に覆う鉄製のヘルメットだ。
@@ -1169,7 +1169,7 @@ E:& Steel Helm~
 G:]:W
 I:32:6:0
 W:5:0:60:200
-A:5/1
+A:5/1:6/1
 P:6:1d3:0:0:0
 D:$This great helm covers the head and shoulders with plates of steel and a 
 D:$curtain of mail.
@@ -1487,7 +1487,7 @@ E:& Set~ of Leather Gloves
 G:]:U
 I:31:1:0
 W:1:0:5:3
-A:1/1
+A:1/1:2/1
 P:1:0d0:0:0:0
 D:$Leather hand protection, with an open palm for gripping weapons.
 D:革製の手甲で、手のひらは武器を握るために開いている。
@@ -1497,7 +1497,7 @@ E:& Set~ of Gauntlets
 G:]:U
 I:31:2:0
 W:2:0:25:35
-A:2/1
+A:2/1:3/1
 P:2:1d1:0:0:0
 D:$A set of gloves that completely covers the hand and wrist in steel plating.
 D:手と手首を鋼鉄板で完全に覆うグローブだ。
@@ -1507,7 +1507,7 @@ E:& Set~ of Cesti
 G:]:W
 I:31:5:0
 W:10:0:40:100
-A:10/1
+A:10/1:11/1
 P:5:1d1:0:0:0
 D:$A massive set of hand sheathings, bound with steel and thrice-cured leather.
 D:重厚な手の覆いで、鋼鉄としっかり煮固めた革で縛ってある。
@@ -1520,7 +1520,7 @@ E:& Small Leather Shield~
 G:):U
 I:34:2:0
 W:1:0:50:15
-A:1/1
+A:1/1:2/1
 P:3:1d1:0:0:0
 D:$A circular shield of cured animal hide stretched over layered wooden strips.
 D:煮固めた動物の革を重ねた小さな木の板いっぱいに伸ばして作った丸い盾だ。
@@ -1530,7 +1530,7 @@ E:& Large Leather Shield~
 G:):U
 I:34:4:0
 W:3:0:100:100
-A:3/1
+A:3/1:4/1
 P:6:1d2:0:0:0
 D:$A large oval shield made of layered wooden strips with a thick leather 
 D:$covering.
@@ -1541,7 +1541,7 @@ E:& Small Metal Shield~
 G:):s
 I:34:3:0
 W:2:0:65:40
-A:2/1
+A:2/1:3/1
 P:5:1d2:0:0:0
 D:$A round shield of wood reinforced with metal rims and central disk.
 D:金属の縁材と中心の円盤で強化した円形の木の盾だ。
@@ -1551,7 +1551,7 @@ E:& Large Metal Shield~
 G:):s
 I:34:5:0
 W:5:0:120:200
-A:5/1
+A:5/1:6/1
 P:8:1d3:0:0:0
 D:$An oval shield of wood covered by leather and rimmed with metal.  A large 
 D:$iron shield boss offers excellent hand protection.
@@ -1729,15 +1729,15 @@ G:=:W
 I:45:29:0
 W:6:0:2:500
 P:0:0d0:0:1:0
-A:6/1
+A:6/1:10/1
 
 N:152:精度:縞めのうの
 E:Accuracy:Onyx
 G:=:R
 I:45:28:0
-W:110:0:2:500
+W:6:0:2:500
 P:0:0d0:1:0:0
-A:20/255
+A:6/1
 
 N:153:守り:オパールの
 E:Protection:Opal
@@ -1814,9 +1814,9 @@ N:162:殺戮:トルコ石の
 E:Slaying:Turquoise
 G:=:B
 I:45:30:0
-W:5:0:2:1000
+W:10:0:2:1000
 P:0:0d0:1:1:0
-A:5/2
+A:10/1:15/1
 F:SHOW_MODS
 
 ##### Amulets #####
@@ -2076,7 +2076,7 @@ E:Magic Mapping:rea fri elip
 G:?:w
 I:70:25:0
 W:2:0:5:40
-A:2/3:10/255
+A:2/8:10/255
 D:$It maps your vicinity when you read it.
 D:それは読むと自分の周辺の地形を感知する。
 
@@ -2240,7 +2240,7 @@ E:Recharging:klis glenash
 G:?:w
 I:70:22:0
 W:2:0:5:200
-A:2/8
+A:2/1
 D:$It recharges wands, staffs or rods when you read it.
 D:それは読むと魔法棒/杖の充填数を回復させたり, 充填中のロッドの充填時間を
 D:縮めたりする。
@@ -2623,7 +2623,7 @@ E:Experience:Green Speckled
 G:!:g
 I:75:59:0
 W:10:0:4:25000
-A:10/1:15/1
+A:10/1:15/1:20/1:23/1
 P:0:1d1:0:0:0
 D:$You gain experience half of your experience (max: 100000) when you quaff it.
 D:それは飲むと現在の経験値の半分(100000を超えない)の経験を得る。
@@ -2758,7 +2758,7 @@ E:Heroism:Pink Speckled
 G:!:R
 I:75:32:0
 W:1:0:4:35
-A:5/255
+A:1/1
 P:0:1d1:0:0:0
 D:$It removes fear, causes you temporary heroism and heals you 10 when you 
 D:$quaff it.
@@ -2789,8 +2789,8 @@ N:260:経験値復活:赤い
 E:Restore Life Levels:Red
 G:!:r
 I:75:41:0
-W:5:0:4:400
-A:5/8
+W:10:0:4:400
+A:10/1
 P:0:1d1:0:0:0
 D:$It restores your experience when you quaff it.
 D:それは飲むと経験値が回復する。
@@ -2852,7 +2852,7 @@ E:Restore Mana:Vermilion
 G:!:r
 I:75:40:0
 W:10:0:4:1000
-A:10/1:12/1:14/1:16/1
+A:10/1:15/1:20/1:23/1
 P:0:1d1:0:0:0
 D:$It restores mana to full and cures berserk when you quaff it.
 D:$MagicEaters restore their charges up to 1/3 of full charge.
@@ -2935,7 +2935,7 @@ E:Stone to Mud:Gold
 G:-:y
 I:65:6:12
 W:2:0:10:300
-A:2/1:3/1:10/255
+A:2/1:3/1:4/1
 P:0:1d1:0:0:0
 D:$It turns a door, rock, wall square to mud when you use it.
 D:それは使うとドアや岩石や壁を溶かす。
@@ -3056,7 +3056,7 @@ E:Teleport Other:Zinc
 G:-:W
 I:65:3:12
 W:5:0:10:350
-A:5/1:15/255
+A:5/1:6/1:15/255
 P:0:1d1:0:0:0
 D:$It fires a beam teleports all monsters on the line when you use it.
 D:それは使うとモンスターをテレポートさせるビームを放つ。
@@ -3213,7 +3213,7 @@ E:Rockets:Adamantite
 G:-:v
 I:65:29:4
 W:23:0:10:9500
-A:23/1
+A:23/1:24/1
 P:0:1d1:0:0:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 D:$It fires a rocket (damage: 250+level*3) when you use it.
@@ -3542,7 +3542,7 @@ E:[Book of Common Prayer]
 G:?:W
 I:90:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -3551,7 +3551,7 @@ E:[High Mass]
 G:?:W
 I:90:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -3580,7 +3580,7 @@ E:[Beginner's Handbook]
 G:?:B
 I:91:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -3589,7 +3589,7 @@ E:[Master Sorcerer's Handbook]
 G:?:B
 I:91:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -4027,7 +4027,7 @@ E:[Call of the Wild]
 G:?:G
 I:92:0:0
 W:2:0:30:100 
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -4036,7 +4036,7 @@ E:[Nature Mastery]
 G:?:G
 I:92:1:0
 W:5:0:30:1000 
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -4065,7 +4065,7 @@ E:[Sign of Chaos]
 G:?:R
 I:93:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -4074,7 +4074,7 @@ E:[Chaos Mastery]
 G:?:R
 I:93:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -4103,7 +4103,7 @@ E:[Black Prayers]
 G:?:D
 I:94:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -4112,7 +4112,7 @@ E:[Black Mass]
 G:?:D
 I:94:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 
@@ -4562,7 +4562,7 @@ E:Light and Darkness Resistance:Platinum
 G:=:w
 I:45:39:0
 W:9:0:2:3000
-A:9/2:14/255
+A:9/3:14/255
 F:RES_LITE | RES_DARK
 
 #JZ#
@@ -4709,109 +4709,109 @@ N:480:銅塊
 E:copper
 G:$:u
 I:127:1:0
-W:1:0:0:3
+W:1:0:0:6
 
 N:481:銅塊
 E:copper
 G:$:u
 I:127:2:0
-W:1:0:0:4
+W:1:0:0:8
 
 N:482:銅塊
 E:copper
 G:$:u
 I:127:3:0
-W:1:0:0:5
+W:1:0:0:10
 
 N:483:銀塊
 E:silver
 G:$:s
 I:127:4:0
-W:1:0:0:6
+W:1:0:0:12
 
 N:484:銀塊
 E:silver
 G:$:s
 I:127:5:0
-W:1:0:0:7
+W:1:0:0:14
 
 N:485:銀塊
 E:silver
 G:$:s
 I:127:6:0
-W:1:0:0:8
+W:1:0:0:16
 
 N:486:ガーネット
 E:garnets
 G:$:r
 I:127:7:0
-W:1:0:0:9
+W:1:0:0:18
 
 N:487:ガーネット
 E:garnets
 G:$:r
 I:127:8:0
-W:1:0:0:10
+W:1:0:0:20
 
 N:488:金塊
 E:gold
 G:$:y
 I:127:9:0
-W:1:0:0:12
+W:1:0:0:24
 
 N:489:金塊
 E:gold
 G:$:y
 I:127:10:0
-W:1:0:0:14
+W:1:0:0:28
 
 N:490:金塊
 E:gold
 G:$:y
 I:127:11:0
-W:1:0:0:16
+W:1:0:0:32
 
 N:491:オパール
 E:opals
 G:$:W
 I:127:12:0
-W:1:0:0:18
+W:1:0:0:36
 
 N:492:サファイア
 E:sapphires
 G:$:b
 I:127:13:0
-W:1:0:0:20
+W:1:0:0:40
 
 N:493:ルビー
 E:rubies
 G:$:r
 I:127:14:0
-W:1:0:0:24
+W:1:0:0:48
 
 N:494:ダイヤモンド
 E:diamonds
 G:$:w
 I:127:15:0
-W:1:0:0:28
+W:1:0:0:56
 
 N:495:エメラルド
 E:emeralds
 G:$:g
 I:127:16:0
-W:1:0:0:32
+W:1:0:0:64
 
 N:496:ミスリル
 E:mithril
 G:$:B
 I:127:17:0
-W:1:0:0:40
+W:1:0:0:80
 
 N:497:アダマンタイト
 E:adamantite
 G:$:G
 I:127:18:0
-W:1:0:0:80
+W:1:0:0:160
 
 
 ##### Objects 498 and 499 are the "Morgoth Artifacts" #####
@@ -4988,7 +4988,7 @@ E:[Conjurings & Tricks]
 G:?:o
 I:95:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -4997,7 +4997,7 @@ E:[Deck of Many Things]
 G:?:o
 I:95:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -5028,7 +5028,7 @@ E:[Cantrips for Beginners]
 G:?:s
 I:96:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -5037,7 +5037,7 @@ E:[Minor Arcana]
 G:?:s
 I:96:1:0
 W:5:0:30:250
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -5046,7 +5046,7 @@ E:[Major Arcana]
 G:?:s
 I:96:2:0
 W:7:0:30:1000
-A:7/255
+A:7/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -5055,7 +5055,7 @@ E:[Manual of Mastery]
 G:?:s
 I:96:3:0
 W:10:0:30:2500
-A:10/255
+A:10/3
 P:0:1d1:0:0:0
 
 #JZ#
@@ -5098,7 +5098,7 @@ E:Resistance:Copper
 G:":U
 I:40:15:0
 W:10:0:3:25000
-A:10/3
+A:10/2
 F:RES_ACID | RES_ELEC | RES_FIRE | RES_COLD
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
@@ -5497,7 +5497,7 @@ E:& Diamond Edge~
 G:|:w
 I:23:31:4
 W:20:0:150:50000
-A:20/4
+A:20/3
 P:0:7d5:10:10:0
 F:SHOW_MODS | VORPAL | TUNNEL
 
@@ -5723,7 +5723,7 @@ E:& Poison Needle~
 G:|:g
 I:23:32:0
 W:0:0:5:2000
-A:15/8
+A:15/6
 P:0:1d1:0:0:0
 F:SHOW_MODS
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
@@ -5791,7 +5791,7 @@ E:Mana:Steel
 G:=:W
 I:45:53:0
 W:15:0:2:30000
-A:15/4
+A:15/2
 F:DEC_MANA
 
 N:600:呪文:大嘗 真吸 回
@@ -5837,7 +5837,7 @@ E:[Handbook for Pupils]
 G:?:y
 I:97:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 N:605:[有段者への道]
@@ -5845,7 +5845,7 @@ E:[Grade Holder's Book]
 G:?:y
 I:97:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 N:606:[師範代の書]
@@ -5949,8 +5949,8 @@ N:617:突然変異:赤銅色の
 E:Polymorph:Bronze
 G:!:r
 I:75:66:0
-W:20:0:4:5000
-A:20/8
+W:15:0:4:5000
+A:15/3
 P:0:1d1:0:0:0
 D:$It mutates you when you quaff it. Rarely it cures all mutations.
 D:それは飲むと突然変異を起こす。稀に全ての突然変異が消える。
@@ -6073,7 +6073,7 @@ E:[Apprentice Handbook]
 G:?:W
 I:105:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 N:632:[詩人楽曲集]
@@ -6081,7 +6081,7 @@ E:[Minstrel's Music]
 G:?:W
 I:105:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 N:633:[リヴェンデルの竪琴]
@@ -6125,7 +6125,7 @@ E:[Bugei Shofu]
 G:?:o
 I:106:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 N:638:[柳生武芸帳]
@@ -6133,7 +6133,7 @@ E:[Yagyuu Bugeichou]
 G:?:o
 I:106:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 N:639:[五輪書]
@@ -6204,7 +6204,7 @@ E:[Dark Incantations]
 G:?:R
 I:98:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 N:647:[不朽の儀式]
@@ -6212,7 +6212,7 @@ E:[Immortal Rituals]
 G:?:R
 I:98:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 N:648:[悪魔の叡知]
@@ -6271,7 +6271,7 @@ E:[Rites of Initiation]
 G:?:W
 I:99:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 N:655:[戦術指南]
@@ -6279,7 +6279,7 @@ E:[Ways of War]
 G:?:W
 I:99:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 N:656:[退魔払邪]
@@ -6343,7 +6343,7 @@ E:[Handbook of Hex]
 G:?:v
 I:107:0:0
 W:2:0:30:100
-A:2/255
+A:2/3
 P:0:1d1:0:0:0
 
 N:664:[上級呪法]
@@ -6351,7 +6351,7 @@ E:[High Curse]
 G:?:v
 I:107:1:0
 W:5:0:30:1000
-A:5/255
+A:5/3
 P:0:1d1:0:0:0
 
 N:665:[怨恨呪縛]
