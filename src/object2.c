@@ -3192,7 +3192,7 @@ static void a_m_aux_3(object_type *o_ptr, int level, int power)
 						o_ptr->curse_flags |= TRC_CURSED;
 
 						/* Reverse pval */
-						o_ptr->pval = 0 - (o_ptr->pval);
+						/*o_ptr->pval = 0 - (o_ptr->pval); /* #tang -> del */
 					}
 
 					break;
