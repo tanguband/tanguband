@@ -2154,9 +2154,10 @@ static cptr do_nature_spell(int spell, int mode)
 		break;
 
 	case 1:
-		if (name) return _("稲妻", "Lightning");
-		if (desc) return _("電撃の短いビームを放つ。", "Fires a short beam of lightning.");
-    
+		if (name) return _("電撃", "Zap"); /* #tang "稲妻", "Lightning" -> "電撃", "Zap" */
+		if (desc) return _("電撃のボルトもしくはビームを放つ。", "Fires a bolt or beam of lightning.");
+		/* #tang "電撃の短いビームを放つ。", "Fires a short beam of lightning." -> "電撃のボルトもしくはビームを放つ。", "Fires a bolt or beam of lightning." */
+/*    
 		{
 			int dice = 3 + (plev - 1) / 5;
 			int sides = 4;
@@ -2173,6 +2174,21 @@ static cptr do_nature_spell(int spell, int mode)
 				fire_beam(GF_ELEC, dir, damroll(dice, sides));
 			}
 		}
+*/
+		{
+			int dice = 3 + (plev - 1) / 5;
+			int sides = 3;
+
+			if (info) return info_damage(dice, sides, 0);
+
+			if (cast)
+			{
+				if (!get_aim_dir(&dir)) return NULL;
+
+				fire_bolt_or_beam(beam_chance() - 10, GF_ELEC, dir, damroll(dice, sides));
+			}
+		}
+		
 		break;
 
 	case 2:
@@ -2313,11 +2329,11 @@ static cptr do_nature_spell(int spell, int mode)
 		break;
 
 	case 9:
-		if (name) return _("アイス・ボルト", "Frost Bolt");
-		if (desc) return _("冷気のボルトもしくはビームを放つ。", "Fires a bolt or beam of cold.");
+		if (name) return _("ウォーター・ボルト", "Frost Bolt"); /* #tang アイス -> ウォーター */
+		if (desc) return _("水のボルトもしくはビームを放つ。", "Fires a bolt or beam of cold."); /* #tang 冷気 -> 水 */
     
 		{
-			int dice = 3 + (plev - 5) / 4;
+			int dice = 6 + (plev - 5) / 4; /* #tang 3 -> 6 */
 			int sides = 8;
 
 			if (info) return info_damage(dice, sides, 0);
@@ -2357,7 +2373,7 @@ static cptr do_nature_spell(int spell, int mode)
 		if (desc) return _("火炎のボルトもしくはビームを放つ。", "Fires a bolt or beam of fire.");
     
 		{
-			int dice = 5 + (plev - 5) / 4;
+			int dice = 8 + (plev - 5) / 4; /* #tang 5 -> 8 */
 			int sides = 8;
 
 			if (info) return info_damage(dice, sides, 0);
@@ -2642,7 +2658,7 @@ static cptr do_nature_spell(int spell, int mode)
 		if (desc) return _("巨大な水の球を放つ。", "Fires a huge ball of water.");
     
 		{
-			int dam = 100 + plev * 3 / 2;
+			int dam = 200 + plev * 3 / 2; /* #tang 100 -> 200 */
 			int rad = plev / 12 + 1;
 
 			if (info) return info_damage(0, 0, dam);
@@ -2700,7 +2716,7 @@ static cptr do_nature_spell(int spell, int mode)
 			"Damages all monsters in sight. Makes quake. Generates disintegration ball centered on you.");
     
 		{
-			int d_dam = 4 * plev;
+			int d_dam = 8 * plev; /* #tang 4 -> 8 */
 			int b_dam = (100 + plev) * 2;
 			int b_rad = 1 + plev / 12;
 			int q_rad = 20 + plev / 2;
@@ -3103,7 +3119,7 @@ static cptr do_chaos_spell(int spell, int mode)
 		if (desc) return _("巨大な分解の球を放つ。", "Fires a huge ball of disintegration.");
     
 		{
-			int dam = plev + 70;
+			int dam = plev + 100; /* #tang 70 -> 100 */
 			int rad = 3 + plev / 40;
 
 			if (info) return info_damage(0, 0, dam);
@@ -3139,7 +3155,7 @@ static cptr do_chaos_spell(int spell, int mode)
 		if (desc) return _("ロケットを発射する。", "Fires a magic rocket.");
     
 		{
-			int dam = 120 + plev * 2;
+			int dam = 200 + plev * 2; /* #tang 120 -> 200 */
 			int rad = 2;
 
 			if (info) return info_damage(0, 0, dam);
@@ -3552,11 +3568,11 @@ static cptr do_death_spell(int spell, int mode)
 		break;
 
 	case 9:
-		if (name) return _("地獄の矢", "Nether Bolt");
-		if (desc) return _("地獄のボルトもしくはビームを放つ。", "Fires a bolt or beam of nether.");
+		if (name) return _("暗黒の矢", "Dark Bolt"); /* #tang 地獄の矢 -> 暗黒の矢 */
+		if (desc) return _("暗黒のボルトもしくはビームを放つ。", "Fires a bolt or beam of Dark."); /* #tang 地獄 -> 暗黒 */
     
 		{
-			int dice = 8 + (plev - 5) / 4;
+			int dice = 8 + (plev - 5) / 4; /* #tang 6 -> 8 */
 			int sides = 8;
 
 			if (info) return info_damage(dice, sides, 0);
@@ -3565,7 +3581,7 @@ static cptr do_death_spell(int spell, int mode)
 			{
 				if (!get_aim_dir(&dir)) return NULL;
 
-				fire_bolt_or_beam(beam_chance(), GF_NETHER, dir, damroll(dice, sides));
+				fire_bolt_or_beam(beam_chance(), GF_DARK, dir, damroll(dice, sides)); /* #tang GF_NETHER -> GF_DARK */
 			}
 		}
 		break;
@@ -3727,11 +3743,11 @@ static cptr do_death_spell(int spell, int mode)
 		break;
 
 	case 18:
-		if (name) return _("暗黒の矢", "Dark Bolt");
-		if (desc) return _("暗黒のボルトもしくはビームを放つ。", "Fires a bolt or beam of darkness.");
+		if (name) return _("地獄の矢", "Nether Bolt"); /* #tang 暗黒の矢 -> 地獄の矢 */
+		if (desc) return _("地獄のボルトもしくはビームを放つ。", "Fires a bolt or beam of nether."); /* #tang 暗黒 -> 地獄 */
     
 		{
-			int dice = 4 + (plev - 5) / 4;
+			int dice = 12 + (plev - 5) / 4; /* #tang 4 -> 12 */
 			int sides = 8;
 
 			if (info) return info_damage(dice, sides, 0);
@@ -3740,7 +3756,7 @@ static cptr do_death_spell(int spell, int mode)
 			{
 				if (!get_aim_dir(&dir)) return NULL;
 
-				fire_bolt_or_beam(beam_chance(), GF_DARK, dir, damroll(dice, sides));
+				fire_bolt_or_beam(beam_chance(), GF_NETHER, dir, damroll(dice, sides)); /* #tang GF_NETHER -> GF_DARK */
 			}
 		}
 		break;
@@ -3828,7 +3844,7 @@ static cptr do_death_spell(int spell, int mode)
 		if (desc) return _("巨大な暗黒の球を放つ。", "Fires a huge ball of darkness.");
     
 		{
-			int dam = 100 + plev * 2;
+			int dam = 200 + plev * 2; /* #tang 100 -> 200 */
 			int rad = 4;
 
 			if (info) return info_damage(0, 0, dam);
@@ -5858,7 +5874,7 @@ static cptr do_daemon_spell(int spell, int mode)
 		if (desc) return _("地獄のボルトもしくはビームを放つ。", "Fires a bolt or beam of nether.");
     
 		{
-			int dice = 6 + (plev - 5) / 4;
+			int dice = 12 + (plev - 5) / 4; /* #tang 6 -> 12 */
 			int sides = 8;
 
 			if (info) return info_damage(dice, sides, 0);
@@ -6137,8 +6153,8 @@ static cptr do_daemon_spell(int spell, int mode)
 		if (desc) return _("プラズマの球を放つ。", "Fires a ball of plasma.");
     
 		{
-			int dam = plev * 3 / 2 + 80;
-			int rad = 2 + plev / 40;
+			int dam = plev * 3 / 2 + 120; /* #tang 80 -> 120 */
+			int rad = 2 + plev / 40; 
 
 			if (info) return info_damage(0, 0, dam);
 
@@ -6192,7 +6208,7 @@ static cptr do_daemon_spell(int spell, int mode)
 		if (desc) return _("因果混乱の球を放つ。", "Fires a ball of nexus.");
     
 		{
-			int dam = 100 + plev * 2;
+			int dam = 200 + plev * 2; /* #tang 100 -> 200 */
 			int rad = 4;
 
 			if (info) return info_damage(0, 0, dam);
@@ -6630,7 +6646,7 @@ static cptr do_crusade_spell(int spell, int mode)
 		if (desc) return _("強力な電撃のボルトを放つ。", "Fires a powerful bolt of lightning.");
     
 		{
-			int dam = plev * 5;
+			int dam = plev * 7; /* #tang 5 -> 7 */
 
 			if (info) return info_damage(0, 0, dam);
 
@@ -6762,7 +6778,7 @@ static cptr do_crusade_spell(int spell, int mode)
 		if (desc) return _("巨大な閃光の球を放つ。", "Fires a huge ball of powerful light.");
     
 		{
-			int dam = 100 + plev * 2;
+			int dam = 200 + plev * 2; /* #tang 100 -> 200 */
 			int rad = 4;
 
 			if (info) return info_damage(0, 0, dam);
