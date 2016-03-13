@@ -258,7 +258,7 @@ bool make_attack_normal(int m_idx)
 			/* Hack -- Apply "protection from evil" */
 			if ((p_ptr->protevil > 0) &&
 			    (r_ptr->flags3 & RF3_EVIL) &&
-			    (p_ptr->lev >= rlev) &&
+			    (p_ptr->lev >= rlev * 4) && /* #tang rlev -> rlev*4 */
 			    ((randint0(100) + p_ptr->lev) > 50))
 			{
 				/* Remember the Evil-ness */
