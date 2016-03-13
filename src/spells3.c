@@ -3855,7 +3855,7 @@ int mod_need_mana(int need_mana, int spell, int realm)
 {
 #define MANA_CONST   2400
 #define MANA_DIV        4
-#define DEC_MANA_DIV    3
+#define DEC_MANA_DIV    2 /* #tang 3 -> 2 */
 
 	/* Realm magic */
 	if ((realm > REALM_NONE) && (realm <= MAX_REALM))
