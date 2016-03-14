@@ -7,8 +7,8 @@ Q:$33:N:The Cloning Pits
 Q:33:N:クローン地獄
 
 # Definition 
-Q:$33:Q:6:0:0:0:11:0:0:0:6
-Q:33:Q:6:0:0:0:11:0:0:0:6
+Q:$33:Q:6:0:0:0:13:0:0:0:6
+Q:33:Q:6:0:0:0:13:0:0:0:6
 
 # Description for quest
 ?:[LEQ $QUEST33 2]
@@ -112,6 +112,9 @@ F:Y:FLOOR:8:0:419
 # Piece of Elvish Waybread
 F:e:FLOOR:8:0:25
 
+# HEALING potion
+F:!:FLOOR:8:0:242
+
 # Dungeon layout
 D:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 D:X                    |              | |  | |              |                    X
@@ -138,11 +141,11 @@ D:X    %      % ECE %   I % ECE %   p %CE  EC%   u % ECE %   R % ECE %      %   
 D:X 5      S  % ECE % I   % ECE % p   %CE  EC% u   % ECE % R   % ECE %  a      5 X
 D:X   5       % ECE %     % ECE %     %CEttEC%     % ECE %     % ECE %       5   X
 D:X%%%%%    %%% ECE %%   %% ECE %%   %%CE  EC%%   %% ECE %%   %% ECE %%%    %%%%%X
-D:Xccc |        ECE         ECE        CEttEC        ECE         ECE        | fffX
-D:Xccc |        ECE         ECE                      ECE         ECE        | fffX
+D:Xccce|        ECE         ECE        CEttEC        ECE         ECE        |efffX
+D:Xccce|        ECE         ECE                      ECE         ECE        |efffX
 D:X%%%%%        ECE         ECE         %%%%         ECE         ECE        %%%%%X
-D:Xeee %                               %%YY%%                               % eeeX
-D:Xeee |                               |    |                               | eeeX
+D:X!!!!%                              %%%YY%%%                              %!!!!X
+D:X!!!!|                              |YYYYYY|                              |!!!!X
 D:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 # Starting position

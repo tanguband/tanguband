@@ -55,8 +55,13 @@ F:h:FLOOR:8:348
 # Normal floor
 F: :FLOOR:8
 
+# HEALING potion
+F:!:FLOOR:8:0:242
+
 # Dungeon layout
 D:XXXXXXXXX
+D:X!!!!!!!X
+D:XXXXDXXXX
 D:X       X
 D:X h h h X
 D:X       X

@@ -7,8 +7,8 @@ Q:$27:N:The Old Castle
 Q:27:N:古い城
 
 # Definition 
-Q:$27:Q:6:0:0:0:13:0:0:0:6
-Q:27:Q:6:0:0:0:13:0:0:0:6
+Q:$27:Q:6:0:0:0:15:0:0:0:6
+Q:27:Q:6:0:0:0:15:0:0:0:6
 
 # Description for quest
 ?:[LEQ $QUEST27 2]
@@ -175,6 +175,9 @@ F:B:FLOOR:12:0:656
 # *HEALING* potion
 F:Y:FLOOR:8:0:419
 
+# Restore Mana potion
+F:!:FLOOR:8:0:266
+
 # *IDENTIFY* scroll on no Teleportation grid
 F:e:FLOOR:12:0:177
 
@@ -195,30 +198,30 @@ F:v:LOCKED_DOOR_7:12
 
 # Dungeon layout
 D:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-D:XxxWWWWWWxX%sTTTTTT%XX%XXX%X%X,<,X%XTT  sM      M%%%TThTTXXX%XXX%%%%hTX
-D:XWWWWWWWWXXR%%%%%%%sXX%%%%XX%X,,,X%XT  XXXX    XXX%%T   TXXX%XXX%%T  TX
-D:XxxX  XXXXR%      %R%XXX%XX%XX]]]X%XjThXM        %%%%%D%%%%X%X% D    TX
+D:XxxWWWWWWxX%sTTTTTT%XX%XXX%X%X,<,X%XTT! sM      M%%%TThTTXXX%XXX%%%%hTX
+D:XWWWWWWWWXXR%%%%%%%sXX%%%%XX%X,,,X%XT!!XXXX    XXX%%T!!!TXXX%XXX%%T YTX
+D:XxxX  XXXXR%      %R%XXX%XX%XX]]]X%XjThXM        %%%%%D%%%%X%X% D   YTX
 D:XxXX  %%%%%   w w  %%XX%%%%XXX,P,X%XXXXXXX              %%%X%X  %%  hTX
-D:XXX     s D    w   %%XX%XXX%%XDDDX%Xh sM           %%%% O %% O %%%C%%%X
-D:XXX   %%%%%   w w  %%XX%%%XX%g   g%XXXXXX         %%  %%%    %X%%h   TX
+D:XXX!    s D    w   %%XX%XXX%%XDDDX%Xh!sM           %%%% O %% O %%%C%%%X
+D:XXX   %%%%%   w w  %%XX%%%XX%g   g%XXXXXX         %%YY%%%    %X%%h  YTX
 D:XX%   %%%%%%      %R%XXXX%%%       %%%XX%r        D   I%%%  %%Xj    TTX
 D:XX%   %%%%%%%    %%%%XTTT%%%d     d%%%%XX%%%s%XXXX%%%%%%X%% %%X%%%s%%%X
-D:XX%%  %%%%%%%%r  D %%XT  sL         L%%%XX%  XX%%%%%%%%XX%%s%%%%%% %%%X
-D:XX    XXXXXX%%%%%X  %XTTT%%%d     d%%%%%%%%   ; %%XXXXXX%      %%XsXXXX
-D:XX    XqqqqX%%%%%X%  %%%%%L         L%%%XXXXX%%   %%%%%            %%%X
+D:XX%%  %%%%%%%%r  D %%XTYYsL         L%%%XX%  XX%%%%%%%%XX%%s%%%%%% %%%X
+D:XX!   XXXXXX%%%%%X  %XTTT%%%d     d%%%%%%%%YY ; %%XXXXXX%      %%XsXXXX
+D:XX    XqqqqX%%%%%X%  %%%%%L         L%%%XXXXX%% YY%%%%%            %%%X
 D:XX    |,,,QXXXXXXX%%  %%%%%%d     d%%%%XXThTX%%%% s%%              %%%X
-D:XXz   XqqqqXpmfmiX%%%    sL         L%%X%T TXX%%%%%                 %YX
-D:XX%%  XXXXXXcenekX%%%%%%%%%%       %%%%%%%s%%XX t D              Z  % X
+D:XXz   XqqqqXpmfmiX%%%    sL         L%%X%T!TXX%%%%%                 %YX
+D:XX%%  XXXXXXcenekX%%%%%%%%%%       %%%%%%%s%%XX t D              Z  %YX
 D:XX%%%  %%%%XmbBymX%%%%%%%  D       D              D                 DhX
 D:XX%%  %%%%%X%%s%%X%%%%%%   D G   G D              D                 DhX
-D:XX%%%  %%%%%%    XX%%%     %%%DDD%%%%%%%s%%%%%% t D              Z  % X
-D:XX%%%%  %         %%N     %%%%   %%%%%%T T%%%%%%%%%                 %YX
-D:XX%%%  %% E        D    %%%%%% K %%%XXX   XXXXXXXX%%%              %%%X
+D:XX%%%  %%%%%%    XX%%%     %%%DDD%%%%%%%s%%%%%% t D              Z  %YX
+D:XX%%%%  %         %%N     %%%%   %%%%%%T!T%%%%%%%%%                 %YX
+D:XX%%%  %% E        D    %%%%%% K %%%XXX!!!XXXXXXXX%%%              %%%X
 D:X%o    %% S        D N%%%%%%%%DDD%%%%%ThThT%%%%%%%%%%%%           %%%%X
 D:X     o%%         %%%%%%%%%% a   a %%XXXXXXXXXXXXXXXXX%%%      %%XXXXXX
-D:X   %%%%XXX%%     %%%ThhT%%%   a   s ;|;|;;;;%%%%%%%%%%%%%%%%s%%%X,,,5X
-D:X  %%%%TTTX%%%%%s%%%%%DD%%%%   A   %XXXuXXXXXXXXXXXXXXXXXXX%%    v,,,,X
-D:X    s TTT% r %   %H      H%  a a  %X5,,,X,,,,,,,,X5,,X,,,XXXXXXXX,,,,X
+D:X!  %%%%XXX%%     %%%ThhT%%%   a   s ;|;|;;;;%%%%%%%%%%%%%%%%s%%%X,,,5X
+D:X! %%%%TTTX%%%%%s%%%%%DD%%%%   A   %XXXuXXXXXXXXXXXXXXXXXXX%%    v,,,,X
+D:X    s TTT% r %!!!%H      H%  a a  %X5,,,X,,,,,,,,X5,,X,,,XXXXXXXX,,,,X
 D:X%l  %%%%%%   %%s%%        %%%%s%%%%XX,,,U,,,X,,,,X,,,X,,,,,,,,,,,,,,,X
 D:X%%                   %%         %%%X5,,,X,,,X5,,,,,,,U,,,X5,,X,,,X,,5X
 D:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
