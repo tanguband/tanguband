@@ -7631,7 +7631,7 @@ static cptr do_music_spell(int spell, int mode)
     
 		{
 			int dice = 15 + (plev - 1) / 2;
-			int sides = 10;
+			int sides = 15; /* #tang 10 -> 15*/
 
 			if (info) return info_damage(dice, sides, 0);
 
