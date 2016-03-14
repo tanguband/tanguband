@@ -2852,7 +2852,7 @@ E:Restore Mana:Vermilion
 G:!:r
 I:75:40:0
 W:10:0:4:1000
-A:10/1:15/1:20/1:23/1
+A:10/1:12/1:14/1:16/1
 P:0:1d1:0:0:0
 D:$It restores mana to full and cures berserk when you quaff it.
 D:$MagicEaters restore their charges up to 1/3 of full charge.
@@ -4054,8 +4054,8 @@ N:382:[自然の脅威]
 E:[Nature's Wrath]
 G:?:g
 I:92:3:0
-W:20:0:30:100000
-A:20/4
+W:12:0:30:100000
+A:12/3
 P:0:1d1:0:0:0
 F:IGNORE_ACID | IGNORE_ELEC | IGNORE_FIRE | IGNORE_COLD
 
