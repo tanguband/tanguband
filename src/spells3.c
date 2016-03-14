@@ -5398,7 +5398,7 @@ bool eat_magic(int power)
 	}
 
 	k_ptr = &k_info[o_ptr->k_idx];
-	lev = k_info[o_ptr->k_idx].level;
+	lev = k_info[o_ptr->k_idx].level * 7; /* #tang 0 -> *7 */
 
 	if (o_ptr->tval == TV_ROD)
 	{
