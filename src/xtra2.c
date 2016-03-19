@@ -1743,7 +1743,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 			}
 			else if (r_ptr->level > dun_level)
 			{
-				if (randint1(10) <= (r_ptr->level - dun_level))
+				if (randint1(10) <= (r_ptr->level * 4 - dun_level * 4)) /* #tang (r_ptr->level - dun_level) -> (r_ptr->level * 4 - dun_level * 4) */
 					chg_virtue(V_VALOUR, 1);
 			}
 			if (r_ptr->level > 60)
@@ -1773,14 +1773,14 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 		}
 
 		if ((r_ptr->flags3 & RF3_GOOD) &&
-			((r_ptr->level) / 10 + (3 * dun_level) >= randint1(100)))
+			((r_ptr->level) * 4 / 10 + (12 * dun_level) >= randint1(100))) /* #tang (r_ptr->level) / 10 + (3 * dun_level) -> (r_ptr->level)*4 / 10 + (12 * dun_level)*/
 			chg_virtue(V_UNLIFE, 1);
 
 		if (r_ptr->d_char == 'A')
 		{
 			if (r_ptr->flags1 & RF1_UNIQUE)
 				chg_virtue(V_FAITH, -2);
-			else if ((r_ptr->level) / 10 + (3 * dun_level) >= randint1(100))
+			else if ((r_ptr->level) * 4 / 10 + (12 * dun_level) >= randint1(100)) /* #tang (r_ptr->level) / 10 + (3 * dun_level) -> (r_ptr->level)*4 / 10 + (12 * dun_level)*/
 			{
 				if (r_ptr->flags3 & RF3_GOOD) chg_virtue(V_FAITH, -1);
 				else chg_virtue(V_FAITH, 1);
@@ -1790,7 +1790,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 		{
 			if (r_ptr->flags1 & RF1_UNIQUE)
 				chg_virtue(V_FAITH, 2);
-			else if ((r_ptr->level) / 10 + (3 * dun_level) >= randint1(100))
+			else if ((r_ptr->level) * 4 / 10 + (12 * dun_level) >= randint1(100)) /* #tang (r_ptr->level) / 10 + (3 * dun_level) -> (r_ptr->level)*4 / 10 + (12 * dun_level)*/
 				chg_virtue(V_FAITH, 1);
 		}
 
@@ -1803,7 +1803,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 			{
 				chg_virtue(V_HONOUR, 10);
 			}
-			else if ((r_ptr->level) / 10 + (2 * dun_level) >= randint1(100))
+			else if ((r_ptr->level) * 4 / 10 + (8 * dun_level) >= randint1(100)) /* #tang (r_ptr->level) / 10 + (2 * dun_level) -> (r_ptr->level)*4 / 10 + (8 * dun_level)*/
 			{
 				chg_virtue(V_HONOUR, 1);
 			}
@@ -1830,7 +1830,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 		{
 			if (r_ptr->flags1 & RF1_UNIQUE)
 				chg_virtue(V_JUSTICE, 3);
-			else if (1+((r_ptr->level) / 10 + (2 * dun_level))
+			else if (1+((r_ptr->level) * 4 / 10 + (8 * dun_level)) /* #tang (1+((r_ptr->level) / 10 + (2 * dun_level)) -> (1+((r_ptr->level) *4 / 10 + (8 * dun_level))*/
 				>= randint1(100))
 				chg_virtue(V_JUSTICE, 1);
 		}
