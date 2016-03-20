@@ -877,7 +877,7 @@ static s32b object_value_base(object_type *o_ptr)
 		/* Figurines, relative to monster level */
 		case TV_FIGURINE:
 		{
-			int level = r_info[o_ptr->pval].level;
+			int level = r_info[o_ptr->pval].level * 4; /* #tang 0 -> *4 */
 			if (level < 20) return level*50L;
 			else if (level < 30) return 1000+(level-20)*150L;
 			else if (level < 40) return 2500+(level-30)*350L;
