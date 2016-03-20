@@ -1162,7 +1162,7 @@ void monster_death(int m_idx, bool drop_item)
 			break;
 
 		case '/':
-			if (dun_level > 4)
+			if (dun_level > 2) /* #tang 4 -> 2*/
 			{
 				/* Get local object */
 				q_ptr = &forge;
@@ -1182,7 +1182,7 @@ void monster_death(int m_idx, bool drop_item)
 			break;
 
 		case '[':
-			if (dun_level > 19)
+			if (dun_level > 6) /* #tang 19 -> 6*/
 			{
 				/* Get local object */
 				q_ptr = &forge;
@@ -1202,7 +1202,7 @@ void monster_death(int m_idx, bool drop_item)
 			break;
 
 		case '\\':
-			if (dun_level > 4)
+			if (dun_level > 2) /* #tang 4 -> 2*/
 			{
 				/* Get local object */
 				q_ptr = &forge;
