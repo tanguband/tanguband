@@ -957,7 +957,7 @@ void monster_death(int m_idx, bool drop_item)
 		break;
 
 	case MON_RAAL:
-		if (drop_chosen_item && (dun_level > 9))
+		if (drop_chosen_item && (dun_level > 3)) /* #tang 9 -> 3*/
 		{
 			/* Get local object */
 			q_ptr = &forge;
@@ -966,7 +966,7 @@ void monster_death(int m_idx, bool drop_item)
 			object_wipe(q_ptr);
 
 			/* Activate restriction */
-			if ((dun_level > 49) && one_in_(5))
+			if ((dun_level > 14) && one_in_(5)) /* #tang 49 -> 14*/
 				get_obj_num_hook = kind_is_good_book;
 			else
 				get_obj_num_hook = kind_is_book;
