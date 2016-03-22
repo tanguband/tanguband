@@ -5036,7 +5036,7 @@ const option_type option_info[] =
 	{ &hilite_player,               FALSE, OPT_PAGE_MAPSCREEN, 1, 27,
 	"hilite_player",                _("プレイヤーにカーソルを合わせる", "Hilite the player with the cursor") },
 
-	{ &display_path,                FALSE, OPT_PAGE_MAPSCREEN, 2, 8,
+	{ &display_path,                TRUE, OPT_PAGE_MAPSCREEN, 2, 8,
 	"display_path",                 _("魔法や矢の軌跡を表示する", "Display actual path before shooting") },
 
 	/*** Text Display Options ***/
@@ -5044,7 +5044,7 @@ const option_type option_info[] =
 	{ &plain_descriptions,          TRUE,  OPT_PAGE_TEXT, 5, 1,
 	"plain_descriptions",           _("アイテムの記述を簡略にする", "Plain object descriptions") },
 
-	{ &plain_pickup,                FALSE, OPT_PAGE_TEXT, 6, 6,
+	{ &plain_pickup,                TRUE, OPT_PAGE_TEXT, 6, 6,
 	"plain_pickup",                 _("「拾った」メッセージを簡略化する", "Plain pickup messages(japanese only)") },
 
 	{ &always_show_list,            TRUE,  OPT_PAGE_TEXT, 4, 0,
@@ -5053,31 +5053,31 @@ const option_type option_info[] =
 	{ &depth_in_feet,               FALSE, OPT_PAGE_TEXT, 0, 7,
 	"depth_in_feet",                _("ダンジョンの深さをフィートで表示する", "Show dungeon level in feet") },
 
-	{ &show_labels,                 TRUE,  OPT_PAGE_TEXT, 0, 10,
+	{ &show_labels,                 FALSE,  OPT_PAGE_TEXT, 0, 10,
 	"show_labels",                  _("装備一覧で装備場所を表示する", "Show labels in object listings") },
 
 	{ &show_weights,                TRUE,  OPT_PAGE_TEXT, 0, 11,
 	"show_weights",                 _("アイテム一覧で重量を表示する", "Show weights in object listings") },
 
-	{ &show_item_graph,             TRUE,  OPT_PAGE_TEXT, 2, 0,
+	{ &show_item_graph,             FALSE,  OPT_PAGE_TEXT, 2, 0,
 	"show_item_graph",              _("アイテムのシンボルを表示する", "Show items graphics") },
 
-	{ &equippy_chars,               TRUE,  OPT_PAGE_TEXT, 1, 12,
+	{ &equippy_chars,               FALSE,  OPT_PAGE_TEXT, 1, 12,
 	"equippy_chars",                _("ステータスに文字で装備を表示する", "Display 'equippy' chars") },
 
-	{ &display_mutations,           FALSE, OPT_PAGE_TEXT, 5, 0,
+	{ &display_mutations,           TRUE, OPT_PAGE_TEXT, 5, 0,
 	"display_mutations",            _("'C'コマンドで突然変異を表示する", "Display mutations in 'C'haracter Display") },
 
-	{ &compress_savefile,           FALSE, OPT_PAGE_TEXT, 1, 26,
+	{ &compress_savefile,           TRUE, OPT_PAGE_TEXT, 1, 26,
 	"compress_savefile",            _("セーブ・ファイル中のメッセージを圧縮する", "Compress messages in savefiles") },
 
-	{ &abbrev_extra,                FALSE, OPT_PAGE_TEXT, 2, 10,
+	{ &abbrev_extra,                TRUE, OPT_PAGE_TEXT, 2, 10,
 	"abbrev_extra",                 _("アイテムに追加耐性/能力の略称を刻む", "Describe obj's extra resistances by abbreviation") },
 
-	{ &abbrev_all,                  FALSE, OPT_PAGE_TEXT, 2, 11,
+	{ &abbrev_all,                  TRUE, OPT_PAGE_TEXT, 2, 11,
 	"abbrev_all",                   _("アイテムに全ての耐性/能力の略称を刻む", "Describe obj's all resistances by abbreviation") },
 
-	{ &exp_need,                    FALSE, OPT_PAGE_TEXT, 2, 12,
+	{ &exp_need,                    TRUE, OPT_PAGE_TEXT, 2, 12,
 	"exp_need",                     _("次のレベルに必要な経験値を表示する", "Show the experience needed for next level") },
 
 	{ &ignore_unview,               FALSE, OPT_PAGE_TEXT, 2, 13,
@@ -5098,7 +5098,7 @@ const option_type option_info[] =
 	{ &stack_force_notes,           TRUE,  OPT_PAGE_GAMEPLAY, 0, 8,
 	"stack_force_notes",            _("異なる銘のアイテムをまとめる", "Merge inscriptions when stacking") },
 
-	{ &stack_force_costs,           FALSE, OPT_PAGE_GAMEPLAY, 0, 9,
+	{ &stack_force_costs,           TRUE, OPT_PAGE_GAMEPLAY, 0, 9,
 	"stack_force_costs",            _("異なる割引表示のアイテムをまとめる", "Merge discounts when stacking") },
 
 	{ &expand_list,                 TRUE,  OPT_PAGE_GAMEPLAY, 1, 5,
@@ -5110,10 +5110,10 @@ const option_type option_info[] =
 	{ &always_small_levels,         FALSE, OPT_PAGE_GAMEPLAY, 2, 3,
 	"always_small_levels",          _("常に非常に小さいフロアを生成する", "Always create unusually small dungeon levels") },
 
-	{ &empty_levels,                TRUE,  OPT_PAGE_GAMEPLAY, 0, 31,
+	{ &empty_levels,                FALSE,  OPT_PAGE_GAMEPLAY, 0, 31,
 	"empty_levels",                 _("空っぽの「アリーナ」レベルの生成を可能にする", "Allow empty 'arena' levels") },
 
-	{ &bound_walls_perm,            FALSE, OPT_PAGE_GAMEPLAY, 2, 1,
+	{ &bound_walls_perm,            TRUE, OPT_PAGE_GAMEPLAY, 2, 1,
 	"bound_walls_perm",             _("ダンジョンの外壁を永久岩にする", "Boundary walls become 'permanent wall'") },
 
 	{ &last_words,                  TRUE,  OPT_PAGE_GAMEPLAY, 0, 28,
