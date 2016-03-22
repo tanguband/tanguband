@@ -4941,7 +4941,7 @@ const option_type option_info[] =
 	{ &quick_messages,              TRUE,  OPT_PAGE_INPUT, 0, 1,
 	"quick_messages",               _("クイック・メッセージを使用する", "Activate quick messages") },
 		
-	{ &auto_more,                   TRUE, OPT_PAGE_INPUT, 2, 6,
+	{ &auto_more,                   FALSE, OPT_PAGE_INPUT, 2, 6,
 	"auto_more",                    _("キー待ちしないで連続でメッセージを表示する", "Automatically clear '-more-' prompts") },
 	
 	{ &command_menu,                TRUE,  OPT_PAGE_INPUT, 2, 7,
@@ -4979,7 +4979,7 @@ const option_type option_info[] =
 #endif /* ALLOW_EASY_DISARM */
 
 #ifdef ALLOW_EASY_FLOOR /* TNB */
-	{ &easy_floor,                  TRUE, OPT_PAGE_INPUT, 5, 9,
+	{ &easy_floor,                  FALSE, OPT_PAGE_INPUT, 5, 9,
 	"easy_floor",                   _("床上で重なったアイテムをリストする", "Display floor stacks in a list") },
 #endif /* ALLOW_EASY_FLOOR -- TNB */
 
@@ -4997,19 +4997,19 @@ const option_type option_info[] =
 	{ &center_player,               FALSE, OPT_PAGE_MAPSCREEN, 5, 11,
 	"center_player",                _("常にプレイヤーを中心に置く(*遅い*)", "Center map while walking (*slow*)") },
 
-	{ &center_running,              FALSE,  OPT_PAGE_MAPSCREEN, 5, 12,
+	{ &center_running,              TRUE,  OPT_PAGE_MAPSCREEN, 5, 12,
 	"center_running",               _("走っている時でも中心に置く", "Centering even while running") },
 
-	{ &view_yellow_lite,            FALSE,  OPT_PAGE_MAPSCREEN, 1, 28,
+	{ &view_yellow_lite,            TRUE,  OPT_PAGE_MAPSCREEN, 1, 28,
 	"view_yellow_lite",             _("明かりの範囲を特別な色で表示する", "Use special colors for torch-lit grids") },
 
-	{ &view_bright_lite,            FALSE,  OPT_PAGE_MAPSCREEN, 1, 29,
+	{ &view_bright_lite,            TRUE,  OPT_PAGE_MAPSCREEN, 1, 29,
 	"view_bright_lite",             _("視界の範囲を特別な色で表示する", "Use special colors for 'viewable' grids") },
 
-	{ &view_granite_lite,           FALSE,  OPT_PAGE_MAPSCREEN, 1, 30,
+	{ &view_granite_lite,           TRUE,  OPT_PAGE_MAPSCREEN, 1, 30,
 	"view_granite_lite",            _("壁を特別な色で表示する(重い)", "Use special colors for wall grids (slow)") },
 
-	{ &view_special_lite,           FALSE,  OPT_PAGE_MAPSCREEN, 1, 31,
+	{ &view_special_lite,           TRUE,  OPT_PAGE_MAPSCREEN, 1, 31,
 	"view_special_lite",            _("床を特別な色で表示する(重い)", "Use special colors for floor grids (slow)") },
 
 	{ &view_perma_grids,            TRUE,  OPT_PAGE_MAPSCREEN, 1, 6,
@@ -5021,10 +5021,10 @@ const option_type option_info[] =
 	{ &view_unsafe_grids,           TRUE, OPT_PAGE_MAPSCREEN, 1, 8,
 	"view_unsafe_grids",            _("トラップ感知済みでない場所を表示する", "Map marked by detect traps") },
 
-	{ &view_reduce_view,            TRUE, OPT_PAGE_MAPSCREEN, 1, 17,
+	{ &view_reduce_view,            FALSE, OPT_PAGE_MAPSCREEN, 1, 17,
 	"view_reduce_view",             _("街では視野を狭くする", "Reduce view-radius in town") },
 
-	{ &fresh_before,                FALSE,  OPT_PAGE_MAPSCREEN, 1, 23,
+	{ &fresh_before,                TRUE,  OPT_PAGE_MAPSCREEN, 1, 23,
 	"fresh_before",                 _("連続コマンド中に画面を再描画し続ける", "Flush output while continuous command") },
 
 	{ &fresh_after,                 FALSE, OPT_PAGE_MAPSCREEN, 1, 24,
@@ -5036,7 +5036,7 @@ const option_type option_info[] =
 	{ &hilite_player,               FALSE, OPT_PAGE_MAPSCREEN, 1, 27,
 	"hilite_player",                _("プレイヤーにカーソルを合わせる", "Hilite the player with the cursor") },
 
-	{ &display_path,                TRUE, OPT_PAGE_MAPSCREEN, 2, 8,
+	{ &display_path,                FALSE, OPT_PAGE_MAPSCREEN, 2, 8,
 	"display_path",                 _("魔法や矢の軌跡を表示する", "Display actual path before shooting") },
 
 	/*** Text Display Options ***/
@@ -5044,7 +5044,7 @@ const option_type option_info[] =
 	{ &plain_descriptions,          TRUE,  OPT_PAGE_TEXT, 5, 1,
 	"plain_descriptions",           _("アイテムの記述を簡略にする", "Plain object descriptions") },
 
-	{ &plain_pickup,                TRUE, OPT_PAGE_TEXT, 6, 6,
+	{ &plain_pickup,                FALSE, OPT_PAGE_TEXT, 6, 6,
 	"plain_pickup",                 _("「拾った」メッセージを簡略化する", "Plain pickup messages(japanese only)") },
 
 	{ &always_show_list,            TRUE,  OPT_PAGE_TEXT, 4, 0,
@@ -5053,37 +5053,37 @@ const option_type option_info[] =
 	{ &depth_in_feet,               FALSE, OPT_PAGE_TEXT, 0, 7,
 	"depth_in_feet",                _("ダンジョンの深さをフィートで表示する", "Show dungeon level in feet") },
 
-	{ &show_labels,                 FALSE,  OPT_PAGE_TEXT, 0, 10,
+	{ &show_labels,                 TRUE,  OPT_PAGE_TEXT, 0, 10,
 	"show_labels",                  _("装備一覧で装備場所を表示する", "Show labels in object listings") },
 
 	{ &show_weights,                TRUE,  OPT_PAGE_TEXT, 0, 11,
 	"show_weights",                 _("アイテム一覧で重量を表示する", "Show weights in object listings") },
 
-	{ &show_item_graph,             FALSE,  OPT_PAGE_TEXT, 2, 0,
+	{ &show_item_graph,             TRUE,  OPT_PAGE_TEXT, 2, 0,
 	"show_item_graph",              _("アイテムのシンボルを表示する", "Show items graphics") },
 
-	{ &equippy_chars,               FALSE,  OPT_PAGE_TEXT, 1, 12,
+	{ &equippy_chars,               TRUE,  OPT_PAGE_TEXT, 1, 12,
 	"equippy_chars",                _("ステータスに文字で装備を表示する", "Display 'equippy' chars") },
 
-	{ &display_mutations,           TRUE, OPT_PAGE_TEXT, 5, 0,
+	{ &display_mutations,           FALSE, OPT_PAGE_TEXT, 5, 0,
 	"display_mutations",            _("'C'コマンドで突然変異を表示する", "Display mutations in 'C'haracter Display") },
 
-	{ &compress_savefile,           TRUE, OPT_PAGE_TEXT, 1, 26,
+	{ &compress_savefile,           FALSE, OPT_PAGE_TEXT, 1, 26,
 	"compress_savefile",            _("セーブ・ファイル中のメッセージを圧縮する", "Compress messages in savefiles") },
 
-	{ &abbrev_extra,                TRUE, OPT_PAGE_TEXT, 2, 10,
+	{ &abbrev_extra,                FALSE, OPT_PAGE_TEXT, 2, 10,
 	"abbrev_extra",                 _("アイテムに追加耐性/能力の略称を刻む", "Describe obj's extra resistances by abbreviation") },
 
-	{ &abbrev_all,                  TRUE, OPT_PAGE_TEXT, 2, 11,
+	{ &abbrev_all,                  FALSE, OPT_PAGE_TEXT, 2, 11,
 	"abbrev_all",                   _("アイテムに全ての耐性/能力の略称を刻む", "Describe obj's all resistances by abbreviation") },
 
-	{ &exp_need,                    TRUE, OPT_PAGE_TEXT, 2, 12,
+	{ &exp_need,                    FALSE, OPT_PAGE_TEXT, 2, 12,
 	"exp_need",                     _("次のレベルに必要な経験値を表示する", "Show the experience needed for next level") },
 
 	{ &ignore_unview,               FALSE, OPT_PAGE_TEXT, 2, 13,
 	"ignore_unview",                _("視界外のモンスターの行動を表示しない", "Ignore whenever any monster does") },
 	
-	{ &show_ammo_detail,            FALSE, OPT_PAGE_TEXT, 2, 14,
+	{ &show_ammo_detail,            TRUE, OPT_PAGE_TEXT, 2, 14,
 	"show_ammo_detail",             _("矢弾のダメージの説明を表示する", "Show description of ammo damage") },
 		
 	{ &show_ammo_no_crit,           FALSE, OPT_PAGE_TEXT, 2, 15,
@@ -5098,7 +5098,7 @@ const option_type option_info[] =
 	{ &stack_force_notes,           TRUE,  OPT_PAGE_GAMEPLAY, 0, 8,
 	"stack_force_notes",            _("異なる銘のアイテムをまとめる", "Merge inscriptions when stacking") },
 
-	{ &stack_force_costs,           TRUE, OPT_PAGE_GAMEPLAY, 0, 9,
+	{ &stack_force_costs,           FALSE, OPT_PAGE_GAMEPLAY, 0, 9,
 	"stack_force_costs",            _("異なる割引表示のアイテムをまとめる", "Merge discounts when stacking") },
 
 	{ &expand_list,                 TRUE,  OPT_PAGE_GAMEPLAY, 1, 5,
@@ -5110,13 +5110,13 @@ const option_type option_info[] =
 	{ &always_small_levels,         FALSE, OPT_PAGE_GAMEPLAY, 2, 3,
 	"always_small_levels",          _("常に非常に小さいフロアを生成する", "Always create unusually small dungeon levels") },
 
-	{ &empty_levels,                FALSE,  OPT_PAGE_GAMEPLAY, 0, 31,
+	{ &empty_levels,                TRUE,  OPT_PAGE_GAMEPLAY, 0, 31,
 	"empty_levels",                 _("空っぽの「アリーナ」レベルの生成を可能にする", "Allow empty 'arena' levels") },
 
-	{ &bound_walls_perm,            TRUE, OPT_PAGE_GAMEPLAY, 2, 1,
+	{ &bound_walls_perm,            FALSE, OPT_PAGE_GAMEPLAY, 2, 1,
 	"bound_walls_perm",             _("ダンジョンの外壁を永久岩にする", "Boundary walls become 'permanent wall'") },
 
-	{ &last_words,                  FALSE,  OPT_PAGE_GAMEPLAY, 0, 28,
+	{ &last_words,                  TRUE,  OPT_PAGE_GAMEPLAY, 0, 28,
 	"last_words",                   _("キャラクターが死んだ時遺言をのこす", "Leave last words when your character dies") },
 
 #ifdef WORLD_SCORE
