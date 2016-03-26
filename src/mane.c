@@ -184,7 +184,7 @@ static int get_mane_power(int *sn, bool baigaesi)
 					if (chance > 95) chance = 95;
 
 					/* Get info */
-					mane_info(comment, p_ptr->mane_spell[i], (baigaesi ? p_ptr->mane_dam[i]*2 : p_ptr->mane_dam[i]));
+					mane_info(comment, p_ptr->mane_spell[i], (baigaesi ? p_ptr->mane_dam[i]*3 : p_ptr->mane_dam[i])); /* # tang 2 -> 3 */
 
 					/* Dump the spell --(-- */
 					sprintf(psi_desc, "  %c) %-30s %3d%%%s",
@@ -261,7 +261,7 @@ static int get_mane_power(int *sn, bool baigaesi)
 	/* Save the choice */
 	(*sn) = i;
 
-	damage = (baigaesi ? p_ptr->mane_dam[i]*2 : p_ptr->mane_dam[i]);
+	damage = (baigaesi ? p_ptr->mane_dam[i]*3 : p_ptr->mane_dam[i]); /* # tang 2 -> 3 */
 
 	/* Success */
 	return (TRUE);

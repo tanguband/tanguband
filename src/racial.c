@@ -1918,7 +1918,7 @@ void do_cmd_racial_power(void)
 	}
 	case CLASS_IMITATOR:
 	{
-		strcpy(power_desc[num].name, _("倍返し", "Double Revenge"));
+		strcpy(power_desc[num].name, _("３倍返し", "Double Revenge")); /* # tang 倍返し -> ３倍返し */
 		power_desc[num].level = 30;
 		power_desc[num].cost = 100;
 		power_desc[num].stat = A_DEX;
