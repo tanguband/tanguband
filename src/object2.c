@@ -4341,7 +4341,7 @@ void apply_magic(object_type *o_ptr, int lev, u32b mode)
 		/* Roll for "great" */
 		if ((mode & AM_GREAT) || magik(f2))
 		{
-			power = (randint0(100) > 75 ? 3 : 2); /* #tang 2 -> (randint0(100) > 75 ? 3 : 2) */
+			power = (randint0(100) > 80 ? 3 : 2); /* #tang 2 -> (randint0(100) > 80 ? 3 : 2) */
 
 			/* Roll for "special" */
 			if (mode & AM_SPECIAL) power = 3;
