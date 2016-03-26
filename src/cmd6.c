@@ -1149,7 +1149,7 @@ static void do_cmd_quaff_potion_aux(int item)
 			if (p_ptr->exp < PY_MAX_EXP)
 			{
 				s32b ee = (p_ptr->exp / 2) + 10;
-				if (ee > 100000L) ee = 100000L;
+				if (ee > 300000L) ee = 300000L; /* #tang 100000 -> 300000 */
 				msg_print(_("更に経験を積んだような気がする。", "You feel more experienced."));
 				gain_exp(ee);
 				ident = TRUE;
