@@ -3539,7 +3539,7 @@ D:あなたの喉に跳びかかる！
 #JZ#It looks very cute, except for the razor sharp teeth. It moans 
 N:206:『柳じじい』
 E:Old Man Willow
-G:#:s
+G:":s
 I:110:23d23:20:20:20
 W:8:5:0:1500:0:0
 B:TOUCH:PARALYZE:3d6
@@ -5616,7 +5616,7 @@ D:深海に棲む悪魔のエイで、僧侶の呪文を使う。
 #JZ#
 N:329:フオルン
 E:Huorn
-G:#:g
+G:":g
 I:110:50d10:40:45:20
 W:7:1:0:750:15000:708
 B:CRUSH:HURT:3d6
