@@ -202,99 +202,191 @@ G:@:w
 ##### Town monsters #####
 
 #J0#
-N:1:汚いイタズラ小僧
-E:Filthy street urchin
-G:t:D
-I:110:1d4:4:1:40
-W:99:2:0:0:10:14
-B:BEG
-B:TOUCH:EAT_GOLD
-F:MALE | EVIL | WILD_TOWN | WILD_ONLY
-F:RAND_25 | FRIENDS | HUMAN |
-F:TAKE_ITEM | OPEN_DOOR | DROP_CORPSE | DROP_SKELETON
-D:$He looks squalid and thoroughly revolting.
-D:彼は汚らしくて本当に頭に来る奴だ。
+N:1:『守護者』のクローク
+E:Cloak of tanguband
+G:):v
+I:180:100d100:100:200:10
+W:26:1:0:50000000:0:0
+B:TOUCH:DR_MANA:500d1
+B:TOUCH:UN_POWER:60d2
+B:TOUCH:TIME:60d2
+B:TOUCH:SHATTER:60d1
+F:UNIQUE | FORCE_SLEEP | NEVER_MOVE | ONLY_ITEM | FORCE_MAXHP | FORCE_DEPTH | ESCORT
+F:DROP_GOOD | DROP_GREAT | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | SELF_LITE_2 | PASS_WALL
+S:1_IN_2 | 
+S:S_KIN | HEAL | BR_DISI | BLINK | TELE_TO | CAUSE_4 | HAND_DOOM |
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンのクロークだ。
+D:彼は引退後にどこかで隠居していると伝えられているが、
+D:愛用していた装備は未だ短愚蛮怒の秩序を守ろうとしている。
+D:装備に込められた非常に強力な魔法により明確な意志を持ち、
+D:近寄るものは新たな守護者への挑戦と受け止め全力で撃退する。
+D:自身を上回る力を持つ者のみを正式な所有者と認め、
+D:以後絶対服従し、その強大な魔力で所有者を守る。
 
 #J0#
-N:2:やせこけた猫
-E:Scrawny cat
-G:f:U
-I:110:1d2:30:1:10
-W:99:3:0:0:5:62
-B:CLAW:HURT:1d3
-F:RAND_25 | WILD_GRASS | WILD_TOWN | WILD_ONLY
-F:ANIMAL | DROP_CORPSE | DROP_SKELETON
-D:$A skinny little furball with sharp claws and a menacing look.
-D:鋭い爪と哀れな容貌を持ったやせこけた小さなネコだ。
+N:2:『守護者』のカタナ
+E:Sword of tanguband
+G:):v
+I:180:100d100:100:200:10
+W:26:1:0:50000000:0:0
+B:SLASH:TIME:40d2
+B:SLASH:TIME:40d2
+B:SLASH:TIME:40d2
+B:SLASH:SHATTER:60d1
+F:UNIQUE | FORCE_SLEEP | NEVER_MOVE | ONLY_ITEM | FORCE_MAXHP | FORCE_DEPTH | ESCORT
+F:DROP_GOOD | DROP_GREAT | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | SELF_LITE_2 | PASS_WALL
+S:1_IN_2 | 
+S:S_KIN | HEAL | BR_DISI | TELE_TO
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンのカタナだ。
+D:彼は引退後にどこかで隠居していると伝えられているが、
+D:愛用していた装備は未だ短愚蛮怒の秩序を守ろうとしている。
+D:装備に込められた非常に強力な魔法により明確な意志を持ち、
+D:近寄るものは新たな守護者への挑戦と受け止め全力で撃退する。
+D:自身を上回る力を持つ者のみを正式な所有者と認め、
+D:以後絶対服従し、その強大な魔力で所有者を守る。
 
 #Note: Sparrows live only near humans, thus no WILD_*
 
 #JZ#
-N:3:すずめ
-E:Sparrow
-G:B:U
-I:110:1d1:30:1:10
-W:99:3:0:0:0:0
-B:BITE:HURT:1d3
-F:RAND_25 | CAN_FLY | WILD_TOWN | WILD_ONLY
-F:ANIMAL | DROP_SKELETON
-D:$Utterly harmless, except when angry.
-D:怒らせなければ全く無害だ。
+N:3:『守護者』の兜
+E:Helmet of tanguband
+G:):v
+I:180:100d100:100:200:10
+W:26:1:0:50000000:0:0
+F:UNIQUE | FORCE_SLEEP | NEVER_MOVE | NEVER_BLOW | ONLY_ITEM | FORCE_MAXHP | FORCE_DEPTH | ESCORT
+F:DROP_GOOD | DROP_GREAT | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | SELF_LITE_2 | PASS_WALL
+S:1_IN_1
+S:S_KIN | HEAL | BLINK
+S:BR_INER | BR_LITE | BR_DISI | BR_TIME | BR_PLAS
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンの兜だ。
+D:彼は引退後にどこかで隠居していると伝えられているが、
+D:愛用していた装備は未だ短愚蛮怒の秩序を守ろうとしている。
+D:装備に込められた非常に強力な魔法により明確な意志を持ち、
+D:近寄るものは新たな守護者への挑戦と受け止め全力で撃退する。
+D:自身を上回る力を持つ者のみを正式な所有者と認め、
+D:以後絶対服従し、その強大な魔力で所有者を守る。
 
 #Instead, we have chaffinches for wilderness
 
 #JZ#
-#JZ#(コメント)訳は 紫月閑丸さん
-N:4:ズアオアトリ
-E:Chaffinch
-G:B:r
-I:110:1d1:30:1:10
-W:99:3:0:0:0:0
-B:BITE:HURT:1d3
-F:RAND_25 | CAN_FLY | WILD_ONLY | WILD_WOOD | WILD_GRASS
-F:ANIMAL | DROP_SKELETON
-D:$Utterly harmless, except when angry.
-D:頭青花鶏。怒らせなければ全く無害だ。
+N:4:『守護者』の鎧
+E:Armor of tanguband
+G:):v
+I:180:100d100:100:200:10
+W:26:1:0:50000000:0:0
+B:CRUSH:SHATTER:80d2
+B:CRUSH:SHATTER:80d2
+B:CRUSH:SHATTER:80d2
+B:CRUSH:SHATTER:80d2
+F:UNIQUE | FORCE_SLEEP | NEVER_MOVE | ONLY_ITEM | FORCE_MAXHP | FORCE_DEPTH | ESCORT
+F:DROP_GOOD | DROP_GREAT | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | SELF_LITE_2 | PASS_WALL
+S:1_IN_1
+S:S_KIN | HEAL | TELE_TO | BR_DISI | BR_FIRE |
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンの鎧だ。
+D:彼は引退後にどこかで隠居していると伝えられているが、
+D:愛用していた装備は未だ短愚蛮怒の秩序を守ろうとしている。
+D:装備に込められた非常に強力な魔法により明確な意志を持ち、
+D:近寄るものは新たな守護者への挑戦と受け止め全力で撃退する。
+D:自身を上回る力を持つ者のみを正式な所有者と認め、
+D:以後絶対服従し、その強大な魔力で所有者を守る。
 
 #JZ#
-N:5:野うさぎ
-E:Wild rabbit
-G:r:U
-I:110:1d2:30:1:10
-W:99:3:0:0:200:205
-B:BITE:HURT:1d3
-F:RAND_50 | WILD_ONLY | WILD_GRASS | WILD_WOOD |
-F:ANIMAL | DROP_SKELETON | DROP_CORPSE
-D:$It is not a carnivore, but will defend itself if you stray too 
-D:$close.
-D:肉食ではないが、近付き過ぎると身を守るため攻撃してくる。
+N:5:『守護者』の籠手
+E:Gloves of tanguband
+G:):v
+I:180:100d100:100:200:10
+W:26:1:0:50000000:0:0
+F:UNIQUE | FORCE_SLEEP | NEVER_MOVE | NEVER_BLOW | ONLY_ITEM | FORCE_MAXHP | FORCE_DEPTH | ESCORT
+F:DROP_GOOD | DROP_GREAT | REFLECTING | INVISIBLE | COLD_BLOOD | POWERFUL |
+F:SMART | EMPTY_MIND | REGENERATE | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | SELF_LITE_2 | PASS_WALL
+S:1_IN_1
+S:S_KIN | HEAL | BR_DISI | BLINK | PSY_SPEAR | BR_ELEC |
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンの籠手だ。
+D:彼は引退後にどこかで隠居していると伝えられているが、
+D:愛用していた装備は未だ短愚蛮怒の秩序を守ろうとしている。
+D:装備に込められた非常に強力な魔法により明確な意志を持ち、
+D:近寄るものは新たな守護者への挑戦と受け止め全力で撃退する。
+D:自身を上回る力を持つ者のみを正式な所有者と認め、
+D:以後絶対服従し、その強大な魔力で所有者を守る。
 
 #JZ#
-N:6:きこり
-E:Woodsman
-G:p:g
-I:110:3d3:10:1:255
-W:99:1:0:0:100:83
-B:HIT:HURT:1d6
-B:HIT:HURT:1d6
-F:MALE | WILD_ONLY | WILD_WOOD | HUMAN |
-F:RAND_25 | DROP_SKELETON | DROP_CORPSE |
-F:ONLY_GOLD | DROP_60 |
-F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR
-D:$He has an axe with a sharp and strong edge.
-D:鋭く頑丈な斧を持っている。
+N:6:『守護者』のブーツ
+E:Boots of tanguband
+G:):v
+I:180:100d100:100:200:10
+W:26:1:0:50000000:0:0
+B:KICK:DR_MANA:400d1
+B:KICK:UN_POWER:60d2
+B:KICK:TIME:60d2
+B:KICK:SHATTER:25d1
+F:UNIQUE | FORCE_SLEEP | NEVER_MOVE | ONLY_ITEM | FORCE_MAXHP | FORCE_DEPTH | ESCORT
+F:DROP_GOOD | DROP_GREAT | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | SELF_LITE_2 | PASS_WALL
+S:1_IN_1
+S:S_KIN | HEAL | BR_DISI | TELE_TO | BLINK | BR_NEXU | BR_ACID |
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンの靴だ。
+D:彼は引退後にどこかで隠居していると伝えられているが、
+D:愛用していた装備は未だ短愚蛮怒の秩序を守ろうとしている。
+D:装備に込められた非常に強力な魔法により明確な意志を持ち、
+D:近寄るものは新たな守護者への挑戦と受け止め全力で撃退する。
+D:自身を上回る力を持つ者のみを正式な所有者と認め、
+D:以後絶対服従し、その強大な魔力で所有者を守る。
 
 #J0#
-N:7:みすぼらしい子犬
-E:Scruffy little dog
-G:C:U
-I:110:1d3:20:1:5
-W:99:3:0:0:6:35
-B:BITE:HURT:1d3
-F:RAND_25 | DROP_SKELETON | DROP_CORPSE | WILD_TOWN | WILD_ONLY
-F:ANIMAL
-D:$A thin flea-ridden mutt, growling as you get close.
-D:ノミの住みかのようなやせた犬で、人が近づくとうなる。
+N:7:(影)守護者のクローク
+E:Cloak of tanguband
+G:):g
+I:145:30d1:100:20:10
+W:26:5:0:50000000:0:0
+B:TOUCH:DR_MANA:40d4
+B:TOUCH:DR_MANA:40d4
+B:TOUCH:UN_POWER:10d1
+B:TOUCH:UN_POWER:10d1
+F:FORCE_MAXHP | FORCE_DEPTH | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | PASS_WALL
+S:1_IN_1 | 
+S:DISPEL | SHRIEK | BR_INER | BR_DISI | DRAIN_MANA
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンのクロークの(影)だ。
+D:短獄の守護者のアーティファクト達を守るために現れる。
 
 #J0#
 #J0#
@@ -325,78 +417,109 @@ D:用心してかからなきゃならないわけですよ。」
 D:（J.R.R.トールキン、瀬田貞二・田中明子訳 新版指輪物語） 
 
 #J0#
-N:9:泣きじゃくる白痴
-E:Blubbering idiot
-G:t:W
-I:110:1d2:6:1:0
-W:99:1:0:0:0:0
-B:DROOL
-F:MALE | DROP_CORPSE | DROP_SKELETON | WILD_TOWN | WILD_ONLY
-F:RAND_25 | EAT_LOSE_INT | HUMAN |
-F:TAKE_ITEM
-D:$He tends to blubber a lot.
-D:彼はいつも泣いてばかりいる。
+N:9:(影)守護者のカタナ
+E:Sword of tanguband
+G:):w
+I:135:30d10:100:20:10
+W:26:5:0:50000000:0:0
+B:SLASH:LOSE_ALL:5d1
+B:SLASH:TIME:5d1
+B:SLASH:DISEASE:5d1
+B:SLASH:SHATTER:1d29
+F:FORCE_MAXHP | FORCE_DEPTH | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | PASS_WALL
+S:1_IN_2 | 
+S:SHRIEK | DISPEL
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンのカタナの(影)だ。
+D:短獄の守護者のアーティファクト達を守るために現れる。
 
 #JZ#
-#JZ#http://www.hobo.org を参照。日本人にはよく分からない。
-N:10:醜い浮浪者
-E:Hobo
-G:t:g
-I:110:1d2:6:1:0
-W:99:1:0:0:0:0
-B:DROOL
-F:MALE | DROP_SKELETON | DROP_CORPSE | WILD_TOWN | WILD_ONLY
-F:RAND_25 | EAT_LOSE_CHR | HUMAN |
-F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR
-D:$Ugly doesn't begin to describe him.
-D:醜い男だが、一番の特徴はその醜さではない。
+N:10:(影)守護者の兜
+E:Helmet of tanguband
+G:):y
+I:135:45d10:100:20:10
+W:26:5:0:50000000:0:0
+B:BUTT:ACID:90d1
+B:BUTT:ELEC:90d1
+B:BUTT:FIRE:90d1
+B:BUTT:COLD:90d1
+F:FORCE_MAXHP | FORCE_DEPTH | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | PASS_WALL
+S:1_IN_1
+S:BR_ACID | BR_ELEC | BR_FIRE | BR_COLD
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンの兜の(影)だ。
+D:短獄の守護者のアーティファクト達を守るために現れる。
 
 #JZ#
-N:11:わめくキチガイ
-E:Raving lunatic
-G:t:G
-I:120:4d4:6:1:0
-W:99:1:0:0:0:0
-B:DROOL
-F:MALE | DROP_CORPSE | DROP_SKELETON | WILD_TOWN | WILD_ONLY
-F:RAND_25 | EAT_LOSE_WIS | HUMAN |
-F:TAKE_ITEM
-D:$Drooling and comical, but then, what do you expect?
-D:よだれを垂らして楽しそうにしているが、それ以上の何を期待するのだろうか？
+N:11:(影)守護者の鎧
+E:Armor of tanguband
+G:):r
+I:135:48d10:100:20:10
+W:26:5:0:50000000:0:0
+B:CRUSH:SHATTER:1d30
+B:CRUSH:SHATTER:1d30
+B:CRUSH:SHATTER:1d30
+B:CRUSH:SHATTER:1d30
+F:FORCE_MAXHP | FORCE_DEPTH | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | PASS_WALL
+S:1_IN_3
+S:SHRIEK | 
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンの鎧の(影)だ。
+D:短獄の守護者のアーティファクト達を守るために現れる。
 
 #J0#
-N:12:哀れな身なりの乞食
-E:Pitiful looking beggar
-G:t:U
-I:110:1d4:10:1:40
-W:99:1:0:0:10:14
-B:BEG
-F:MALE | DROP_SKELETON | DROP_CORPSE | HUMAN |
-F:RAND_25 | WILD_TOWN | WILD_ONLY
-F:TAKE_ITEM | OPEN_DOOR
-D:$You just can't help feeling sorry for him.
-D:彼を見ると、どうしても哀れだという思いを禁じ得ない。
+N:12:(影)守護者の籠手
+E:Gloves of tanguband
+G:):o
+I:135:3d10:100:20:10
+W:26:5:0:50000000:0:0
+F:FORCE_MAXHP | FORCE_DEPTH | REFLECTING | INVISIBLE | COLD_BLOOD | NEVER_BLOW |
+F:SMART | EMPTY_MIND | REGENERATE | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | PASS_WALL
+S:1_IN_1
+S:BO_ICEE | BO_PLAS | BO_WATE | BR_DISI |
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンの籠手の(影)だ。
+D:短獄の守護者のアーティファクト達を守るために現れる。
 
-#J0#
-#J0#
-#J0#(コメント)
-#J0# 「ライ病」という言葉は問題がある、という指摘を受けた。
-#J0# 私は知識不足でそのことに関しては判断しかねるが、気になる人が
-#J0# いるのならあえて、「ライ病」とする必要もないであろうと思い「病人」にした。
-#J0# * leper = ライ病患者
-#J0#
-N:13:不潔な病人
-E:Mangy looking leper
-G:t:u
-I:110:1d1:10:1:50
-W:99:1:0:0:0:0
-B:BEG
-B:TOUCH:DISEASE
-F:MALE | DROP_CORPSE | DROP_SKELETON | HUMAN |
-F:RAND_25 | WILD_TOWN | WILD_ONLY
-F:TAKE_ITEM | OPEN_DOOR | EAT_LOSE_CON | EAT_POISONOUS
-D:$You feel it isn't safe to touch him.
-D:彼に触るのは危険な気がする。
+N:13:(影)守護者のブーツ
+E:Boots of tanguband
+G:):u
+I:145:3d10:100:20:10
+W:26:20:0:50000000:0:0
+B:KICK:DR_MANA:100d2
+B:KICK:UN_POWER:5d1
+B:KICK:TIME:5d1
+B:KICK:SHATTER:60d1
+F:FORCE_MAXHP | FORCE_DEPTH | REFLECTING | INVISIBLE | COLD_BLOOD
+F:SMART | EMPTY_MIND | REGENERATE | POWERFUL | AURA_FIRE | AURA_ELEC | AURA_COLD |
+F:NONLIVING | IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+F:RES_TELE | NO_FEAR | NO_CONF | NO_STUN | NO_SLEEP | CAN_FLY | CAN_SWIM | PASS_WALL
+S:1_IN_1
+S:SHRIEK | DISPEL | DRAIN_MANA | BR_INER
+D:$It is a Cloak of tanguband. 
+D:初代の短獄の守護者ナヴェスンのブーツの(影)だ。
+D:短獄の守護者のアーティファクト達を守るために現れる。
 
 #JZ#
 N:14:ブラックマーケットのエージェント
@@ -415,18 +538,23 @@ D:$He 'finds' new wares for the Black Market. From unwary adventurers...
 D:彼はブラックマーケットの商品を「拾って」来る。油断した冒険者から...
 
 #J0#
-N:15:歌を口ずさむ幸せな酔っぱらい
-E:Singing, happy drunk
-G:t:y
-I:110:2d3:10:1:0
-W:99:1:0:0:0:0
-B:BEG
-F:MALE | HAS_LITE_1
-F:RAND_50 | DROP_SKELETON | DROP_CORPSE | HUMAN |
-F:ONLY_GOLD | DROP_60 | WILD_TOWN | WILD_ONLY
-F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR
-D:$He makes you glad to be sober.
-D:誰でも彼に会えば、酔いを覚ましてあげたいような気になる。
+N:15:ミミック(＊体力回復＊の薬)
+E:Potion mimic
+G:!:v
+I:110:10d10:25:30:0
+W:26:1:0:600:0:0
+F:FORCE_MAXHP | FORCE_DEPTH |
+F:FORCE_SLEEP | NEVER_MOVE | NEVER_BLOW | FRIENDS | ESCORTS |
+F:NO_CONF | NO_SLEEP | NO_FEAR
+F:IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+S:1_IN_2 | 
+S:S_KIN | BA_FIRE |
+D:$A strange creature that disguises itself as discarded objects to lure 
+D:$unsuspecting adventurers within reach of its venomous claws.
+D:放置されたアイテムに化けている奇妙な生物で、愚かな冒険者がファイアボール
+D:の射程距離に入るのを待ちかまえている。
 
 #J0#
 N:16:あてどなくふらつく商人
@@ -445,18 +573,23 @@ D:町をふらつく典型的なクズで、財布をじゃらじゃらさせて
 D:を買おうと町を探し回っている。
 
 #J0#
-N:17:貧しげな傭兵
-E:Mean looking mercenary
-G:t:R
-I:110:5d8:10:20:250
-W:99:1:0:0:8:43
-B:HIT:HURT:1d10
-F:MALE | DROP_SKELETON | DROP_CORPSE | HAS_LITE_1 | HUMAN |
-F:RAND_50 | DROP_90 | WILD_GRASS | WILD_TOWN | WILD_WOOD | WILD_ONLY
-F:TAKE_ITEM | OPEN_DOOR | BASH_DOOR | 
-F:EVIL
-D:$No job is too low for him.
-D:仕事が見つからないことが彼をいっそう貧しくしている。
+N:17:ミミック(魔力復活の薬)
+E:Potion mimic
+G:!:v
+I:110:10d10:25:30:0
+W:26:1:0:600:0:0
+F:FORCE_MAXHP | FORCE_DEPTH |
+F:FORCE_SLEEP | NEVER_MOVE | NEVER_BLOW | FRIENDS | ESCORTS |
+F:NO_CONF | NO_SLEEP | NO_FEAR
+F:IM_ACID | IM_ELEC | IM_FIRE | IM_COLD | IM_POIS |
+F:RES_LITE | RES_DARK | RES_NETH | RES_WATE | RES_PLAS | RES_SHAR | RES_SOUN |
+F:RES_CHAO | RES_NEXU | RES_DISE | RES_WALL | RES_INER | RES_TIME | RES_GRAV |
+S:1_IN_2 | 
+S:S_KIN | BA_ACID |
+D:$A strange creature that disguises itself as discarded objects to lure 
+D:$unsuspecting adventurers within reach of its venomous claws.
+D:放置されたアイテムに化けている奇妙な生物で、愚かな冒険者がアシッドボール
+D:の射程距離に入るのを待ちかまえている。
 
 #J0#
 #J0#(コメント)
@@ -17875,7 +18008,7 @@ N:864:金無垢の指輪
 E:a Plain Gold Ring
 G:=:y
 I:140:160d100:100:200:10
-W:26:10:0:50000000:0:0
+W:25:10:0:50000000:0:0
 B:TOUCH:BLIND:5d5
 B:TOUCH:UN_BONUS:10d10
 B:TOUCH:LOSE_ALL:10d10
