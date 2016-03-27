@@ -3835,16 +3835,18 @@ D:燕の刺客荊軻は、この匕首を用いて秦の始皇帝の暗殺を試
 D:いまもその執念が宿る。
 D:「其人雖已歿　千載有餘情」(陶淵明「詠荊軻」)
 
-N:232:農夫マゴットの
-E:of Maggot
-I:22:3:1
-W:3:4:70:10000
-P:0:2d3:7:9:0
-F:STR | DEX | RES_FIRE | RES_LITE | VORPAL |
-D:$This is farmer Maggot's sickle. He left it behind on his 
-D:$farm.
-D:これは農夫マゴットの農作業用の鎌だ。どうやら農場に置き忘れ
-D:てしまったようだ。
+N:232:〈短獄の守護者〉
+E:of tanguband
+I:31:3:2
+W:110:255:20:5000000
+P:4:0d0:15:15:26
+F:STR | INT | WIS | DEX | CON | CHR | SPEED | BLOWS | INSTA_ART
+F:EASY_SPELL | FREE_ACT | DEC_MANA |
+F:IM_ELEC |
+F:SUST_STR | SUST_DEX | SUST_CON |
+F:SUST_INT | SUST_WIS | SUST_CHR |
+D:$Cloak of tanguband
+D:初代の短獄の守護者ナヴェスンが愛用していた竜の籠手だ。
 
 N:233:『天女の羽衣』
 E:of the Heavenly Maiden
@@ -3906,13 +3908,18 @@ D:知勇兼備の武者畠山重忠の赤糸威大鎧だ。清廉潔白をもっ
 D:れた重忠は「坂東武士の鑑」と称された。この大鎧は、あたかも
 D:彼がここにいるかのように威風堂々としている。
 
-N:237:『デーモンベーン』
-E:'Demonbane'
-I:23:17:0
-W:3:20:130:2500
-P:0:2d5:5:0:0
-F:SLAY_DEMON | RIDING
-D:秩序の下僕が忌み嫌う剣があるらしい。
+N:237:〈短獄の守護者〉
+E:of tanguband
+I:30:4:15
+W:110:255:20:5000000
+P:5:0d0:10:10:25
+F:SPEED | SHOW_MODS | INSTA_ART
+F:RES_NEXUS | IM_ACID |
+F:LEVITATION | FREE_ACT |  
+F:SUST_STR | SUST_DEX | SUST_CON |
+F:SUST_INT | SUST_WIS | SUST_CHR |
+D:$Cloak of tanguband
+D:初代の短獄の守護者ナヴェスンが愛用していた竜の靴だ。
 
 N:238:『デーモンベーン』
 E:'Demonbane'
@@ -4095,4 +4102,62 @@ W:12:75:120:75000
 P:0:0d0:0:0:0
 F:DEX | CHR
 F:RES_FIRE | RES_SOUND | RES_NETHER | SHOW_MODS | INSTA_ART
+
+N:252:〈短獄の守護者〉
+E:of tanguband
+I:35:6:5
+W:110:255:10:5000000
+P:6:0d0:5:5:24
+F:STR | INT | WIS | DEX | CON | CHR | SPEED | STEALTH | INSTA_ART
+F:SEE_INVIS | FREE_ACT | LEVITATION | REFLECT | HOLD_EXP | SLOW_DIGEST |
+F:SH_FIRE | SH_COLD | SH_ELEC 
+F:SUST_STR | SUST_DEX | SUST_CON |
+F:SUST_INT | SUST_WIS | SUST_CHR |
+F:RES_DARK | RES_LITE |
+F:ESP_NONLIVING | ESP_UNIQUE | TELEPATHY
+D:$Cloak of tanguband
+D:初代の短獄の守護者ナヴェスンが愛用していたクロークだ。
+
+N:253:〈短獄の守護者〉
+E:of tanguband
+I:23:20:4
+W:110:255:40:5000000
+P:0:10d4:49:49:30
+F:STR | DEX | CON | SPEED | VORPAL | RIDING | BLESSED | INSTA_ART
+F:KILL_DRAGON | KILL_UNDEAD | KILL_DEMON | KILL_HUMAN |
+F:BRAND_ACID | BRAND_ELEC | BRAND_FIRE | BRAND_COLD | BRAND_POIS |
+F:VAMPIRIC | FREE_ACT | RES_FEAR | RES_DISEN | 
+F:SUST_STR | SUST_DEX | SUST_CON |
+D:$Cloak of tanguband
+D:初代の短獄の守護者ナヴェスンが愛用していたカタナだ。
+
+N:254:〈短獄の守護者〉
+E:of tanguband
+I:32:7:5
+W:110:255:20:5000000
+P:8:1d3:10:10:22
+F:STR | INT | WIS | DEX | CON | CHR | SPEED | INSTA_ART
+F:RES_ACID | RES_ELEC | RES_COLD | RES_FIRE | RES_POIS |
+F:RES_LITE | RES_DARK | RES_BLIND | RES_CONF |
+F:IM_COLD |
+F:SUST_STR | SUST_DEX | SUST_CON |
+F:SUST_INT | SUST_WIS | SUST_CHR |
+F:ESP_NONLIVING | ESP_UNIQUE | TELEPATHY | SEE_INVIS |
+D:$Cloak of tanguband
+D:初代の短獄の守護者ナヴェスンが愛用していた竜の兜だ。
+
+N:255:〈短獄の守護者〉
+E:of tanguband
+I:38:20:5
+W:110:255:100:5000000
+P:40:0d0:0:0:40
+F:STR | INT | WIS | DEX | CON | CHR | SPEED | STEALTH | INSTA_ART
+F:RES_ACID | RES_ELEC | RES_COLD | RES_FIRE | 
+F:RES_SHARDS | RES_CHAOS | RES_SOUND | RES_DISEN |
+F:RES_POIS | RES_NETHER 
+F:IM_FIRE |
+F:SUST_STR | SUST_DEX | SUST_CON |
+F:SUST_INT | SUST_WIS | SUST_CHR |
+D:$Cloak of tanguband
+D:初代の短獄の守護者ナヴェスンが愛用していた竜の鎧だ。
 
