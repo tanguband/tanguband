@@ -1111,6 +1111,34 @@ void monster_death(int m_idx, bool drop_item)
 		}
 		break;
 
+	case MON_MIMIC_HEALING:
+		if (drop_chosen_item)
+		{
+			/* Get local object */
+			q_ptr = &forge;
+
+			/* Prepare to make a broken sword */
+			object_prep(q_ptr, lookup_kind(TV_POTION, SV_POTION_STAR_HEALING));
+
+			/* Drop it in the dungeon */
+			(void)drop_near(q_ptr, -1, y, x);
+		}
+		break;
+
+	case MON_MIMIC_MANA:
+		if (drop_chosen_item)
+		{
+			/* Get local object */
+			q_ptr = &forge;
+
+			/* Prepare to make a broken sword */
+			object_prep(q_ptr, lookup_kind(TV_POTION, SV_POTION_RESTORE_MANA));
+
+			/* Drop it in the dungeon */
+			(void)drop_near(q_ptr, -1, y, x);
+		}
+		break;
+
 	case MON_A_GOLD:
 	case MON_A_SILVER:
 		if (drop_chosen_item && ((m_ptr->r_idx == MON_A_GOLD) ||
@@ -1247,16 +1275,56 @@ void monster_death(int m_idx, bool drop_item)
 	/* Mega-Hack -- drop fixed items */
 	if (drop_chosen_item)
 	{
-		int i;
+		/*int i; #tang */
 		int a_idx = 0;
 		int chance = 0;
 
+		/* #tang 特定モンスター固定ドロップ */
+		
+		switch (m_ptr->r_idx)
+		{
+		
+		case MON_TANG_CLOAK:
+			a_idx = ART_TANG_CLOAK;
+			chance = 100;
+			break;
+		
+		case MON_TANG_SWORD:
+			a_idx = ART_TANG_SWORD;
+			chance = 100;
+			break;
+		
+		case MON_TANG_HELM:
+			a_idx = ART_TANG_HELM;
+			chance = 100;
+			break;
+		
+		case MON_TANG_ARMOR:
+			a_idx = ART_TANG_ARMOR;
+			chance = 100;
+			break;
+		
+		case MON_TANG_GLOVES:
+			a_idx = ART_TANG_GLOVES;
+			chance = 100;
+			break;
+		
+		case MON_TANG_BOOTS:
+			a_idx = ART_TANG_BOOTS;
+			chance = 100;
+			break;
+		
+		}
+		/* #tang */
+		
+		/* #tang 
 		for(i = 0; i < 4; i++)
 		{
 			if(!r_ptr->artifact_id[i]) break;
 			a_idx = r_ptr->artifact_id[i];
 			chance = r_ptr->artifact_percent[i];
 		}
+		/* #tang */
 
 		if ((a_idx > 0) && ((randint0(100) < chance) || p_ptr->wizard))
 		{
@@ -1766,12 +1834,12 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 
 			if (one_in_(3)) chg_virtue(V_INDIVIDUALISM, -1);
 		}
-
+/* #tang
 		if (m_ptr->r_idx == MON_BEGGAR || m_ptr->r_idx == MON_LEPER)
 		{
 			chg_virtue(V_COMPASSION, -1);
 		}
-
+*/
 		if ((r_ptr->flags3 & RF3_GOOD) &&
 			((r_ptr->level) * 4 / 10 + (12 * dun_level) >= randint1(100))) /* #tang (r_ptr->level) / 10 + (3 * dun_level) -> (r_ptr->level)*4 / 10 + (12 * dun_level)*/
 			chg_virtue(V_UNLIFE, 1);
@@ -4526,7 +4594,7 @@ msg_format("%sの声が響き渡った:",
 			else if (p_ptr->exp < PY_MAX_EXP)
 			{
 				s32b ee = (p_ptr->exp / 2) + 10;
-				if (ee > 100000L) ee = 100000L;
+				if (ee > 300000L) ee = 300000L; /* #tang 100000 -> 300000 */
 				msg_print(_("更に経験を積んだような気がする。", "You feel more experienced."));
 
 				gain_exp(ee);

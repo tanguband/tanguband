@@ -2927,13 +2927,13 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
 				if (r_ptr->flags3 & RF3_ANIMAL)
 					chg_virtue(V_NATURE, 1);
 			}
-
+/* #tang MON_LEPER -> DEL
 			if (m_ptr->r_idx == MON_LEPER)
 			{
 				heal_leper = TRUE;
 				if (!who) chg_virtue(V_COMPASSION, 5);
 			}
-
+*/
 			/* Redraw (later) if needed */
 			if (p_ptr->health_who == c_ptr->m_idx) p_ptr->redraw |= (PR_HEALTH);
 			if (p_ptr->riding == c_ptr->m_idx) p_ptr->redraw |= (PR_UHEALTH);

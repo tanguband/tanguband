@@ -1485,6 +1485,14 @@
 /* Arrows */
 #define ART_BARD_ARROW          153
 
+/* #tang */
+#define ART_TANG_GLOVES         232 /* #tang */
+#define ART_TANG_BOOTS          237 /* #tang */
+#define ART_TANG_CLOAK          252 /* #tang */
+#define ART_TANG_SWORD          253 /* #tang */
+#define ART_TANG_HELM           254 /* #tang */
+#define ART_TANG_ARMOR          255 /* #tang */
+
 /*** Ego-Item indexes (see "lib/edit/e_info.txt") ***/
 
 
@@ -4903,10 +4911,15 @@ extern int PlayerUID;
 #define MS_S_AMBERITE     94
 #define MS_S_UNIQUE       95
 
-
-#define MON_BEGGAR        12
-#define MON_LEPER         13
+#define MON_TANG_CLOAK     1 /* #tang */
+#define MON_TANG_SWORD     2 /* #tang */
+#define MON_TANG_HELM      3 /* #tang */
+#define MON_TANG_ARMOR     4 /* #tang */
+#define MON_TANG_GLOVES    5 /* #tang */
+#define MON_TANG_BOOTS     6 /* #tang */
 #define MON_BLACK_MARKET  14
+#define MON_MIMIC_HEALING 15 /* #tang */
+#define MON_MIMIC_MANA    17 /* #tang */
 #define MON_LION_HEART    19
 #define MON_GHB           39
 #define MON_NOV_PRIEST    45
