@@ -569,7 +569,7 @@ errr do_cmd_write_nikki(int type, int num, cptr note)
 							hour, min, note_level, _(n, note), _("", n), _(note, get_ordinal_number_suffix(n)));
 				break;
 			}
-			fprintf(fff, _(" %2d:%02d %20s 闘技場の%d%s回戦(%s)に勝利した。\n", " %2d:%02d %20s won the %d%s fight (%s).\n"), 
+			fprintf(fff, _(" %2d:%02d %20s 闘技場の%d%s回戦(%s)に勝利した。\n", " %2d:%02d %20s won the %d%s fight (%s).\n"),
 						hour, min, note_level, num, _("", get_ordinal_number_suffix(num)), note);
 			
 			if (num == MAX_ARENA_MONS)
