@@ -4154,5 +4154,5 @@ int monspell_bluemage_damage(int SPELL_NUM, int plev, int TYPE)
         shoot_ds = o_ptr->ds;
         shoot_base = o_ptr->to_d;
     }
-    return monspell_damage_base(SPELL_NUM, hp, plev * 2, FALSE, shoot_dd, shoot_ds, shoot_base, TYPE);
+    return monspell_damage_base(SPELL_NUM, hp, plev / 2, FALSE, shoot_dd, shoot_ds, shoot_base, TYPE); /* #tang *2 -> /2 */
 }
