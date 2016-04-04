@@ -1885,7 +1885,7 @@ bool create_artifact(object_type *o_ptr, bool a_scroll)
 
 		if (have_flag(o_ptr->art_flags, TR_BLOWS))
 		{
-			o_ptr->pval = randint1(2);
+			o_ptr->pval = randint1(3); /* #tang 2 -> 3 */
 			if ((o_ptr->tval == TV_SWORD) && (o_ptr->sval == SV_HAYABUSA))
 				o_ptr->pval++;
 		}
@@ -1898,8 +1898,8 @@ bool create_artifact(object_type *o_ptr, bool a_scroll)
 			while (o_ptr->pval < randint1(5) || one_in_(o_ptr->pval));
 		}
 
-		if ((o_ptr->pval > 4) && !one_in_(WEIRD_LUCK))
-			o_ptr->pval = 4;
+		if ((o_ptr->pval > 5) && !one_in_(WEIRD_LUCK)) /* #tang 4 -> 5 */
+			o_ptr->pval = 5; /* #tang 4 -> 5 */
 	}
 
 	/* give it some plusses... */
@@ -1975,8 +1975,8 @@ bool create_artifact(object_type *o_ptr, bool a_scroll)
 	{
 		/* For armors */
 		if (a_cursed) power_level = 0;
-		else if (total_flags < 15000) power_level = 1;
-		else if (total_flags < 35000) power_level = 2;
+		else if (total_flags < 10000) power_level = 1; /* #tang 15000 -> 10000 */
+		else if (total_flags < 30000) power_level = 2; /* #tang 35000 -> 30000 */
 		else power_level = 3;
 	}
 
@@ -1984,8 +1984,8 @@ bool create_artifact(object_type *o_ptr, bool a_scroll)
 	{
 		/* For weapons */
 		if (a_cursed) power_level = 0;
-		else if (total_flags < 20000) power_level = 1;
-		else if (total_flags < 45000) power_level = 2;
+		else if (total_flags < 15000) power_level = 1; /* #tang 20000 -> 15000 */
+		else if (total_flags < 35000) power_level = 2; /* #tang 45000 -> 35000 */
 		else power_level = 3;
 	}
 
