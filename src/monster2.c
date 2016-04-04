@@ -1971,7 +1971,7 @@ void sanity_blast(monster_type *m_ptr, bool necro)
 		char            m_name[80];
 		monster_race    *r_ptr = &r_info[m_ptr->ap_r_idx];
 
-		power = r_ptr->level * 4; /* #tang /2 -> *2 */
+		power = r_ptr->level * 2; /* #tang /2 -> *2 */
 
 		monster_desc(m_name, m_ptr, 0);
 
