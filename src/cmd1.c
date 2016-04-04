@@ -1368,7 +1368,7 @@ static void touch_zap_player_aux(monster_type *m_ptr, bool immune, int flags_off
 	if ((atoffset(u32b, r_ptr, flags_offset) & aura_flag) && !immune)
 	{
 		char mon_name[80];
-		int aura_damage = damroll(1 + (r_ptr->level / 26), 1 + (r_ptr->level / 17));
+		int aura_damage = damroll(1 + (r_ptr->level * 4 / 26), 1 + (r_ptr->level * 4 / 17)); /* #tang level -> level*4 */
 
 		/* Hack -- Get the "died from" name */
 		monster_desc(mon_name, m_ptr, MD_IGNORE_HALLU | MD_ASSUME_VISIBLE | MD_INDEF_VISIBLE);
