@@ -6544,6 +6544,8 @@ static void show_info(void)
 	int             i, j, k, l;
 	object_type		*o_ptr;
 	store_type		*st_ptr;
+	/* #tang */
+	bool			dumped = FALSE;
 
 	/* Hack -- Know everything in the inven/equip */
 	for (i = 0; i < INVEN_TOTAL; i++)
@@ -6604,8 +6606,18 @@ static void show_info(void)
 		/* Default */
 		strcpy(out_val, "");
 
-		/* Ask for filename (or abort) */
-		if (!askfor(out_val, 60)) return;
+		/* #tang 手動でダンプ出力していないならダンプ強制出力 */
+		if (!askfor(out_val, 60) && !dumped)
+		{
+			time_t now = time(NULL);
+			struct tm *t_ptr = localtime(&now);
+			sprintf(out_val, "%d%02d%02d-%02d%02d%02d.txt", t_ptr->tm_year + 1900, t_ptr->tm_mon, t_ptr->tm_mday, t_ptr->tm_hour, t_ptr->tm_min, t_ptr->tm_sec);
+			screen_save();
+			(void)file_character(out_val);
+			screen_load();
+			return;
+		}
+		/* #tang */
 
 		/* Return means "show on screen" */
 		if (!out_val[0]) break;
@@ -6615,6 +6627,8 @@ static void show_info(void)
 
 		/* Dump a character file */
 		(void)file_character(out_val);
+		/* #tang */
+		dumped = TRUE;
 
 		/* Load screen */
 		screen_load();
