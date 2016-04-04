@@ -5046,6 +5046,53 @@ errr file_character(cptr name)
 	return (0);
 }
 
+/*!
+ * @brief プレイヤーステータスをmorgue.txtにファイルダンプ出力する
+ * Hack -- Dump a character description to mogue.txt
+ * @return エラーコード
+ * @details
+ * XXX XXX XXX Allow the "full" flag to dump additional info,
+ * and trigger its usage from various places in the code.
+ */
+errr auto_file_character()
+{
+	FILE		*fff = NULL;
+	char		buf[1024];
+
+	/* Build the filename */
+	path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "morgue.txt");
+
+	/* File type is "TEXT" */
+	FILE_TYPE(FILE_TYPE_TEXT);
+
+	/* Open the non-existing file */
+	fff = my_fopen(buf, "w");
+
+	/* Invalid file */
+	if (!fff)
+	{
+		/* Message */
+		prt(_("キャラクタ情報のファイルへの書き出しに失敗しました！", "Character dump failed!"), 0, 0);
+
+		(void)inkey();
+
+		/* Error */
+		return (-1);
+	}
+
+	(void)make_character_dump(fff);
+
+	/* Close it */
+	my_fclose(fff);
+
+
+	/* Message */
+	msg_print(_("キャラクタ情報のファイルへの書き出しに成功しました。", "Character dump successful."));
+	msg_print(NULL);
+
+	/* Success */
+	return (0);
+}
 
 /*!
  * @brief ファイル内容の一行をコンソールに出力する
@@ -6544,8 +6591,6 @@ static void show_info(void)
 	int             i, j, k, l;
 	object_type		*o_ptr;
 	store_type		*st_ptr;
-	/* #tang */
-	bool			dumped = FALSE;
 
 	/* Hack -- Know everything in the inven/equip */
 	for (i = 0; i < INVEN_TOTAL; i++)
@@ -6606,14 +6651,11 @@ static void show_info(void)
 		/* Default */
 		strcpy(out_val, "");
 
-		/* #tang 手動でダンプ出力していないならダンプ強制出力 */
-		if (!askfor(out_val, 60) && !dumped)
+		/* #tang ダンプ強制出力 */
+		if (!askfor(out_val, 60))
 		{
-			time_t now = time(NULL);
-			struct tm *t_ptr = localtime(&now);
-			sprintf(out_val, "%d%02d%02d-%02d%02d%02d.txt", t_ptr->tm_year + 1900, t_ptr->tm_mon, t_ptr->tm_mday, t_ptr->tm_hour, t_ptr->tm_min, t_ptr->tm_sec);
 			screen_save();
-			(void)file_character(out_val);
+			(void)auto_file_character("morgue.txt");
 			screen_load();
 			return;
 		}
@@ -6627,8 +6669,6 @@ static void show_info(void)
 
 		/* Dump a character file */
 		(void)file_character(out_val);
-		/* #tang */
-		dumped = TRUE;
 
 		/* Load screen */
 		screen_load();
