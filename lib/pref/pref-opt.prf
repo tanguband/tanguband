@@ -76,7 +76,7 @@ X:always_small_levels
 X:empty_levels
 Y:bound_walls_perm
 Y:last_words
-X:send_score
+#X:send_score
 X:allow_debug_opts
 
 ##### Disturbance #####

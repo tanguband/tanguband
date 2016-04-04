@@ -5046,6 +5046,55 @@ errr file_character(cptr name)
 	return (0);
 }
 
+/* #tang 自動ダンプ出力用 */
+/*!
+ * @brief プレイヤーステータスをmorgue.txtにファイルダンプ出力する
+ * Hack -- Dump a character description to mogue.txt
+ * @return エラーコード
+ * @details
+ * XXX XXX XXX Allow the "full" flag to dump additional info,
+ * and trigger its usage from various places in the code.
+ */
+errr auto_file_character()
+{
+	FILE		*fff = NULL;
+	char		buf[1024];
+
+	/* Build the filename */
+	path_build(buf, sizeof(buf), ANGBAND_DIR_USER, "morgue.txt");
+
+	/* File type is "TEXT" */
+	FILE_TYPE(FILE_TYPE_TEXT);
+
+	/* Open the non-existing file */
+	fff = my_fopen(buf, "w");
+
+	/* Invalid file */
+	if (!fff)
+	{
+		/* Message */
+		prt(_("キャラクタ情報のファイルへの書き出しに失敗しました！", "Character dump failed!"), 0, 0);
+
+		(void)inkey();
+
+		/* Error */
+		return (-1);
+	}
+
+	(void)make_character_dump(fff);
+
+	/* Close it */
+	my_fclose(fff);
+
+
+	/* Message */
+	msg_print(_("キャラクタ情報のファイルへの書き出しに成功しました。", "Character dump successful."));
+	msg_print(NULL);
+
+	/* Success */
+	return (0);
+}
+/* #tang */
 
 /*!
  * @brief ファイル内容の一行をコンソールに出力する
@@ -6604,8 +6653,15 @@ static void show_info(void)
 		/* Default */
 		strcpy(out_val, "");
 
-		/* Ask for filename (or abort) */
-		if (!askfor(out_val, 60)) return;
+		/* #tang ダンプ強制出力 */
+		if (!askfor(out_val, 60))
+		{
+			screen_save();
+			(void)auto_file_character("morgue.txt");
+			screen_load();
+			return;
+		}
+		/* #tang */
 
 		/* Return means "show on screen" */
 		if (!out_val[0]) break;

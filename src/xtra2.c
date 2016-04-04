@@ -1279,11 +1279,194 @@ void monster_death(int m_idx, bool drop_item)
 		int a_idx = 0;
 		int chance = 0;
 
-		/* #tang 特定モンスター固定ドロップ */
-		
 		switch (m_ptr->r_idx)
 		{
-		
+		case MON_OBERON:
+			if (one_in_(3))
+			{
+				a_idx = ART_JUDGE;
+				chance = 33;
+			}
+			else
+			{
+				a_idx = ART_AMBER;
+				chance = 50;
+			}
+			break;
+
+		case MON_GHB:
+			a_idx = ART_GHB;
+			chance = 100;
+			break;
+
+		case MON_STORMBRINGER:
+			a_idx = ART_STORMBRINGER;
+			chance = 100;
+			break;
+
+		case MON_ECHIZEN:
+			a_idx = ART_CRIMSON;
+			chance = 50;
+			break;
+
+		case MON_GANDALF:
+			a_idx = ART_ICANUS;
+			chance = 20;
+			break;
+
+		case MON_OROCHI:
+			a_idx = ART_KUSANAGI;
+			chance = 25;
+			break;
+
+		case MON_DWORKIN:
+			a_idx = ART_JUDGE;
+			chance = 20;
+			break;
+
+		case MON_SAURON:
+			if (one_in_(10))
+			{
+				a_idx = ART_POWER;
+				chance = 100;
+			}
+			else
+			{
+				a_idx = ART_AHO;
+				chance = 100;
+			}
+			break;
+
+		case MON_BRAND:
+			if (!one_in_(3))
+			{
+				a_idx = ART_BRAND;
+				chance = 25;
+			}
+			else
+			{
+				a_idx = ART_WEREWINDLE;
+				chance = 33;
+			}
+			break;
+
+		case MON_CORWIN:
+			if (!one_in_(3))
+			{
+				a_idx = ART_GRAYSWANDIR;
+				chance = 33;
+			}
+			else
+			{
+				a_idx = ART_CORWIN;
+				chance = 33;
+			}
+			break;
+
+		case MON_SURTUR:
+			if (!one_in_(3))
+			{
+				a_idx = ART_TWILIGHT;
+				chance = 100;
+			}
+			else
+			{
+				a_idx = ART_ORB_OF_FATE;
+				chance = 100;
+			}
+			break;
+
+		case MON_SARUMAN:
+			a_idx = ART_ELENDIL;
+			chance = 33;
+			break;
+
+		case MON_FIONA:
+			a_idx = ART_FIONA;
+			chance = 50;
+			break;
+
+		case MON_JULIAN:
+			a_idx = ART_JULIAN;
+			chance = 45;
+			break;
+
+		case MON_KLING:
+			a_idx = ART_DESTINY;
+			chance = 40;
+			break;
+
+		case MON_GOEMON:
+			a_idx = ART_ZANTETSU;
+			chance = 100;
+			break;
+
+		case MON_HAGEN:
+			a_idx = ART_HAGEN;
+			chance = 66;
+			break;
+
+		case MON_CAINE:
+			a_idx = ART_CAINE;
+			chance = 50;
+			break;
+
+		case MON_BULLGATES:
+			a_idx = ART_WINBLOWS;
+			chance = 66;
+			break;
+
+		case MON_LUNGORTHIN:
+			a_idx = ART_CALRIS;
+			chance = 50;
+			break;
+
+		case MON_JACK_SHADOWS:
+			a_idx = ART_JACK;
+			chance = 15;
+			break;
+
+		case MON_DIO:
+			a_idx = ART_STONEMASK;
+			chance = 20;
+			break;
+
+		case MON_BELD:
+			a_idx = ART_SOULCRUSH;
+			chance = 10;
+			break;
+
+		case MON_PIP:
+			a_idx = ART_EXCALIBUR_J;
+			chance = 50;
+			break;
+
+		case MON_SHUTEN:
+			a_idx = ART_SHUTEN_DOJI;
+			chance = 33;
+			break;
+
+		case MON_GOTHMOG:
+			a_idx = ART_GOTHMOG;
+			chance = 33;
+			break;
+
+		case MON_FUNDIN:
+			a_idx = ART_FUNDIN;
+			chance = 5;
+			break;
+
+		case MON_ROBIN_HOOD:
+			a_idx = ART_ROBIN_HOOD;
+			chance = 5;
+			break;
+
+		case MON_KOGAN:
+			a_idx = ART_NANACHO;
+			chance = 80;
+			break;
+
+		/* #tang 特定モンスター固定ドロップ */		
 		case MON_TANG_CLOAK:
 			a_idx = ART_TANG_CLOAK;
 			chance = 100;
@@ -1313,9 +1496,8 @@ void monster_death(int m_idx, bool drop_item)
 			a_idx = ART_TANG_BOOTS;
 			chance = 100;
 			break;
-		
-		}
 		/* #tang */
+		}
 		
 		/* #tang 
 		for(i = 0; i < 4; i++)

@@ -573,5 +573,6 @@
 
 
 #ifndef HAVE_CONFIG_H
-#define WORLD_SCORE
+/* #tang スコア送信機能を無効化 */
+/* #define WORLD_SCORE */
 #endif /* HAVE_CONFIG_H */
