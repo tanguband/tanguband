@@ -1793,7 +1793,7 @@ bool make_attack_spell(int m_idx)
 	if (!thrown_spell) return (FALSE);
 
 	/* Calculate spell failure rate */
-	failrate = 25 - (rlev + 3) / 4;
+	failrate = 25 - (rlev * 4 + 3) / 4; /* rlev > rlev*4 */
 
 	/* Hack -- Stupid monsters will never fail (for jellies and such) */
 	if (r_ptr->flags2 & RF2_STUPID) failrate = 0;

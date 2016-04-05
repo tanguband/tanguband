@@ -700,7 +700,7 @@ bool make_attack_normal(int m_idx)
 						    (o_ptr->pval))
 						{
 							/* Calculate healed hitpoints */
-							int heal=rlev * o_ptr->pval;
+							int heal=rlev * 4 * o_ptr->pval; /* rlev > rlev*4 */
 							if( o_ptr->tval == TV_STAFF)
 							    heal *=  o_ptr->number;
 
@@ -1578,7 +1578,7 @@ bool make_attack_normal(int m_idx)
 					}
 					else
 					{
-						if (set_slow((p_ptr->slow + 4 + randint0(rlev / 10)), FALSE))
+						if (set_slow((p_ptr->slow + 4 + randint0(rlev * 4 / 10)), FALSE)) /* rlev > rlev*4 */
 						{
 							obvious = TRUE;
 						}
