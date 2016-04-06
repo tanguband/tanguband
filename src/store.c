@@ -976,19 +976,40 @@ static void mass_produce(object_type *o_ptr)
 		case TV_FLASK:
 		case TV_LITE:
 		{
+
 			if (cost <= 5L) size += damroll(3, 5);
 			if (cost <= 20L) size += damroll(3, 5);
 			if (cost <= 50L) size += damroll(2, 2);
+			
+			if (o_ptr->sval == SV_FOOD_RATION) size = 11; /* #tang */
+			if (o_ptr->sval == SV_FOOD_WAYBREAD) size = 11; /* #tang */
+
 			break;
 		}
 
 		case TV_POTION:
 		case TV_SCROLL:
 		{
+			/* #tang
 			if (cost <= 60L) size += damroll(3, 5);
 			if (cost <= 240L) size += damroll(1, 5);
-			if (o_ptr->sval == SV_SCROLL_STAR_IDENTIFY) size += damroll(3, 5);
-			if (o_ptr->sval == SV_SCROLL_STAR_REMOVE_CURSE) size += damroll(1, 4);
+			*/
+			if (o_ptr->sval == SV_SCROLL_STAR_IDENTIFY) size = 88; /* #tang */
+			if (o_ptr->sval == SV_SCROLL_STAR_REMOVE_CURSE) size = damroll(1, 4);
+			if (o_ptr->sval == SV_SCROLL_PHASE_DOOR) size = 88; /* #tang */
+			if (o_ptr->sval == SV_SCROLL_TELEPORT) size = 88; /* #tang */
+			if (o_ptr->sval == SV_SCROLL_ENCHANT_ARMOR) size = 48; /* #tang */
+			if (o_ptr->sval == SV_SCROLL_ENCHANT_WEAPON_TO_HIT) size = 48; /* #tang */
+			if (o_ptr->sval == SV_SCROLL_ENCHANT_WEAPON_TO_DAM) size = 48; /* #tang */
+			if (o_ptr->sval == SV_SCROLL_MAPPING) size = 48; /* #tang */
+			if (o_ptr->sval == SV_SCROLL_RECHARGING) size = 88; /* #tang */
+			if (o_ptr->sval == SV_SCROLL_WORD_OF_RECALL) size = 48; /* #tang */
+			if (o_ptr->sval == SV_SCROLL_DETECT_ITEM) size = 48; /* #tang */
+
+			if (o_ptr->sval == SV_POTION_CURE_CRITICAL) size = 88; /* #tang */
+			if (o_ptr->sval == SV_POTION_RESTORE_EXP) size = 22; /* #tang */
+			if (o_ptr->sval == SV_POTION_HEROISM) size = 88; /* #tang */
+
 			break;
 		}
 
