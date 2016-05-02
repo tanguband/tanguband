@@ -2974,7 +2974,7 @@ N:277:スロウ・モンスター:ニッケルの
 E:Slow Monster:Nickel
 G:-:U
 I:65:9:17
-W:110:0:10:500
+W:2:0:10:500
 A:2/1:5/255
 P:0:1d1:0:0:0
 D:$It slows a monster down when you use it.
