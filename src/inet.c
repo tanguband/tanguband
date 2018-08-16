@@ -165,7 +165,7 @@ void set_proxy(char *default_url, int default_port)
 
 	/* ポート番号があるかどうかを調べ、あればproxy_portに設定。 */
 	--len;
-	while (len > 0 && isdigit(s[len]))
+	while (len > 0 && isdigit((unsigned char)s[len]))
 		--len;
 	if (len > 0 && s[len] == ':' && s[len + 1] != '\0')
 	{
@@ -209,6 +209,31 @@ int soc_write(int sd, char *buf, size_t sz)
 
 #endif
 	return sz;
+}
+
+int soc_read(int sd, char *buf, size_t sz)
+{
+#ifndef MACINTOSH
+	int nleft, nread = 0;
+
+	nleft = sz;
+
+	while (nleft > 0) {
+		int n;
+		n = recv(sd, buf + nread, nleft, 0);
+		if (n <= 0)
+			return (nread);
+		nleft -= n;
+		nread += n;
+	}
+#else /* !MACINTOSH */
+
+	OTResult bytesSent;
+
+	OTSnd(ep, (void *)buf, sz, 0);
+
+#endif
+	return nread;
 }
 
 #if 0 /* おそらく使わない */

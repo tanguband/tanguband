@@ -33,7 +33,7 @@
  * @param width 基本幅
  * @return なし
  */
-static void recursive_river(int x1, int y1, int x2, int y2, int feat1, int feat2, int width)
+static void recursive_river(int x1, int y1, int x2, int y2, IDX feat1, IDX feat2, int width)
 {
 	int dx, dy, length, l, x, y;
 	int changex, changey;
@@ -155,11 +155,11 @@ static void recursive_river(int x1, int y1, int x2, int y2, int feat1, int feat2
  * @param feat2 境界部地形ID
  * @return なし
  */
-void add_river(int feat1, int feat2)
+void add_river(IDX feat1, IDX feat2)
 {
-	int y2, x2;
-	int y1 = 0, x1 = 0;
-	int wid;
+	POSITION y2, x2;
+	POSITION y1 = 0, x1 = 0;
+	POSITION wid;
 
 
 	/* Hack -- Choose starting point */
@@ -226,7 +226,7 @@ void add_river(int feat1, int feat2)
  * hidden gold types are currently unused.
  * </pre>
  */
-void build_streamer(int feat, int chance)
+void build_streamer(IDX feat, int chance)
 {
 	int		i, tx, ty;
 	int		y, x, dir;
@@ -357,18 +357,9 @@ void build_streamer(int feat, int chance)
 
 		if (dummy >= SAFE_MAX_ATTEMPTS)
 		{
-			if (cheat_room)
-			{
-#ifdef JP
-msg_print("警告！ストリーマーを配置できません！");
-#else
-				msg_print("Warning! Could not place streamer!");
-#endif
-
-			}
+			msg_print_wizard(CHEAT_DUNGEON, _("地形のストリーマー処理に失敗しました。", "Failed to place streamer."));
 			return;
 		}
-
 
 		/* Advance the streamer */
 		y += ddy[cdd[dir]];
@@ -398,7 +389,7 @@ msg_print("警告！ストリーマーを配置できません！");
  * This happens in real world lava tubes.
  * </pre>
  */
-void place_trees(int x, int y)
+void place_trees(POSITION x, POSITION y)
 {
 	int i, j;
 	cave_type *c_ptr;
@@ -459,11 +450,7 @@ void destroy_level(void)
 	int y1, x1, n;
 
 	/* Note destroyed levels */
-#ifdef JP
-	if (cheat_room) msg_print("破壊された階");
-#else
-	if (cheat_room) msg_print("Destroyed Level");
-#endif
+	msg_print_wizard(CHEAT_DUNGEON, _("階に*破壊*の痕跡を生成しました。", "Destroyed Level."));
 
 	/* Drop a few epi-centers (usually about two) */
 	for (n = 0; n < randint1(5); n++)

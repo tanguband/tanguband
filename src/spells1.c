@@ -208,7 +208,7 @@ static byte spell_color(int type)
  * If the distance is not "one", we (may) return "*".
  * </pre>
  */
-u16b bolt_pict(int y, int x, int ny, int nx, int typ)
+u16b bolt_pict(POSITION y, POSITION x, POSITION ny, POSITION nx, int typ)
 {
 	int base;
 
@@ -298,7 +298,7 @@ u16b bolt_pict(int y, int x, int ny, int nx, int typ)
  * by "update_view_los()", and very different from the one used by "los()".
  * </pre>
  */
-sint project_path(u16b *gp, int range, int y1, int x1, int y2, int x2, int flg)
+sint project_path(u16b *gp, POSITION range, POSITION y1, POSITION x1, POSITION y2, POSITION x2, BIT_FLAGS flg)
 {
 	int y, x;
 
@@ -596,11 +596,11 @@ sint project_path(u16b *gp, int range, int y1, int x1, int y2, int x2, int flg)
  * Mega-Hack -- track "affected" monsters (see "project()" comments)
  */
 static int project_m_n; /*!< 魔法効果範囲内にいるモンスターの数 */
-static int project_m_x; /*!< 処理中のモンスターX座標 */
-static int project_m_y; /*!< 処理中のモンスターY座標 */
+static POSITION project_m_x; /*!< 処理中のモンスターX座標 */
+static POSITION project_m_y; /*!< 処理中のモンスターY座標 */
 /* Mega-Hack -- monsters target */
-static s16b monster_target_x; /*!< モンスターの攻撃目標X座標 */
-static s16b monster_target_y; /*!< モンスターの攻撃目標Y座標 */
+static POSITION monster_target_x; /*!< モンスターの攻撃目標X座標 */
+static POSITION monster_target_y; /*!< モンスターの攻撃目標Y座標 */
 
 
 /*!
@@ -628,7 +628,7 @@ static s16b monster_target_y; /*!< モンスターの攻撃目標Y座標 */
  * XXX XXX XXX Perhaps we should affect doors?
  * </pre>
  */
-static bool project_f(int who, int r, int y, int x, int dam, int typ)
+static bool project_f(int who, int r, int y, int x, HIT_POINT dam, int typ)
 {
 	cave_type       *c_ptr = &cave[y][x];
 	feature_type    *f_ptr = &f_info[c_ptr->feat];
@@ -1198,20 +1198,20 @@ static bool project_f(int who, int r, int y, int x, int dam, int typ)
  * We return "TRUE" if the effect of the projection is "obvious".
  * </pre>
  */
-static bool project_o(int who, int r, int y, int x, int dam, int typ)
+static bool project_o(MONSTER_IDX who, POSITION r, POSITION y, POSITION x, HIT_POINT dam, int typ)
 {
 	cave_type *c_ptr = &cave[y][x];
 
-	s16b this_o_idx, next_o_idx = 0;
+	OBJECT_IDX this_o_idx, next_o_idx = 0;
 
 	bool obvious = FALSE;
 	bool known = player_has_los_bold(y, x);
 
-	u32b flgs[TR_FLAG_SIZE];
+	BIT_FLAGS flgs[TR_FLAG_SIZE];
 
 	char o_name[MAX_NLEN];
 
-	int k_idx = 0;
+	KIND_OBJECT_IDX k_idx = 0;
 	bool is_potion = FALSE;
 
 
@@ -1430,7 +1430,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
 				if (o_ptr->tval == TV_CORPSE)
 				{
 					int i;
-					u32b mode = 0L;
+					BIT_FLAGS mode = 0L;
 
 					if (!who || is_pet(&m_list[who]))
 						mode |= PM_FORCE_PET;
@@ -1585,7 +1585,7 @@ static bool project_o(int who, int r, int y, int x, int dam, int typ)
  * "flg" was added.
  * </pre>
  */
-static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, bool see_s_msg)
+static bool project_m(MONSTER_IDX who, POSITION r, POSITION y, POSITION x, HIT_POINT dam, int typ, BIT_FLAGS flg, bool see_s_msg)
 {
 	int tmp;
 
@@ -1643,7 +1643,7 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
 	char m_name[80];
 	char m_poss[10];
 
-	int photo = 0;
+	PARAMETER_VALUE photo = 0;
 
 	/* Assume no note */
 	cptr note = NULL;
@@ -2730,13 +2730,13 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
 
 
 		/* Drain Life */
-		case GF_OLD_DRAIN:
+		case GF_HYPODYNAMIA:
 		{
 			if (seen) obvious = TRUE;
 
 			if (r_ptr->flagsr & RFR_RES_ALL)
-            {
-                note = _("には完全な耐性がある！", " is immune.");
+			{
+				note = _("には完全な耐性がある！", " is immune.");
 				dam = 0;
 				if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
 				break;
@@ -2749,7 +2749,7 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
 					if (r_ptr->flags3 & RF3_UNDEAD) r_ptr->r_flags3 |= (RF3_UNDEAD);
 					if (r_ptr->flags3 & RF3_NONLIVING) r_ptr->r_flags3 |= (RF3_NONLIVING);
 				}
-                note = _("には効果がなかった。", " is unaffected.");
+				note = _("には効果がなかった。", " is unaffected.");
 				obvious = FALSE;
 				dam = 0;
 			}
@@ -3053,7 +3053,7 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
 
 			if (r_ptr->flagsr & RFR_RES_ALL)
 			{
-                note = _("には効果がなかった！", " is immune.");
+				note = _("には効果がなかった！", " is immune.");
 				dam = 0;
 				if (is_original_ap_and_seen(m_ptr)) r_ptr->r_flagsr |= (RFR_RES_ALL);
 				break;
@@ -4073,7 +4073,7 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
 				break;
 			}
 
-			if ((r_ptr->flags4 & ~(RF4_NOMAGIC_MASK)) || (r_ptr->flags5 & ~(RF5_NOMAGIC_MASK)) || (r_ptr->flags6 & ~(RF6_NOMAGIC_MASK)))
+			if ((r_ptr->flags4 & ~(RF4_NOMAGIC_MASK)) || (r_ptr->a_ability_flags1 & ~(RF5_NOMAGIC_MASK)) || (r_ptr->a_ability_flags2 & ~(RF6_NOMAGIC_MASK)))
 			{
 				if (who > 0)
 				{
@@ -4783,7 +4783,7 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
 
 			if (do_time)
 			{
-                note = _("は弱くなったようだ。", " seems weakened.");
+				note = _("は弱くなったようだ。", " seems weakened.");
 				m_ptr->maxhp -= do_time;
 				if ((m_ptr->hp - dam) > m_ptr->maxhp) dam = m_ptr->hp - m_ptr->maxhp;
 			}
@@ -5005,10 +5005,10 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
 			case 3: case 4: case 5: case 6:
 				if (!count)
 				{
-					int dam = damroll(10, 10);
+					int extra_dam = damroll(10, 10);
                     msg_print(_("純粋な魔力の次元への扉が開いた！", "A portal opens to a plane of raw mana!"));
 
-					project(0, 8, ty,tx, dam, GF_MANA, curse_flg, -1);
+					project(0, 8, ty, tx, extra_dam, GF_MANA, curse_flg, -1);
 					if (!one_in_(6)) break;
 				}
 			case 7: case 8:
@@ -5033,7 +5033,7 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
 			case 19: case 20: case 21: case 22:
 			{
 				bool pet = !one_in_(3);
-				u32b mode = PM_ALLOW_GROUP;
+				BIT_FLAGS mode = PM_ALLOW_GROUP;
 
 				if (pet) mode |= PM_FORCE_PET;
 				else mode |= (PM_NO_PET | PM_FORCE_FRIENDLY);
@@ -5173,7 +5173,7 @@ static bool project_m(int who, int r, int y, int x, int dam, int typ, int flg, b
  * We return "TRUE" if any "obvious" effects were observed.  XXX XXX Actually,
  * we just assume that the effects were obvious, for historical reasons.
  */
-static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int typ, int flg, int monspell)
+static bool project_p(int who, cptr who_name, int r, POSITION y, POSITION x, HIT_POINT dam, int typ, BIT_FLAGS flg, int monspell)
 {
 	int k = 0;
 	int rlev = 0;
@@ -5216,15 +5216,16 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 
 	if ((p_ptr->reflect || ((p_ptr->special_defense & KATA_FUUJIN) && !p_ptr->blind)) && (flg & PROJECT_REFLECTABLE) && !one_in_(10))
 	{
-		byte t_y, t_x;
+		POSITION t_y, t_x;
 		int max_attempts = 10;
+		sound(SOUND_REFLECT);
 
-        if (blind) 
-            msg_print(_("何かが跳ね返った！", "Something bounces!"));
+		if (blind) 
+			msg_print(_("何かが跳ね返った！", "Something bounces!"));
 		else if (p_ptr->special_defense & KATA_FUUJIN) 
-            msg_print(_("風の如く武器を振るって弾き返した！", "The attack bounces!"));
+			msg_print(_("風の如く武器を振るって弾き返した！", "The attack bounces!"));
 		else 
-            msg_print(_("攻撃が跳ね返った！", "The attack bounces!"));
+			msg_print(_("攻撃が跳ね返った！", "The attack bounces!"));
 
 
 		/* Choose 'new' target */
@@ -5423,13 +5424,13 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 		/* Arrow -- XXX no dodging */
 		case GF_ARROW:
 		{
-            if (fuzzy)
-            {
-                msg_print(_("何か鋭いもので攻撃された！", "You are hit by something sharp!"));
-            }
+			if (fuzzy)
+			{
+				msg_print(_("何か鋭いもので攻撃された！", "You are hit by something sharp!"));
+			}
 			else if ((inventory[INVEN_RARM].name1 == ART_ZANTETSU) || (inventory[INVEN_LARM].name1 == ART_ZANTETSU))
 			{
-                msg_print(_("矢を斬り捨てた！", "You cut down the arrow!"));
+				msg_print(_("矢を斬り捨てた！", "You cut down the arrow!"));
 				break;
 			}
 			get_damage = take_hit(DAMAGE_ATTACK, dam, killer, monspell);
@@ -5444,13 +5445,13 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 
 			if (!p_ptr->resist_sound && !CHECK_MULTISHADOW())
 			{
-				int k = (randint1((dam > 40) ? 35 : (dam * 3 / 4 + 5)));
-				(void)set_stun(p_ptr->stun + k);
+				int plus_stun = (randint1((dam > 40) ? 35 : (dam * 3 / 4 + 5)));
+				(void)set_stun(p_ptr->stun + plus_stun);
 			}
 
 			if (!(p_ptr->resist_fire ||
-			      IS_OPPOSE_FIRE() ||
-			      p_ptr->immune_fire))
+				IS_OPPOSE_FIRE() ||
+				p_ptr->immune_fire))
 			{
 				inven_damage(set_acid_destroy, 3);
 			}
@@ -5465,7 +5466,9 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 			if (p_ptr->resist_neth)
 			{
 				if (!prace_is_(RACE_SPECTRE))
+				{
 					dam *= 6; dam /= (randint1(4) + 7);
+				}
 			}
 			else if (!CHECK_MULTISHADOW()) drain_exp(200 + (p_ptr->exp / 100), 200 + (p_ptr->exp / 1000), 75);
 
@@ -5580,8 +5583,8 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 			}
 			else if (!CHECK_MULTISHADOW())
 			{
-				int k = (randint1((dam > 90) ? 35 : (dam / 3 + 5)));
-				(void)set_stun(p_ptr->stun + k);
+				int plus_stun = (randint1((dam > 90) ? 35 : (dam / 3 + 5)));
+				(void)set_stun(p_ptr->stun + plus_stun);
 			}
 
 			if (!p_ptr->resist_sound || one_in_(13))
@@ -5821,7 +5824,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 		case GF_GRAVITY:
 		{
 			if (fuzzy) msg_print(_("何か重いもので攻撃された！", "You are hit by something heavy!"));
-            msg_print(_("周辺の重力がゆがんだ。", "Gravity warps around you."));
+				msg_print(_("周辺の重力がゆがんだ。", "Gravity warps around you."));
 
 			if (!CHECK_MULTISHADOW())
 			{
@@ -5830,8 +5833,8 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 					(void)set_slow(p_ptr->slow + randint0(4) + 4, FALSE);
 				if (!(p_ptr->resist_sound || p_ptr->levitation))
 				{
-					int k = (randint1((dam > 90) ? 35 : (dam / 3 + 5)));
-					(void)set_stun(p_ptr->stun + k);
+					int plus_stun = (randint1((dam > 90) ? 35 : (dam / 3 + 5)));
+					(void)set_stun(p_ptr->stun + plus_stun);
 				}
 			}
 			if (p_ptr->levitation)
@@ -6061,7 +6064,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 		/* Mind blast */
 		case GF_MIND_BLAST:
 		{
-			if ((randint0(100 + rlev * 4 / 2) < MAX(5, p_ptr->skill_sav)) && !CHECK_MULTISHADOW()) /* rlev > rlev*4 */
+			if ((randint0(100 + rlev * 2) < MAX(5, p_ptr->skill_sav)) && !CHECK_MULTISHADOW()) /* #tang rlev / 2 -> rlev * 2 */
 			{
                 msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
 				learn_spell(monspell);
@@ -6099,7 +6102,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 		/* Brain smash */
 		case GF_BRAIN_SMASH:
 		{
-			if ((randint0(100 + rlev * 4 / 2) < MAX(5, p_ptr->skill_sav)) && !CHECK_MULTISHADOW()) /* rlev > rlev*4 */
+			if ((randint0(100 + rlev * 2) < MAX(5, p_ptr->skill_sav)) && !CHECK_MULTISHADOW()) /* #tang rlev / 2 -> rlev * 2 */
             {
                 msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
 				learn_spell(monspell);
@@ -6136,9 +6139,9 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 					}
 					(void)set_slow(p_ptr->slow + randint0(4) + 4, FALSE);
 
-					while (randint0(100 + rlev * 4 / 2) > (MAX(5, p_ptr->skill_sav))) /* rlev > rlev*4 */
+					while (randint0(100 + rlev * 2) > (MAX(5, p_ptr->skill_sav))) /* #tang rlev / 2 -> rlev * 2 */
 						(void)do_dec_stat(A_INT);
-					while (randint0(100 + rlev * 4 / 2) > (MAX(5, p_ptr->skill_sav))) /* rlev > rlev*4 */
+					while (randint0(100 + rlev * 2) > (MAX(5, p_ptr->skill_sav))) /* #tang rlev / 2 -> rlev * 2 */
 						(void)do_dec_stat(A_WIS);
 
 					if (!p_ptr->resist_chaos)
@@ -6153,7 +6156,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 		/* cause 1 */
 		case GF_CAUSE_1:
 		{
-			if ((randint0(100 + rlev * 4 / 2) < p_ptr->skill_sav) && !CHECK_MULTISHADOW()) /* rlev > rlev*4 */
+			if ((randint0(100 + rlev * 2) < p_ptr->skill_sav) && !CHECK_MULTISHADOW()) /* #tang rlev / 2 -> rlev * 2 */
             {
                 msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
 				learn_spell(monspell);
@@ -6169,7 +6172,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 		/* cause 2 */
 		case GF_CAUSE_2:
 		{
-			if ((randint0(100 + rlev * 4 / 2) < p_ptr->skill_sav) && !CHECK_MULTISHADOW()) /* rlev > rlev*4 */
+			if ((randint0(100 + rlev * 2) < p_ptr->skill_sav) && !CHECK_MULTISHADOW()) /* #tang rlev / 2 -> rlev * 2 */
             {
                 msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
 				learn_spell(monspell);
@@ -6185,7 +6188,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 		/* cause 3 */
 		case GF_CAUSE_3:
 		{
-			if ((randint0(100 + rlev * 4 / 2) < p_ptr->skill_sav) && !CHECK_MULTISHADOW()) /* rlev > rlev*4 */
+			if ((randint0(100 + rlev * 2) < p_ptr->skill_sav) && !CHECK_MULTISHADOW()) /* #tang rlev / 2 -> rlev * 2 */
             {
                 msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
 				learn_spell(monspell);
@@ -6201,7 +6204,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 		/* cause 4 */
 		case GF_CAUSE_4:
 		{
-			if ((randint0(100 + rlev * 4 / 2) < p_ptr->skill_sav) && !(m_ptr->r_idx == MON_KENSHIROU) && !CHECK_MULTISHADOW()) /* rlev > rlev*4 */
+			if ((randint0(100 + rlev * 2) < p_ptr->skill_sav) && !(m_ptr->r_idx == MON_KENSHIROU) && !CHECK_MULTISHADOW()) /* #tang rlev / 2 -> rlev * 2 */
 			{
                 msg_print(_("しかし秘孔を跳ね返した！", "You resist the effects!"));
 				learn_spell(monspell);
@@ -6217,7 +6220,7 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 		/* Hand of Doom */
 		case GF_HAND_DOOM:
 		{
-			if ((randint0(100 + rlev * 4 / 2) < p_ptr->skill_sav) && !CHECK_MULTISHADOW()) /* rlev > rlev*4 */
+			if ((randint0(100 + rlev * 2) < p_ptr->skill_sav) && !CHECK_MULTISHADOW()) /* #tang rlev / 2 -> rlev * 2 */
             {
                 msg_print(_("しかし効力を跳ね返した！", "You resist the effects!"));
 				learn_spell(monspell);
@@ -6286,27 +6289,27 @@ static bool project_p(int who, cptr who_name, int r, int y, int x, int dam, int 
 /*
  * Find the distance from (x, y) to a line.
  */
-int dist_to_line(int y, int x, int y1, int x1, int y2, int x2)
+POSITION dist_to_line(POSITION y, POSITION x, POSITION y1, POSITION x1, POSITION y2, POSITION x2)
 {
 	/* Vector from (x, y) to (x1, y1) */
-	int py = y1 - y;
-	int px = x1 - x;
+	POSITION py = y1 - y;
+	POSITION px = x1 - x;
 
 	/* Normal vector */
-	int ny = x2 - x1;
-	int nx = y1 - y2;
+	POSITION ny = x2 - x1;
+	POSITION nx = y1 - y2;
 
-   /* Length of N */
-	int pd = distance(y1, x1, y, x);
-	int nd = distance(y1, x1, y2, x2);
+	/* Length of N */
+	POSITION pd = distance(y1, x1, y, x);
+	POSITION nd = distance(y1, x1, y2, x2);
 
 	if (pd > nd) return distance(y, x, y2, x2);
 
 	/* Component of P on N */
 	nd = ((nd) ? ((py * ny + px * nx) / nd) : 0);
 
-   /* Absolute value */
-   return((nd >= 0) ? nd : 0 - nd);
+	/* Absolute value */
+	return((nd >= 0) ? nd : 0 - nd);
 }
 
 
@@ -6316,28 +6319,28 @@ int dist_to_line(int y, int x, int y1, int x1, int y2, int x2)
  * Modified version of los() for calculation of disintegration balls.
  * Disintegration effects are stopped by permanent walls.
  */
-bool in_disintegration_range(int y1, int x1, int y2, int x2)
+bool in_disintegration_range(POSITION y1, POSITION x1, POSITION y2, POSITION x2)
 {
 	/* Delta */
-	int dx, dy;
+	POSITION dx, dy;
 
 	/* Absolute */
-	int ax, ay;
+	POSITION ax, ay;
 
 	/* Signs */
-	int sx, sy;
+	POSITION sx, sy;
 
 	/* Fractions */
-	int qx, qy;
+	POSITION qx, qy;
 
 	/* Scanners */
-	int tx, ty;
+	POSITION tx, ty;
 
 	/* Scale factors */
-	int f1, f2;
+	POSITION f1, f2;
 
 	/* Slope, or 1/Slope, of LOS */
-	int m;
+	POSITION m;
 
 
 	/* Extract the offset */
@@ -6542,10 +6545,10 @@ bool in_disintegration_range(int y1, int x1, int y2, int x2)
 /*
  * breath shape
  */
-void breath_shape(u16b *path_g, int dist, int *pgrids, byte *gx, byte *gy, byte *gm, int *pgm_rad, int rad, int y1, int x1, int y2, int x2, int typ)
+void breath_shape(u16b *path_g, int dist, int *pgrids, POSITION *gx, POSITION *gy, POSITION *gm, POSITION *pgm_rad, POSITION rad, POSITION y1, POSITION x1, POSITION y2, POSITION x2, int typ)
 {
-	int by = y1;
-	int bx = x1;
+	POSITION by = y1;
+	POSITION bx = x1;
 	int brad = 0;
 	int brev = rad * rad / dist;
 	int bdis = 0;
@@ -6771,17 +6774,17 @@ void breath_shape(u16b *path_g, int dist, int *pgrids, byte *gx, byte *gy, byte 
  * and "update_view()" and "update_monsters()" need to be called.
  * </pre>
  */
-bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int monspell)
+bool project(MONSTER_IDX who, POSITION rad, POSITION y, POSITION x, HIT_POINT dam, int typ, BIT_FLAGS flg, int monspell)
 {
 	int i, t, dist;
 
-	int y1, x1;
-	int y2, x2;
-	int by, bx;
+	POSITION y1, x1;
+	POSITION y2, x2;
+	POSITION by, bx;
 
 	int dist_hack = 0;
 
-	int y_saver, x_saver; /* For reflecting monsters */
+	POSITION y_saver, x_saver; /* For reflecting monsters */
 
 	int msec = delay_factor * delay_factor * delay_factor;
 
@@ -6812,13 +6815,13 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
 	int grids = 0;
 
 	/* Coordinates of the affected grids */
-	byte gx[1024], gy[1024];
+	POSITION gx[1024], gy[1024];
 
 	/* Encoded "radius" info (see above) */
-	byte gm[32];
+	POSITION gm[32];
 
 	/* Actual radius encoded in gm[] */
-	int gm_rad = rad;
+	POSITION gm_rad = rad;
 
 	bool jump = FALSE;
 
@@ -7022,15 +7025,15 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
 				monster_target_y=(s16b)y;
 				monster_target_x=(s16b)x;
 
-				remove_mirror(y,x);
-				next_mirror( &oy,&ox,y,x );
+				remove_mirror(y, x);
+				next_mirror(&oy, &ox, y, x);
 
 				path_n = i+project_path(&(path_g[i+1]), (project_length ? project_length : MAX_RANGE), y, x, oy, ox, flg);
-				for( j = last_i; j <=i ; j++ )
+				for(j = last_i; j <= i; j++)
 				{
 					y = GRID_Y(path_g[j]);
 					x = GRID_X(path_g[j]);
-					if(project_m(0,0,y,x,dam,GF_SEEKER,flg,TRUE))notice=TRUE;
+					if(project_m(0, 0, y, x, dam, GF_SEEKER, flg, TRUE)) notice=TRUE;
 					if(!who && (project_m_n==1) && !jump ){
 					  if(cave[project_m_y][project_m_x].m_idx >0 ){
 					    monster_type *m_ptr = &m_list[cave[project_m_y][project_m_x].m_idx];
@@ -7050,28 +7053,29 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
 				last_i = i;
 			}
 		}
-		for( i = last_i ; i < path_n ; i++ )
+		for(i = last_i ; i < path_n ; i++)
 		{
-			int x,y;
-			y = GRID_Y(path_g[i]);
-			x = GRID_X(path_g[i]);
-			if(project_m(0,0,y,x,dam,GF_SEEKER,flg,TRUE))
-			  notice=TRUE;
+			int py, px;
+			py = GRID_Y(path_g[i]);
+			px = GRID_X(path_g[i]);
+			if(project_m(0, 0, py, px, dam, GF_SEEKER, flg, TRUE))
+				notice = TRUE;
 			if(!who && (project_m_n==1) && !jump ){
-			  if(cave[project_m_y][project_m_x].m_idx >0 ){
-			    monster_type *m_ptr = &m_list[cave[project_m_y][project_m_x].m_idx];
+				if(cave[project_m_y][project_m_x].m_idx > 0)
+				{
+					monster_type *m_ptr = &m_list[cave[project_m_y][project_m_x].m_idx];
 
-			    if (m_ptr->ml)
-			    {
-			      /* Hack -- auto-recall */
-			      if (!p_ptr->image) monster_race_track(m_ptr->ap_r_idx);
+					if (m_ptr->ml)
+					{
+						/* Hack -- auto-recall */
+						if (!p_ptr->image) monster_race_track(m_ptr->ap_r_idx);
 
-			      /* Hack - auto-track */
-			      health_track(cave[project_m_y][project_m_x].m_idx);
-			    }
-			  }
+						/* Hack - auto-track */
+						health_track(cave[project_m_y][project_m_x].m_idx);
+					}
+				}
 			}
-			(void)project_f(0,0,y,x,dam,GF_SEEKER);
+			(void)project_f(0, 0, py, px, dam, GF_SEEKER);
 		}
 		return notice;
 	}
@@ -7185,25 +7189,25 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
 		}
 		for( i = 0; i < path_n ; i++ )
 		{
-			int x,y;
-			y = GRID_Y(path_g[i]);
-			x = GRID_X(path_g[i]);
-			(void)project_m(0,0,y,x,dam,GF_SUPER_RAY,flg,TRUE);
-			if(!who && (project_m_n==1) && !jump ){
-			  if(cave[project_m_y][project_m_x].m_idx >0 ){
-			    monster_type *m_ptr = &m_list[cave[project_m_y][project_m_x].m_idx];
+			int py, px;
+			py = GRID_Y(path_g[i]);
+			px = GRID_X(path_g[i]);
+			(void)project_m(0, 0, py, px, dam, GF_SUPER_RAY, flg, TRUE);
+			if(!who && (project_m_n == 1) && !jump){
+				if(cave[project_m_y][project_m_x].m_idx >0 ){
+					monster_type *m_ptr = &m_list[cave[project_m_y][project_m_x].m_idx];
 
-			    if (m_ptr->ml)
-			    {
-			      /* Hack -- auto-recall */
-			      if (!p_ptr->image) monster_race_track(m_ptr->ap_r_idx);
+					if (m_ptr->ml)
+					{
+						/* Hack -- auto-recall */
+						if (!p_ptr->image) monster_race_track(m_ptr->ap_r_idx);
 
-			      /* Hack - auto-track */
-			      health_track(cave[project_m_y][project_m_x].m_idx);
-			    }
-			  }
+						/* Hack - auto-track */
+						health_track(cave[project_m_y][project_m_x].m_idx);
+					}
+				}
 			}
-			(void)project_f(0,0,y,x,dam,GF_SUPER_RAY);
+			(void)project_f(0, 0, py, px, dam, GF_SUPER_RAY);
 		}
 		return notice;
 	}
@@ -7583,7 +7587,7 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
 				    ((cave[y][x].m_idx != p_ptr->riding) || !(flg & PROJECT_PLAYER)) &&
 				    (!who || dist_hack > 1) && !one_in_(10))
 				{
-					byte t_y, t_x;
+					POSITION t_y, t_x;
 					int max_attempts = 10;
 
 					/* Choose 'new' target */
@@ -7601,6 +7605,7 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
 						t_x = x_saver;
 					}
 
+					sound(SOUND_REFLECT);
 					if (is_seen(m_ptr))
 					{
 						if ((m_ptr->r_idx == MON_KENSHIROU) || (m_ptr->r_idx == MON_RAOU))
@@ -7843,7 +7848,7 @@ bool project(int who, int rad, int y, int x, int dam, int typ, int flg, int mons
  * @param dam ダメージ量
  * @return 効果があったらTRUEを返す
  */
-bool binding_field( int dam )
+bool binding_field( HIT_POINT dam )
 {
 	int mirror_x[10],mirror_y[10]; /* 鏡はもっと少ない */
 	int mirror_num=0;              /* 鏡の数 */
@@ -7992,7 +7997,7 @@ bool binding_field( int dam )
  * @param dam ダメージ量
  * @return 効果があったらTRUEを返す
  */
-void seal_of_mirror( int dam )
+void seal_of_mirror( HIT_POINT dam )
 {
 	int x,y;
 

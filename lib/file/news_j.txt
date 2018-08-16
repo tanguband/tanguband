@@ -1,7 +1,8 @@
 
-                  ***************************************
-                  **         短愚蛮怒 16.5.2           **
-                  ***************************************
+
+                  *****************************************
+
+                  *****************************************
 
           Based on Moria:    Copyright (c) 1985 Robert Alan Koeneke
               and Umoria:    Copyright (c) 1989 James E. Wilson
@@ -14,9 +15,8 @@
     ZAngband 2.3.0 - ???:    The ZAngband DevTeam
        ZAngband 日本語版:    板倉充洋 < itakura＠users.sourceforge.net >
 
-
           変愚蛮怒: Mr.hoge (echizen＠users.sourceforge.jp) ＆ 多くの方々
                      http://hengband.sourceforge.jp/
 
-       変愚蛮怒 は UNIX/X11, Windows, Macintosh で動作しています。
+       短愚蛮怒 は UNIX/X11, Windows, Macintosh で動作しています。
           バグ情報などは上記 URL にある掲示板へお願いします。

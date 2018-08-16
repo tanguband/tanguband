@@ -43,8 +43,7 @@
 #endif /* CHECK_MODIFICATION_TIME */
 #endif
 
-
-
+static void put_title(void);
 
 /*!
  * @brief 各データファイルを読み取るためのパスを取得する
@@ -113,28 +112,6 @@ void init_file_paths(char *path)
 	/* Prepare to append to the Base Path */
 	tail = path + strlen(path);
 
-
-#ifdef VM
-
-	/*** Use "flat" paths with VM/ESA ***/
-
-	/* Use "blank" path names */
-	ANGBAND_DIR_APEX = string_make("");
-	ANGBAND_DIR_BONE = string_make("");
-	ANGBAND_DIR_DATA = string_make("");
-	ANGBAND_DIR_EDIT = string_make("");
-	ANGBAND_DIR_SCRIPT = string_make("");
-	ANGBAND_DIR_FILE = string_make("");
-	ANGBAND_DIR_HELP = string_make("");
-	ANGBAND_DIR_INFO = string_make("");
-	ANGBAND_DIR_SAVE = string_make("");
-	ANGBAND_DIR_USER = string_make("");
-	ANGBAND_DIR_XTRA = string_make("");
-
-
-#else /* VM */
-
-
 	/*** Build the sub-directory names ***/
 
 	/* Build a path name */
@@ -196,8 +173,6 @@ void init_file_paths(char *path)
 	/* Build a path name */
 	strcpy(tail, "xtra");
 	ANGBAND_DIR_XTRA = string_make(path);
-
-#endif /* VM */
 
 
 #ifdef NeXT
@@ -429,7 +404,7 @@ static errr init_info_raw(int fd, header *head)
  * @param len データの長さ
  * @return エラーコード
  */
-static void init_header(header *head, int num, int len)
+static void init_header(header *head, IDX num, int len)
 {
 	/* Save the "version" */
 	head->v_major = FAKE_VER_MAJOR;
@@ -438,7 +413,7 @@ static void init_header(header *head, int num, int len)
 	head->v_extra = 0;
 
 	/* Save the "record" information */
-	head->info_num = num;
+	head->info_num = (IDX)num;
 	head->info_len = len;
 
 	/* Save the size of "*_head" and "*_info" */
@@ -466,7 +441,7 @@ static errr init_info(cptr filename, header *head,
 {
 	int fd;
 
-	int mode = 0644;
+	BIT_FLAGS mode = 0644;
 
 	errr err = 1;
 
@@ -1520,7 +1495,7 @@ static errr init_towns(void)
 			/* Scan the choices */
 			for (k = 0; k < STORE_CHOICES; k++)
 			{
-				int k_idx;
+				KIND_OBJECT_IDX k_idx;
 
 				/* Extract the tval/sval codes */
 				int tv = store_table[j][k][0];
@@ -1604,10 +1579,10 @@ static errr init_quests(void)
 	/*** Prepare the quests ***/
 
 	/* Allocate the quests */
-	C_MAKE(quest, max_quests, quest_type);
+	C_MAKE(quest, max_q_idx, quest_type);
 
 	/* Set all quest to "untaken" */
-	for (i = 0; i < max_quests; i++)
+	for (i = 0; i < max_q_idx; i++)
 	{
 		quest[i].status = QUEST_STATUS_UNTAKEN;
 	}
@@ -1640,7 +1615,7 @@ s16b f_tag_to_index_in_init(cptr str)
  */
 static errr init_feat_variables(void)
 {
-	int i;
+	FEAT_IDX i;
 
 	/* Nothing */
 	feat_none = f_tag_to_index_in_init("NONE");
@@ -1806,7 +1781,7 @@ static errr init_other(void)
 	}
 
 	/* Allocate and Wipe the max dungeon level */
-	C_MAKE(max_dlv, max_d_idx, s16b);
+	C_MAKE(max_dlv, max_d_idx, DEPTH);
 
 	/* Allocate and wipe each line of the cave */
 	for (i = 0; i < MAX_HGT; i++)
@@ -1830,7 +1805,7 @@ static errr init_other(void)
 	quark_init();
 
 	/* Message variables */
-	C_MAKE(message__ptr, MESSAGE_MAX, u16b);
+	C_MAKE(message__ptr, MESSAGE_MAX, u32b);
 	C_MAKE(message__buf, MESSAGE_BUF, char);
 
 	/* Hack -- No messages yet */
@@ -2003,11 +1978,11 @@ static errr init_object_alloc(void)
 				z = y + aux[x];
 
 				/* Load the entry */
-				table[z].index = i;
-				table[z].level = x;
-				table[z].prob1 = p;
-				table[z].prob2 = p;
-				table[z].prob3 = p;
+				table[z].index = (KIND_OBJECT_IDX)i;
+				table[z].level = (DEPTH)x;
+				table[z].prob1 = (PROB)p;
+				table[z].prob2 = (PROB)p;
+				table[z].prob3 = (PROB)p;
 
 				/* Another entry complete for this locale */
 				aux[x]++;
@@ -2072,11 +2047,11 @@ static errr init_alloc(void)
 			p = (100 / r_ptr->rarity);
 
 			/* Load the entry */
-			alloc_race_table[i].index = elements[i].index;
-			alloc_race_table[i].level = x;
-			alloc_race_table[i].prob1 = p;
-			alloc_race_table[i].prob2 = p;
-			alloc_race_table[i].prob3 = p;
+			alloc_race_table[i].index = (KIND_OBJECT_IDX)elements[i].index;
+			alloc_race_table[i].level = (DEPTH)x;
+			alloc_race_table[i].prob1 = (PROB)p;
+			alloc_race_table[i].prob2 = (PROB)p;
+			alloc_race_table[i].prob3 = (PROB)p;
 		}
 	}
 
@@ -2291,7 +2266,7 @@ void init_angband(void)
 {
 	int fd = -1;
 
-	int mode = 0664;
+	BIT_FLAGS mode = 0664;
 
 	FILE *fp;
 
@@ -2392,6 +2367,7 @@ void init_angband(void)
 	/* Close it */
 	(void)fd_close(fd);
 
+	put_title();
 
 	/*** Initialize some arrays ***/
 
@@ -2502,6 +2478,25 @@ void init_angband(void)
 
 	/* Done */
 	note(_("[初期化終了]", "[Initialization complete]"));
+}
+
+/*!
+ * @brief タイトル記述
+ * @return なし
+ */
+static void put_title(void)
+{
+	char title[120];
+	int col;
+#if H_VER_EXTRA > 0
+	sprintf(title, _("短愚蛮怒 %d.%d.%d.%d(%s)", "Hengband %d.%d.%d.%d(%s)"), H_VER_MAJOR, H_VER_MINOR, H_VER_PATCH, H_VER_EXTRA,
+#else
+	sprintf(title, _("短愚蛮怒 %d.%d.%d(%s)", "Hengband %d.%d.%d(%s)"), H_VER_MAJOR, H_VER_MINOR, H_VER_PATCH,
+#endif
+	IS_STABLE_VERSION ? _("安定版", "Stable") : _("開発版", "Developing"));
+	col = (80 - strlen(title)) / 2;
+	col = col < 0 ? 0 : col;
+	prt(title, VER_INFO_ROW, col);
 }
 
 /*!

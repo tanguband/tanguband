@@ -466,7 +466,7 @@ uint vstrnfmt(char *buf, uint max, cptr fmt, va_list vp)
 				arg = va_arg(vp, int);
 
 				/* Format the argument */
-				sprintf(tmp, aux, arg);
+				sprintf(tmp, "%c", arg);
 
 				/* Done */
 				break;
@@ -510,7 +510,6 @@ uint vstrnfmt(char *buf, uint max, cptr fmt, va_list vp)
 					/* Access next argument */
 					arg = va_arg(vp, unsigned long);
 
-					/* Format the argument */
 					sprintf(tmp, aux, arg);
 				}
 				else
@@ -519,9 +518,8 @@ uint vstrnfmt(char *buf, uint max, cptr fmt, va_list vp)
 
 					/* Access next argument */
 					arg = va_arg(vp, unsigned int);
-
-					/* Format the argument */
 					sprintf(tmp, aux, arg);
+
 				}
 
 				/* Done */
@@ -577,7 +575,7 @@ uint vstrnfmt(char *buf, uint max, cptr fmt, va_list vp)
 				arg2[1023] = '\0';
 
 				/* Format the argument */
-				sprintf(tmp, aux, arg2);
+				sprintf(tmp, aux, arg);
 
 				/* Done */
 				break;
@@ -593,7 +591,7 @@ uint vstrnfmt(char *buf, uint max, cptr fmt, va_list vp)
 				arg = va_arg(vp, vptr);
 
 				/* Format the "user data" */
-				(void)vstrnfmt_aux(tmp, 1000, aux, arg);
+				sprintf(tmp, aux, arg);
 
 				/* Done */
 				break;
@@ -626,7 +624,7 @@ uint vstrnfmt(char *buf, uint max, cptr fmt, va_list vp)
 				{
 					/* Capitalize if possible */
 					if (islower(tmp[q]))
-						tmp[q] = toupper(tmp[q]);
+						tmp[q] = (char)toupper(tmp[q]);
 
 					/* Done */
 					break;

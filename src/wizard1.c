@@ -229,15 +229,16 @@ static grouper group_item[] =
  * @param dam ダメージダイス記述を返すバッファ参照ポインタ
  * @param wgt 重量記述を返すバッファ参照ポインタ
  * @param lev 生成階記述を返すバッファ参照ポインタ
+ * @param chance 生成機会を返すバッファ参照ポインタ
  * @param val 価値を返すバッファ参照ポインタ
  * @param k ベースアイテムID
  * @return なし
  */
-static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int k)
+static void kind_info(char *buf, char *dam, char *wgt, char *chance, DEPTH *lev, PRICE *val, OBJECT_IDX k)
 {
 	object_type forge;
 	object_type *q_ptr;
-
+	int i;
 
 	/* Get local object */
 	q_ptr = &forge;
@@ -263,7 +264,7 @@ static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int 
 
 
 	/* Hack */
-	if (!buf || !dam || !wgt) return;
+	if (!buf || !dam || !chance || !wgt) return;
 
 
 	/* Description (too brief) */
@@ -317,9 +318,22 @@ static void kind_info(char *buf, char *dam, char *wgt, int *lev, s32b *val, int 
 		}
 	}
 
+	/* Chance */
+	strcpy(chance, "");
+	for(i = 0; i < 4; i++)
+	{
+		char chance_aux[20] = "";
+		if(k_info[q_ptr->k_idx].chance[i] > 0)
+		{
+			sprintf(chance_aux, "%s%3dF:%+4d", (i != 0 ? "/" : ""),
+				(int)k_info[q_ptr->k_idx].locale[i], 100/k_info[q_ptr->k_idx].chance[i]);
+			strcat(chance, chance_aux);
+		}
+	}
+
 
 	/* Weight */
-	sprintf(wgt, "%3d.%d", q_ptr->weight / 10, q_ptr->weight % 10);
+	sprintf(wgt, "%3d.%d", (int)(q_ptr->weight / 10), (int)(q_ptr->weight % 10));
 }
 
 
@@ -333,11 +347,12 @@ static void spoil_obj_desc(cptr fname)
 {
 	int i, k, s, t, n = 0, group_start = 0;
 
-	u16b who[200];
+	OBJECT_IDX who[200];
 
 	char buf[1024];
 
 	char wgt[80];
+	char chance[80];
 	char dam[80];
 
 
@@ -359,15 +374,14 @@ static void spoil_obj_desc(cptr fname)
 
 
 	/* Header */
-	fprintf(fff, "Spoiler File -- Basic Items (tanguband %d.%d.%d)\n\n\n",
-		FAKE_VER_MAJOR-10, FAKE_VER_MINOR, FAKE_VER_PATCH);
+	fprintf(fff, "Spoiler File -- Basic Items (Hengband %d.%d.%d.%d)\n\n\n",
+		FAKE_VER_MAJOR-10, FAKE_VER_MINOR, FAKE_VER_PATCH, FAKE_VER_EXTRA);
 
 	/* More Header */
-	fprintf(fff, "%-45s     %8s%7s%5s%9s\n",
-		"Description", "Dam/AC", "Wgt", "Lev", "Cost");
-	fprintf(fff, "%-45s     %8s%7s%5s%9s\n",
-		"----------------------------------------",
-		"------", "---", "---", "----");
+	fprintf(fff, "%-37s%8s%7s%5s %40s%9s\n",
+		"Description", "Dam/AC", "Wgt", "Lev", "Chance", "Cost");
+	fprintf(fff, "%-37s%8s%7s%5s %40s%9s\n",
+		"-------------------------------------", "------", "---", "---", "----------------", "----");
 
 	/* List the groups */
 	for (i = 0; TRUE; i++)
@@ -385,18 +399,18 @@ static void spoil_obj_desc(cptr fname)
 						int i1 = t;
 						int i2 = t + 1;
 
-						int e1;
-						int e2;
+						DEPTH e1;
+						DEPTH e2;
 
-						s32b t1;
-						s32b t2;
+						PRICE t1;
+						PRICE t2;
 
-						kind_info(NULL, NULL, NULL, &e1, &t1, who[i1]);
-						kind_info(NULL, NULL, NULL, &e2, &t2, who[i2]);
+						kind_info(NULL, NULL, NULL, NULL, &e1, &t1, who[i1]);
+						kind_info(NULL, NULL, NULL, NULL, &e2, &t2, who[i2]);
 
 						if ((t1 > t2) || ((t1 == t2) && (e1 > e2)))
 						{
-							int tmp = who[i1];
+							u16b tmp = who[i1];
 							who[i1] = who[i2];
 							who[i2] = tmp;
 						}
@@ -408,15 +422,15 @@ static void spoil_obj_desc(cptr fname)
 				/* Spoil each item */
 				for (s = 0; s < n; s++)
 				{
-					int e;
-					s32b v;
+					DEPTH e;
+					PRICE v;
 
 					/* Describe the kind */
-					kind_info(buf, dam, wgt, &e, &v, who[s]);
+					kind_info(buf, dam, wgt, chance, &e, &v, who[s]);
 
 					/* Dump it */
-					fprintf(fff, "     %-45s%8s%7s%5d%9ld\n",
-						buf, dam, wgt, e, (long)(v));
+					fprintf(fff, "  %-35s%8s%7s%5d %-40s%9ld\n",
+						buf, dam, wgt, (int)e, chance, (long)(v));
 				}
 
 				/* Start a new set */
@@ -442,7 +456,7 @@ static void spoil_obj_desc(cptr fname)
 			if (k_ptr->gen_flags & (TRG_INSTA_ART)) continue;
 
 			/* Save the index */
-			who[n++] = k;
+			who[n++] = (u16b)k;
 		}
 	}
 
@@ -1058,7 +1072,7 @@ static void analyze_general(object_type *o_ptr, char *desc_ptr)
  * @param p_ptr pval修正構造体の参照ポインタ
  * @return なし
  */
-static void analyze_pval(object_type *o_ptr, pval_info_type *p_ptr)
+static void analyze_pval(object_type *o_ptr, pval_info_type *pi_ptr)
 {
 	u32b flgs[TR_FLAG_SIZE];
 
@@ -1068,17 +1082,17 @@ static void analyze_pval(object_type *o_ptr, pval_info_type *p_ptr)
 	if (!o_ptr->pval)
 	{
 		/* An "empty" pval description indicates that pval == 0 */
-		p_ptr->pval_desc[0] = '\0';
+		pi_ptr->pval_desc[0] = '\0';
 		return;
 	}
 
 	/* Extract the flags */
 	object_flags(o_ptr, flgs);
 
-	affects_list = p_ptr->pval_affects;
+	affects_list = pi_ptr->pval_affects;
 
 	/* Create the "+N" string */
-	sprintf(p_ptr->pval_desc, "%s%d", POSITIZE(o_ptr->pval), o_ptr->pval);
+	sprintf(pi_ptr->pval_desc, "%s%d", POSITIZE(o_ptr->pval), o_ptr->pval);
 
 	/* First, check to see if the pval affects all stats */
 	if (have_flag(flgs, TR_STR) && have_flag(flgs, TR_INT) &&
@@ -1371,12 +1385,12 @@ static void analyze_misc(object_type *o_ptr, char *misc_desc)
 	artifact_type *a_ptr = &a_info[o_ptr->name1];
 
 #ifdef JP
-	sprintf(misc_desc, "レベル %u, 希少度 %u, %d.%d kg, ＄%ld",
-		a_ptr->level, a_ptr->rarity,
+	sprintf(misc_desc, "レベル %d, 希少度 %u, %d.%d kg, ＄%ld",
+		(int)a_ptr->level, a_ptr->rarity,
 		lbtokg1(a_ptr->weight), lbtokg2(a_ptr->weight), (long int)a_ptr->cost);
 #else
-	sprintf(misc_desc, "Level %u, Rarity %u, %d.%d lbs, %ld Gold",
-		a_ptr->level, a_ptr->rarity,
+	sprintf(misc_desc, "Level %d, Rarity %u, %d.%d lbs, %ld Gold",
+		(int)a_ptr->level, a_ptr->rarity,
 		a_ptr->weight / 10, a_ptr->weight % 10, a_ptr->cost);
 #endif
 }
@@ -1622,9 +1636,9 @@ static void spoiler_print_art(obj_desc_list *art_ptr)
  * @param name1 生成するアーティファクトID
  * @return 生成が成功した場合TRUEを返す
  */
-static bool make_fake_artifact(object_type *o_ptr, int name1)
+static bool make_fake_artifact(object_type *o_ptr, IDX name1)
 {
-	int i;
+	IDX i;
 
 	artifact_type *a_ptr = &a_info[name1];
 
@@ -1642,7 +1656,7 @@ static bool make_fake_artifact(object_type *o_ptr, int name1)
 	object_prep(o_ptr, i);
 
 	/* Save the name */
-	o_ptr->name1 = name1;
+	o_ptr->name1 = (byte_hack)name1;
 
 	/* Extract the fields */
 	o_ptr->pval = a_ptr->pval;
@@ -1667,7 +1681,8 @@ static bool make_fake_artifact(object_type *o_ptr, int name1)
  */
 static void spoil_artifact(cptr fname)
 {
-	int i, j;
+	int i;
+	IDX j;
 
 	object_type forge;
 	object_type *q_ptr;
@@ -1804,7 +1819,7 @@ static void spoil_mon_desc(cptr fname)
 		monster_race *r_ptr = &r_info[i];
 
 		/* Use that monster */
-		if (r_ptr->name) who[n++] = i;
+		if (r_ptr->name) who[n++] = (s16b)i;
 	}
 
 	/* Select the sort method */
@@ -1840,10 +1855,10 @@ static void spoil_mon_desc(cptr fname)
 
 
 		/* Level */
-		sprintf(lev, "%d", r_ptr->level);
+		sprintf(lev, "%d", (int)r_ptr->level);
 
 		/* Rarity */
-		sprintf(rar, "%d", r_ptr->rarity);
+		sprintf(rar, "%d", (int)r_ptr->rarity);
 
 		/* Speed */
 		if (r_ptr->speed >= 110)
@@ -1974,7 +1989,7 @@ static void spoil_out(cptr str)
 		bool wrap = (ch == '\n');
 
 #ifdef JP
-		if (!isprint(ch) && !k_flag && !iskanji_flag) ch = ' ';
+		if (!isprint((unsigned char)ch) && !k_flag && !iskanji_flag) ch = ' ';
 		iskanji_flag = k_flag && !iskanji_flag;
 #else
 		if (!isprint(ch)) ch = ' ';
@@ -2013,7 +2028,7 @@ static void spoil_out(cptr str)
 
 #ifdef JP
 					k_flag_local = iskanji((unsigned char)(*tail));
-					if (isprint(*tail) || k_flag_local || iskanji_flag_local) break;
+					if (isprint((unsigned char)*tail) || k_flag_local || iskanji_flag_local) break;
 					iskanji_flag_local = k_flag_local && !iskanji_flag_local;
 #else
 					if (isprint(*tail)) break;
@@ -2141,7 +2156,7 @@ static void spoil_mon_info(cptr fname)
 		monster_race *r_ptr = &r_info[i];
 
 		/* Use that monster */
-		if (r_ptr->name) who[n++] = i;
+		if (r_ptr->name) who[n++] = (s16b)i;
 	}
 
 	/* Select the sort method */
@@ -2203,7 +2218,7 @@ static void spoil_mon_info(cptr fname)
 		spoil_out(buf);
 
 		/* Level */
-		sprintf(buf, "Lev:%d  ", r_ptr->level);
+		sprintf(buf, "Lev:%d  ", (int)r_ptr->level);
 		spoil_out(buf);
 
 		/* Rarity */
@@ -2478,25 +2493,16 @@ static void spoil_mon_evol(cptr fname)
 
 		/* Trace the evolution tree */
 		r_ptr = &r_info[r_idx];
-#ifdef JP
-		fprintf(fff, "[%d]: %s (レベル%d, '%c')\n", r_idx,
-			r_name + r_ptr->name, r_ptr->level, r_ptr->d_char);
-#else
-		fprintf(fff, "[%d]: %s (Level %d, '%c')\n", r_idx,
-			r_name + r_ptr->name, r_ptr->level, r_ptr->d_char);
-#endif
+		fprintf(fff, _("[%d]: %s (レベル%d, '%c')\n", "[%d]: %s (Level %d, '%c')\n"),
+			r_idx, r_name + r_ptr->name, (int)r_ptr->level, r_ptr->d_char);
+
 		for (n = 1; r_ptr->next_exp; n++)
 		{
 			fprintf(fff, "%*s-(%ld)-> ", n * 2, "", (long int)r_ptr->next_exp);
 			fprintf(fff, "[%d]: ", r_ptr->next_r_idx);
 			r_ptr = &r_info[r_ptr->next_r_idx];
-#ifdef JP
-			fprintf(fff, "%s (レベル%d, '%c')\n",
-				r_name + r_ptr->name, r_ptr->level, r_ptr->d_char);
-#else
-			fprintf(fff, "%s (Level %d, '%c')\n",
-				r_name + r_ptr->name, r_ptr->level, r_ptr->d_char);
-#endif
+			fprintf(fff, _("%s (レベル%d, '%c')\n", "%s (Level %d, '%c')\n"),
+				r_name + r_ptr->name, (int)r_ptr->level, r_ptr->d_char);
 		}
 
 		/* End of evolution tree */
@@ -2545,11 +2551,11 @@ void do_cmd_spoilers(void)
 		prt("Create a spoiler file.", 2, 0);
 
 		/* Prompt for a file */
-		prt("(1) Brief Object Info (obj-desc.spo)", 5, 5);
-		prt("(2) Brief Artifact Info (artifact.spo)", 6, 5);
-		prt("(3) Brief Monster Info (mon-desc.spo)", 7, 5);
-		prt("(4) Full Monster Info (mon-info.spo)", 8, 5);
-		prt("(5) Monster Evolution Info (mon-evol.spo)", 9, 5);
+		prt("(1) Brief Object Info (obj-desc.txt)", 5, 5);
+		prt("(2) Brief Artifact Info (artifact.txt)", 6, 5);
+		prt("(3) Brief Monster Info (mon-desc.txt)", 7, 5);
+		prt("(4) Full Monster Info (mon-info.txt)", 8, 5);
+		prt("(5) Monster Evolution Info (mon-evol.txt)", 9, 5);
 
 		/* Prompt */
 		prt(_("コマンド:", "Command: "), _(18, 12), 0);
@@ -2565,27 +2571,27 @@ void do_cmd_spoilers(void)
 
 		/* Option (1) */
 		case '1':
-			spoil_obj_desc("obj-desc.spo");
+			spoil_obj_desc("obj-desc.txt");
 			break;
 
 		/* Option (2) */
 		case '2':
-			spoil_artifact("artifact.spo");
+			spoil_artifact("artifact.txt");
 			break;
 
 		/* Option (3) */
 		case '3':
-			spoil_mon_desc("mon-desc.spo");
+			spoil_mon_desc("mon-desc.txt");
 			break;
 
 		/* Option (4) */
 		case '4':
-			spoil_mon_info("mon-info.spo");
+			spoil_mon_info("mon-info.txt");
 			break;
 
 		/* Option (5) */
 		case '5':
-			spoil_mon_evol("mon-evol.spo");
+			spoil_mon_evol("mon-evol.txt");
 			break;
 
 		/* Oops */

@@ -963,7 +963,7 @@ static s32b price_item(object_type *o_ptr, int greed, bool flip)
 static void mass_produce(object_type *o_ptr)
 {
 	int size = 1;
-	int discount = 0;
+	DISCOUNT_RATE discount = 0;
 
 	s32b cost = object_value(o_ptr);
 
@@ -976,7 +976,6 @@ static void mass_produce(object_type *o_ptr)
 		case TV_FLASK:
 		case TV_LITE:
 		{
-
 			if (cost <= 5L) size += damroll(3, 5);
 			if (cost <= 20L) size += damroll(3, 5);
 			if (cost <= 50L) size += damroll(2, 2);
@@ -1120,18 +1119,8 @@ static void mass_produce(object_type *o_ptr)
 		discount = 90;
 	}
 
-
 	if (o_ptr->art_name)
 	{
-		if (cheat_peek && discount)
-		{
-#ifdef JP
-msg_print("ランダムアーティファクトは値引きなし。");
-#else
-			msg_print("No discount on random artifacts.");
-#endif
-
-		}
 		discount = 0;
 	}
 
@@ -1144,7 +1133,7 @@ msg_print("ランダムアーティファクトは値引きなし。");
 	/* Ensure that mass-produced rods and wands get the correct pvals. */
 	if ((o_ptr->tval == TV_ROD) || (o_ptr->tval == TV_WAND))
 	{
-		o_ptr->pval *= o_ptr->number;
+		o_ptr->pval *= (PARAMETER_VALUE)o_ptr->number;
 	}
 }
 
@@ -1653,8 +1642,8 @@ bool combine_and_reorder_home(int store_num)
 					}
 					else
 					{
-						int old_num = o_ptr->number;
-						int remain = j_ptr->number + o_ptr->number - max_num;
+						ITEM_NUMBER old_num = o_ptr->number;
+						ITEM_NUMBER remain = j_ptr->number + o_ptr->number - max_num;
 
 						/* Add together the item counts */
 						object_absorb(j_ptr, o_ptr);
@@ -1961,6 +1950,7 @@ static int store_carry(object_type *o_ptr)
  * Increase, by a given amount, the number of a certain item
  * in a certain store.	This can result in zero items.
  * </pre>
+ * @todo numは本来ITEM_NUMBER型にしたい。
  */
 static void store_item_increase(int item, int num)
 {
@@ -1977,7 +1967,7 @@ static void store_item_increase(int item, int num)
 	num = cnt - o_ptr->number;
 
 	/* Save the new number */
-	o_ptr->number += num;
+	o_ptr->number += (ITEM_NUMBER)num;
 }
 
 
@@ -2111,7 +2101,9 @@ static void store_delete(void)
  */
 static void store_create(void)
 {
-	int i, tries, level;
+	OBJECT_IDX i;
+	int tries;
+	DEPTH level;
 
 	object_type forge;
 	object_type *q_ptr;
@@ -2640,7 +2632,7 @@ static void display_store(void)
  * @param j 選択範囲の最大値
  * @return 実際に選択したらTRUE、キャンセルしたらFALSE
  */
-static int get_stock(int *com_val, cptr pmt, int i, int j)
+static int get_stock(COMMAND_CODE *com_val, cptr pmt, int i, int j)
 {
 	char	command;
 	char	out_val[160];
@@ -2684,7 +2676,7 @@ static int get_stock(int *com_val, cptr pmt, int i, int j)
 	/* Ask until done */
 	while (TRUE)
 	{
-		int k;
+		COMMAND_CODE k;
 
 		/* Escape */
 		if (!get_com(out_val, &command, FALSE)) break;
@@ -3460,8 +3452,10 @@ static bool sell_haggle(object_type *o_ptr, s32b *price)
  */
 static void store_purchase(void)
 {
-	int i, amt, choice;
-	int item, item_new;
+	int i, choice;
+	COMMAND_CODE item, item_new;
+
+	ITEM_NUMBER amt;
 
 	s32b price, best;
 
@@ -3649,7 +3643,7 @@ msg_format("一つにつき $%ldです。", (long)(best));
 
 			/* Message */
 #ifdef JP
-msg_format("%s(%c)を購入する。", o_name, I2A(item));
+			msg_format("%s(%c)を購入する。", o_name, I2A(item));
 #else
 			msg_format("Buying %s (%c).", o_name, I2A(item));
 #endif
@@ -3730,7 +3724,7 @@ msg_format("%sを $%ldで購入しました。", o_name, (long)price);
 
 				/* Message */
 #ifdef JP
-		msg_format("%s(%c)を手に入れた。", o_name, index_to_label(item_new));
+				msg_format("%s(%c)を手に入れた。", o_name, index_to_label(item_new));
 #else
 				msg_format("You have %s (%c).",
 						   o_name, index_to_label(item_new));
@@ -3856,7 +3850,7 @@ msg_format("%sを $%ldで購入しました。", o_name, (long)price);
 
 		/* Message */
 #ifdef JP
-				msg_format("%s(%c)を取った。",
+		msg_format("%s(%c)を取った。",
 #else
 		msg_format("You have %s (%c).",
 #endif
@@ -3913,7 +3907,8 @@ msg_format("%sを $%ldで購入しました。", o_name, (long)price);
 static void store_sell(void)
 {
 	int choice;
-	int item, item_pos;
+	OBJECT_IDX item;
+	int item_pos;
 	int amt;
 
 	s32b price, value, dummy;
@@ -4317,7 +4312,7 @@ msg_format("%sを $%ldで売却しました。", o_name, (long)price);
 static void store_examine(void)
 {
 	int         i;
-	int         item;
+	COMMAND_CODE item;
 	object_type *o_ptr;
 	char        o_name[MAX_NLEN];
 	char        out_val[160];
@@ -4419,7 +4414,7 @@ msg_print("特に変わったところはないようだ。");
 static void museum_remove_object(void)
 {
 	int         i;
-	int         item;
+	COMMAND_CODE item;
 	object_type *o_ptr;
 	char        o_name[MAX_NLEN];
 	char        out_val[160];

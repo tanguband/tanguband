@@ -1,0 +1,220 @@
+# File: Makefile.osx
+
+# This is a Makefile for the Mac OS X Cocoa port of Tanguband.
+
+# default target
+all: install
+
+# settings
+CC = clang
+LD = ld
+OPT ?= -fast
+
+NAME = Tanguband
+APPNAME = $(NAME).app
+EXE = tanguband
+#VERSION = $(shell ../scripts/version.sh)
+COPYRIGHT = 2018 Tanguband
+
+# For now, buggy in 64bit
+#ARCH = -arch x86_64
+#ARCH = -arch i386 -arch x86_64
+ARCH = -arch i386
+
+WARNINGS = -W -Wall -Wno-unused-parameter -Wno-missing-field-initializers
+JUST_C = -std=c99 -Wdeclaration-after-statement
+OBJ_CFLAGS = -std=c99 -x objective-c -mmacosx-version-min=10.11
+
+ENCODINGS = -DJP -DEUC
+CFLAGS = -g -I. $(WARNINGS) $(OPT) -DMACH_O_CARBON -DHAVE_MKSTEMP $(ENCODINGS)  \
+	-fno-stack-protector $(ARCH)
+LIBS = -framework Cocoa  -liconv  
+DEPLOYMENT_TARGET = MACOSX_DEPLOYMENT_TARGET=10.11
+
+# Import user prefs
+# If you don't want to edit this file, put your module redefinitions
+# and build flags in "./config"
+-include config
+
+OBJS = \
+	artifact.o autopick.o avatar.o birth.o bldg.o cave.o \
+	cmd1.o cmd2.o cmd3.o cmd4.o cmd5.o cmd6.o do-spell.o \
+	dungeon.o effects.o files.o floors.o flavor.o generate.o \
+	grid.o hex.o hissatsu.o inet.o init1.o init2.o japanese.o \
+	load.o mane.o melee1.o melee2.o mind.o \
+	monster1.o monster2.o mspells1.o mspells2.o mspells3.o mspells4.o \
+	mutation.o snipe.o \
+	obj_kind.o object1.o object2.o racial.o \
+	report.o rooms.o save.o scores.o spells1.o \
+	spells2.o spells3.o store.o streams.o tables.o util.o \
+	variable.o wild.o wizard1.o wizard2.o xtra1.o xtra2.o \
+	z-form.o z-rand.o z-term.o z-util.o z-virt.o \
+	chuukei.o
+OSX_OBJS = main-cocoa.o
+
+
+#
+# Build the "Tanguband" program
+#
+
+# disable 64-bit build
+#$(EXE).o: $(OBJS)
+#	$(LD) -r -arch x86_64 -o $@.x86_64 $(OBJS)
+#	$(LD) -r -arch i386 -o $@.i386 $(OBJS)
+#	lipo -arch x86_64 $@.x86_64 -arch i386 $@.i386 -create -output $(EXE).o
+#	lipo -arch x86_64 $@.x86_64  -create -output $(EXE).o
+
+$(EXE).o: $(OBJS)
+	$(LD) -r -arch i386 -o $@.i386 $(OBJS)
+	lipo -arch i386 $@.i386 -create -output $(EXE).o
+
+$(EXE): $(EXE).o $(OSX_OBJS)
+	$(DEPLOYMENT_TARGET) $(CC) $(CFLAGS) $(LDFLAGS) -o $(EXE) $(EXE).o $(OSX_OBJS) $(LIBS) 
+
+
+#
+# Clean up old junk
+#
+
+clean:
+	-rm -f $(OBJS) $(EXE) $(EXE).o.i386 $(EXE).o $(OSX_OBJS)
+
+
+#
+# Basic build rules and dependencies
+#
+
+main-cocoa.o : main-cocoa.m
+	@printf "%10s %-20s (objective-c)\n" CC $<
+	$(CC) $(CFLAGS) $(OBJ_CFLAGS) -c -o $@ $<
+%.o : %.c
+	@printf "%10s %-20s\n" CC $<
+	$(CC) $(JUST_C) $(CFLAGS) -c -o $@ $<
+
+
+#
+# Installation.
+# Application bundle -- a directory looking like an ordinary application
+#
+
+# Bundle of the game (it must be a directory whose name ends in ".app")
+APPBNDL = ../$(APPNAME)
+
+# A bundle must have these subdirectories
+APPCONT = $(APPBNDL)/Contents
+APPBIN = $(APPCONT)/MacOS
+APPRES = $(APPCONT)/Resources
+
+# Auxiliary files. Please note that it still uses resouce fork based
+# resources for menus, dialogues and sounds, so that it isn't safe to use
+# utilities that doesn't understand them (virtually all Un*x commands) to
+# copy or archive the application.
+#
+# The graphics tiles have been moved out of the resource fork, but, again,
+# it isn't generally safe just to convert GIF or BMP files to PNG, because
+# the Mac OS takes dpi values stored in various images quite seriously.
+# Almost all tilesets for *band requires adjustment, with the sole exception
+# of 8x8.png for Vanilla.  Make sure setting dpi to 72, *not* preserving
+# the actual size of image.  When you have them ready, put them in
+# the lib/xtra/graf directory and rebuild.
+PLIST = cocoa/Hengband-Cocoa.xml
+
+ICONFILES = cocoa/Tanguband_Icons.icns cocoa/Save.icns cocoa/Edit.icns cocoa/Data.icns
+
+LIBFILES = \
+  ../lib/edit/*.txt \
+  ../lib/file/*.txt \
+  ../lib/help/*.txt \
+  ../lib/help/*.hlp \
+  ../lib/pref/*.prf \
+
+install: $(EXE) $(ICONFILES) $(PLIST) $(LIBFILES)
+	@echo making directories...
+	@mkdir -p $(APPBNDL)
+	@mkdir -p $(APPCONT)
+	@mkdir -p $(APPBIN)
+	@mkdir -p $(APPRES)
+	@mkdir -p $(APPRES)/English.lproj/MainMenu.nib 
+	@mkdir -p $(APPRES)/Japanese.lproj/MainMenu.nib 
+	@mkdir -p $(APPRES)/lib/apex
+	@mkdir -p $(APPRES)/lib/bone
+	@mkdir -p $(APPRES)/lib/data
+	@mkdir -p $(APPRES)/lib/edit
+	@mkdir -p $(APPRES)/lib/file
+	@mkdir -p $(APPRES)/lib/help
+	@mkdir -p $(APPRES)/lib/info
+	@mkdir -p $(APPRES)/lib/save
+	@mkdir -p $(APPRES)/lib/pref
+	@mkdir -p $(APPRES)/lib/script
+	@mkdir -p $(APPRES)/lib/user
+	@mkdir -p $(APPRES)/lib/xtra/font
+	@mkdir -p $(APPRES)/lib/xtra/graf
+	@mkdir -p $(APPRES)/lib/xtra/music
+	@mkdir -p $(APPRES)/lib/xtra/sound
+
+	@echo copying files...
+	@cp ../lib/apex/readme.txt ../lib/apex/h_scores.raw $(APPRES)/lib/apex
+	@cp ../lib/edit/*.txt $(APPRES)/lib/edit
+	@cp ../lib/file/*.txt $(APPRES)/lib/file
+	@cp ../lib/help/*.txt $(APPRES)/lib/help
+	@cp ../lib/help/*.hlp $(APPRES)/lib/help
+	@cp ../lib/pref/*.prf $(APPRES)/lib/pref
+
+	# 'optionally' install sound and graphics tiles, if present
+	# TODO: read the tile pngs from $(APPRES)/lib/xtra/graf/
+	# so we can just recursively copy that directory.
+	-cp ../lib/xtra/font/*.FON ../lib/xtra/font/*.fnt $(APPRES)/lib/xtra/font
+	-cp ../lib/xtra/graf/*.bmp $(APPRES)/lib/xtra/graf
+	-cp ../lib/xtra/sound/*.wav $(APPRES)/lib/xtra/sound
+	-cp ../lib/xtra/sound/sound.cfg $(APPRES)/lib/xtra/sound
+
+	install -m 755 $(EXE) $(APPBIN)
+	install -m 644 $(ICONFILES) $(APPRES)
+	cp cocoa/English.lproj/MainMenu.nib/*ib $(APPRES)/English.lproj/MainMenu.nib
+	cp cocoa/English.lproj/InfoPlist.strings $(APPRES)/English.lproj
+	cp cocoa/Japanese.lproj/MainMenu.nib/*ib $(APPRES)/Japanese.lproj/MainMenu.nib
+	cp cocoa/Japanese.lproj/InfoPlist.strings $(APPRES)/Japanese.lproj
+	sed -e 's/\$$VERSION\$$/$(VERSION)/' -e 's/\$$COPYRIGHT\$$/$(COPYRIGHT)/' \
+		-e 's/\$$NAME\$$/$(NAME)/' -e 's/\$$EXECUTABLE\$$/$(EXE)/' \
+		$(PLIST) > $(APPCONT)/Info.plist
+
+	SetFile -a B $(APPBNDL)
+
+
+vars:
+	@echo LDFLAGS = $(LDFLAGS)
+	@echo CFLAGS = $(CFLAGS)
+	@echo BASEOBJS = $(BASEOBJS)
+
+
+
+PACKAGE_NAME = $(NAME)-$(VERSION)
+
+# In the unlikely event that tar+zip isn't enough...
+
+dist: install
+	@rm -rf disttemp*
+	mkdir -p disttemp/Docs
+	cp ../autopick.txt ../autopick_eng.txt ../readme.txt ../readme_angband \
+		../readme_eng.txt disttemp/Docs
+	mkdir -p disttemp/build
+	cp ../lib/pref/pref-mac.prf main-cocoa.m makefile.osx disttemp/build
+	cp -R -p cocoa disttemp/build
+	cp ../readme_mac_jp.txt disttemp
+	cp -R -p "$(APPBNDL)" disttemp
+	SetFile -a B disttemp/$(APPNAME)
+
+	@-rm ../"$(PACKAGE_NAME)-osx.dmg"
+
+	hdiutil create -quiet -fs HFS+ -volname $(PACKAGE_NAME) -srcfolder disttemp disttemp.dmg
+	hdiutil convert disttemp.dmg -quiet -format UDZO -imagekey zlib-level=6 -o ../"$(PACKAGE_NAME)-osx.dmg"
+
+	rm -rf disttemp*
+
+tests:
+	$(MAKE) -C tests all CFLAGS="-I.. $(CFLAGS)" LDFLAGS="$(LIBS)" DEFAULT_CONFIG_PATH=../lib
+
+test-clean:
+	$(MAKE) -C tests clean
+
+.PHONY : tests test-clean

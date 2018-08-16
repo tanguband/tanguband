@@ -299,7 +299,7 @@ E:& Ration~ of Food
 G:,:U
 I:80:35:5000
 W:0:0:10:3
-A:0/1:1/1:2/1
+A:0/1
 D:$This nutritious but fairly bland food is 
 D:$familiar to anyone contemplating long journeys.
 D:栄養はあるが味気ないこの食料は長旅を考える冒険者に良く合う。
@@ -338,7 +338,7 @@ E:& Piece~ of Elvish Waybread
 G:,:B
 I:80:37:7500
 W:1:0:3:30
-A:1/1:2/1:3/1
+A:1/1
 D:$Small golden-brown wafers wrapped in silven leaves.  Made with elvish art, 
 D:$it sustains life where nothing else can.
 D:銀色の葉に包まれた小さな山吹色の薄焼き菓子の束だ。エルフの技で作られ、
@@ -358,7 +358,7 @@ G:,:r
 I:80:39:1000
 W:110:0:10:2
 D:$A heady wine, almost as good as that served at the Green Dragon at Bywater.
-D:ベイウォーターの緑竜邸で出るのと同じくらい質の良い、
+D:水の辺村の緑竜館で出るのと同じくらい質の良い、
 D:アルコール度の高いワインだ。
 
 ##### Extra digger #####
@@ -572,8 +572,8 @@ W:1:0:75:48
 A:1/1
 P:0:1d6:0:0:0
 F:SHOW_MODS
-D:$A smaller version of the longsword, perfectly sized for Hobbits.
-D:ロングソードを少し短くしたような剣だ。ホビットにぴったりのサイズだ。
+D:$A smaller version of the Long Sword, perfectly sized for Hobbits.
+D:ロング・ソードを少し短くしたような剣だ。ホビットにぴったりのサイズだ。
 
 N:47:折れた剣
 E:& Broken Sword~
@@ -3007,8 +3007,8 @@ I:65:12:7
 W:10:0:10:1200
 A:10/1:11/1
 P:0:1d1:0:0:0
-D:$It fires a bolt of drain life (damage: 80+level) when you use it.
-D:それは使うとダメージ80+レベルの生命力を削る矢を放つ。
+D:$It fires a bolt of hypodynamia (damage: 80+level) when you use it.
+D:それは使うとダメージ80+レベルの衰弱の矢を放つ。
 
 N:281:トラップ/ドア破壊:ブリキの
 E:Trap/Door Destruction:Tin
@@ -3862,8 +3862,8 @@ I:66:18:23
 W:110:0:15:3600
 A:38/2:75/1
 P:0:1d1:0:0:0
-D:$It fires a bolt of drain life (damage: 70+3*level/2) when you zap it.
-D:それは振るとダメージ70+3*レベル/2の生命力を削る矢を放つ。
+D:$It fires a bolt of hypodynamia (damage: 70+3*level/2) when you zap it.
+D:それは振るとダメージ70+3*レベル/2の衰弱の矢を放つ。
 
 N:364:テレポート・アウェイ:タングステンの
 E:Teleport Other:Tungsten

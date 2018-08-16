@@ -13,7 +13,7 @@
 #include "angband.h"
 
 /*!
- * @brief 現在の修正後能力値を3～17及び18/xxx形式に変換する / Converts stat num into a six-char (right justified) string
+ * @brief 現在の修正後能力値を3〜17及び18/xxx形式に変換する / Converts stat num into a six-char (right justified) string
  * @param val 能力値
  * @param out_val 出力先文字列ポインタ
  * @return なし
@@ -47,7 +47,7 @@ void cnv_stat(int val, char *out_val)
 }
 
 /*!
- * @brief 能力値現在値から3～17及び18/xxx様式に基づく加減算を行う。
+ * @brief 能力値現在値から3〜17及び18/xxx様式に基づく加減算を行う。
  * Modify a stat value by a "modifier", return new value
  * @param value 現在値
  * @param amount 加減算値
@@ -96,7 +96,7 @@ s16b modify_stat_value(int value, int amount)
 	}
 
 	/* Return new value */
-	return (value);
+	return (s16b)(value);
 }
 
 
@@ -674,10 +674,10 @@ static void prt_status(void)
 			hex_spelling(HEX_CURE_SERIOUS) ||
 			hex_spelling(HEX_CURE_CRITICAL)) ADD_FLG(BAR_CURE);
 
-		if (p_ptr->magic_num2[2])
+		if (HEX_REVENGE_TURN(p_ptr))
 		{
-			if (p_ptr->magic_num2[1] == 1) ADD_FLG(BAR_PATIENCE);
-			if (p_ptr->magic_num2[1] == 2) ADD_FLG(BAR_REVENGE);
+			if (HEX_REVENGE_TYPE(p_ptr) == 1) ADD_FLG(BAR_PATIENCE);
+			if (HEX_REVENGE_TYPE(p_ptr) == 2) ADD_FLG(BAR_REVENGE);
 		}
 	}
 
@@ -1030,8 +1030,8 @@ static void prt_depth(void)
 	}
 	else
 	{
-		if (depth_in_feet) (void)sprintf(depths, _("%d ft", "%d ft"), dun_level * 50);
-		else (void)sprintf(depths, _("%d 階", "Lev %d"), dun_level);
+		if (depth_in_feet) (void)sprintf(depths, _("%d ft", "%d ft"), (int)dun_level * 50);
+		else (void)sprintf(depths, _("%d 階", "Lev %d"), (int)dun_level);
 
 		/* Get color of level based on feeling  -JSV- */
 		switch (p_ptr->feeling)
@@ -1113,7 +1113,7 @@ static void prt_state(void)
 {
 	byte attr = TERM_WHITE;
 
-	char text[5];
+	char text[16];
 
 	/* Repeating */
 	if (command_rep)
@@ -1181,13 +1181,13 @@ static void prt_state(void)
 				}
 
 				/* Rest until healed */
-				else if (resting == -1)
+				else if (resting == COMMAND_ARG_REST_FULL_HEALING)
 				{
 					text[0] = text[1] = text[2] = text[3] = '*';
 				}
 
 				/* Rest until done */
-				else if (resting == -2)
+				else if (resting == COMMAND_ARG_REST_UNTIL_DONE)
 				{
 					text[0] = text[1] = text[2] = text[3] = '&';
 				}
@@ -1736,7 +1736,7 @@ static void fix_inven(void)
 static void print_monster_line(int x, int y, monster_type* m_ptr, int n_same){
 	char buf[256];
 	int i;
-	int r_idx = m_ptr->ap_r_idx;
+	MONRACE_IDX r_idx = m_ptr->ap_r_idx;
 	monster_race* r_ptr = &r_info[r_idx];
  
 	Term_gotoxy(x, y);
@@ -1762,7 +1762,7 @@ static void print_monster_line(int x, int y, monster_type* m_ptr, int n_same){
 	Term_add_bigch(r_ptr->x_attr, r_ptr->x_char);
 	//LV
 	if (r_ptr->r_tkills && !(m_ptr->mflag2 & MFLAG2_KAGE)){
-		sprintf(buf, " %2d", r_ptr->level);
+		sprintf(buf, " %2d", (int)r_ptr->level);
 	}else{
 		strcpy(buf, " ??");
 	}
@@ -1795,7 +1795,7 @@ void print_monster_list(int x, int y, int max_lines){
 		if(!m_ptr->r_idx)continue;//dead?
 		{
 			/*
-			int r_idx = m_ptr->ap_r_idx;
+			MONRACE_IDX r_idx = m_ptr->ap_r_idx;
 			monster_race* r_ptr = &r_info[r_idx];
 			cptr name = (r_name + r_ptr->name);
 			cptr ename = (r_name + r_ptr->name);
@@ -2202,7 +2202,7 @@ static void calc_spells(void)
 	int         num_boukyaku = 0;
 
 	const magic_type	*s_ptr;
-	int which;
+	REALM_IDX which;
 	int bonus = 0;
 
 
@@ -2503,7 +2503,11 @@ static void calc_spells(void)
 			k++;
 		}
 		if (k > 32) k = 32;
-		if ((p_ptr->new_spells > k) && ((mp_ptr->spell_book == TV_LIFE_BOOK) || (mp_ptr->spell_book == TV_HISSATSU_BOOK))) p_ptr->new_spells = k;
+		if ((p_ptr->new_spells > k) &&
+			((mp_ptr->spell_book == TV_LIFE_BOOK) || (mp_ptr->spell_book == TV_HISSATSU_BOOK)))
+		{
+			p_ptr->new_spells = (s16b)k;
+		}
 	}
 
 	if (p_ptr->new_spells < 0) p_ptr->new_spells = 0;
@@ -2990,7 +2994,7 @@ static void calc_torch(void)
 		if (have_flag(flgs, TR_LITE_M1)) rad -= 1;
 		if (have_flag(flgs, TR_LITE_M2)) rad -= 2;
 		if (have_flag(flgs, TR_LITE_M3)) rad -= 3;
-		p_ptr->cur_lite += rad;
+		p_ptr->cur_lite += (s16b)rad;
 	}
 
 	/* max radius is 14 (was 5) without rewriting other code -- */
@@ -3030,12 +3034,12 @@ static void calc_torch(void)
  * Computes current weight limit.
  * @return 制限重量(ポンド)
  */
-u32b weight_limit(void)
+WEIGHT weight_limit(void)
 {
-	u32b i;
+	WEIGHT i;
 
 	/* Weight limit based only on strength */
-	i = (u32b)adj_str_wgt[p_ptr->stat_ind[A_STR]] * 50; /* Constant was 100 */
+	i = (WEIGHT)adj_str_wgt[p_ptr->stat_ind[A_STR]] * 50; /* Constant was 100 */
 	if (p_ptr->pclass == CLASS_BERSERKER) i = i * 3 / 2;
 
 	/* Return the result */
@@ -3092,6 +3096,7 @@ int bow_tval_ammo(object_type *o_ptr)
 			return TV_BOLT;
 		}
 		case SV_CRIMSON:
+		case SV_HARP:
 		{
 			return TV_NO_AMMO;
 		}
@@ -3111,7 +3116,7 @@ s16b calc_num_fire(object_type *o_ptr)
 	int extra_shots = 0;
 	int i;
 	int num = 0;
-	int tval_ammo = bow_tval_ammo(o_ptr);
+	OBJECT_TYPE_VALUE tval_ammo = bow_tval_ammo(o_ptr);
 	object_type *q_ptr;
 	u32b flgs[TR_FLAG_SIZE];
 	
@@ -3179,7 +3184,7 @@ s16b calc_num_fire(object_type *o_ptr)
 			num += (p_ptr->lev * 4);
 		}
 	}
-	return num;
+	return (s16b)num;
 }
 
 /*!
@@ -3245,8 +3250,8 @@ void calc_bonuses(void)
 	bool old_mighty_throw = p_ptr->mighty_throw;
 
 	/* Save the old armor class */
-	bool old_dis_ac = p_ptr->dis_ac;
-	bool old_dis_to_a = p_ptr->dis_to_a;
+	s16b old_dis_ac = p_ptr->dis_ac;
+	s16b old_dis_to_a = p_ptr->dis_to_a;
 
 
 	/* Clear extra blows/shots */
@@ -4357,25 +4362,25 @@ void calc_bonuses(void)
 		/* To Bow and Natural attack */
 
 		/* Apply the bonuses to hit/damage */
-		p_ptr->to_h_b += bonus_to_h;
-		p_ptr->to_h_m += bonus_to_h;
-		p_ptr->to_d_m += bonus_to_d;
+		p_ptr->to_h_b += (s16b)bonus_to_h;
+		p_ptr->to_h_m += (s16b)bonus_to_h;
+		p_ptr->to_d_m += (s16b)bonus_to_d;
 
 		/* Apply the mental bonuses tp hit/damage, if known */
-		if (object_is_known(o_ptr)) p_ptr->dis_to_h_b += bonus_to_h;
+		if (object_is_known(o_ptr)) p_ptr->dis_to_h_b += (s16b)bonus_to_h;
 
 		/* To Melee */
 		if ((i == INVEN_LEFT || i == INVEN_RIGHT) && !p_ptr->ryoute)
 		{
 			/* Apply the bonuses to hit/damage */
-			p_ptr->to_h[i-INVEN_RIGHT] += bonus_to_h;
-			p_ptr->to_d[i-INVEN_RIGHT] += bonus_to_d;
+			p_ptr->to_h[i-INVEN_RIGHT] += (s16b)bonus_to_h;
+			p_ptr->to_d[i-INVEN_RIGHT] += (s16b)bonus_to_d;
 
 			/* Apply the mental bonuses tp hit/damage, if known */
 			if (object_is_known(o_ptr))
 			{
-				p_ptr->dis_to_h[i-INVEN_RIGHT] += bonus_to_h;
-				p_ptr->dis_to_d[i-INVEN_RIGHT] += bonus_to_d;
+				p_ptr->dis_to_h[i-INVEN_RIGHT] += (s16b)bonus_to_h;
+				p_ptr->dis_to_d[i-INVEN_RIGHT] += (s16b)bonus_to_d;
 			}
 		}
 		else if (p_ptr->migite && p_ptr->hidarite)
@@ -4398,14 +4403,14 @@ void calc_bonuses(void)
 		else
 		{
 			/* Apply the bonuses to hit/damage */
-			p_ptr->to_h[default_hand] += bonus_to_h;
-			p_ptr->to_d[default_hand] += bonus_to_d;
+			p_ptr->to_h[default_hand] += (s16b)bonus_to_h;
+			p_ptr->to_d[default_hand] += (s16b)bonus_to_d;
 
 			/* Apply the mental bonuses to hit/damage, if known */
 			if (object_is_known(o_ptr))
 			{
-				p_ptr->dis_to_h[default_hand] += bonus_to_h;
-				p_ptr->dis_to_d[default_hand] += bonus_to_d;
+				p_ptr->dis_to_h[default_hand] += (s16b)bonus_to_h;
+				p_ptr->dis_to_d[default_hand] += (s16b)bonus_to_d;
 			}
 		}
 	}
@@ -4498,7 +4503,7 @@ void calc_bonuses(void)
 	/* Hex bonuses */
 	if (p_ptr->realm1 == REALM_HEX)
 	{
-		if (hex_spelling_any()) p_ptr->skill_stl -= (1 + p_ptr->magic_num2[0]);
+		if (hex_spelling_any()) p_ptr->skill_stl -= (1 + CASTING_HEX_NUM(p_ptr));
 		if (hex_spelling(HEX_DETECT_EVIL)) p_ptr->esp_evil = TRUE;
 		if (hex_spelling(HEX_XTRA_MIGHT)) p_ptr->stat_add[A_STR] += 4;
 		if (hex_spelling(HEX_BUILDING))
@@ -4533,8 +4538,8 @@ void calc_bonuses(void)
 			ac += 5;
 			if (o_ptr->curse_flags & TRC_HEAVY_CURSE) ac += 7;
 			if (o_ptr->curse_flags & TRC_PERMA_CURSE) ac += 13;
-			p_ptr->to_a += ac;
-			p_ptr->dis_to_a += ac;
+			p_ptr->to_a += (s16b)ac;
+			p_ptr->dis_to_a += (s16b)ac;
 		}
 	}
 
@@ -4550,7 +4555,7 @@ void calc_bonuses(void)
 		if (p_ptr->stat_top[i] != top)
 		{
 			/* Save the new value */
-			p_ptr->stat_top[i] = top;
+			p_ptr->stat_top[i] = (s16b)top;
 
 			/* Redisplay the stats later */
 			p_ptr->redraw |= (PR_STATS);
@@ -4576,7 +4581,7 @@ void calc_bonuses(void)
 		if (p_ptr->stat_use[i] != use)
 		{
 			/* Save the new value */
-			p_ptr->stat_use[i] = use;
+			p_ptr->stat_use[i] = (s16b)use;
 
 			/* Redisplay the stats later */
 			p_ptr->redraw |= (PR_STATS);
@@ -4599,7 +4604,7 @@ void calc_bonuses(void)
 		if (p_ptr->stat_ind[i] != ind)
 		{
 			/* Save the new index */
-			p_ptr->stat_ind[i] = ind;
+			p_ptr->stat_ind[i] = (s16b)ind;
 
 			/* Change in CON affects Hitpoints */
 			if (i == A_CON)
@@ -4891,10 +4896,10 @@ void calc_bonuses(void)
 		}
 		if (inventory[INVEN_RARM].tval == TV_POLEARM) penalty1 += 10;
 		if (inventory[INVEN_LARM].tval == TV_POLEARM) penalty2 += 10;
-		p_ptr->to_h[0] -= penalty1;
-		p_ptr->to_h[1] -= penalty2;
-		p_ptr->dis_to_h[0] -= penalty1;
-		p_ptr->dis_to_h[1] -= penalty2;
+		p_ptr->to_h[0] -= (s16b)penalty1;
+		p_ptr->to_h[1] -= (s16b)penalty2;
+		p_ptr->dis_to_h[0] -= (s16b)penalty1;
+		p_ptr->dis_to_h[1] -= (s16b)penalty2;
 	}
 
 	/* Extract the current weight (in tenth pounds) */
@@ -4986,7 +4991,7 @@ void calc_bonuses(void)
 	/* Compute "extra shots" if needed */
 	if (o_ptr->k_idx)
 	{
-		p_ptr->tval_ammo = bow_tval_ammo(o_ptr);
+		p_ptr->tval_ammo = (byte_hack)bow_tval_ammo(o_ptr);
 
 		/* Apply special flags */
 		if (o_ptr->k_idx && !p_ptr->heavy_shoot)
@@ -5004,8 +5009,7 @@ void calc_bonuses(void)
 		}
 	}
 
-	if (p_ptr->ryoute)
-		hold *= 2;
+	if (p_ptr->ryoute) hold *= 2;
 
 	for(i = 0 ; i < 2 ; i++)
 	{
@@ -5164,10 +5168,10 @@ void calc_bonuses(void)
 			p_ptr->num_blow[i] = blows_table[str_index][dex_index];
 
 			/* Maximal value */
-			if (p_ptr->num_blow[i] > num) p_ptr->num_blow[i] = num;
+			if (p_ptr->num_blow[i] > num) p_ptr->num_blow[i] = (s16b)num;
 
 			/* Add in the "bonus blows" */
-			p_ptr->num_blow[i] += extra_blows[i];
+			p_ptr->num_blow[i] += (s16b)extra_blows[i];
 
 
 			if (p_ptr->pclass == CLASS_WARRIOR) p_ptr->num_blow[i] += (p_ptr->lev / 40);
@@ -5283,8 +5287,8 @@ void calc_bonuses(void)
 					penalty += 30;
 					if (penalty < 30) penalty = 30;
 				}
-				p_ptr->to_h[i] -= penalty;
-				p_ptr->dis_to_h[i] -= penalty;
+				p_ptr->to_h[i] -= (s16b)penalty;
+				p_ptr->dis_to_h[i] -= (s16b)penalty;
 
 				/* Riding weapon */
 				p_ptr->riding_wield[i] = TRUE;
@@ -5323,8 +5327,8 @@ void calc_bonuses(void)
 			if (penalty < 30) penalty = 30;
 		}
 		if (p_ptr->tval_ammo == TV_BOLT) penalty *= 2;
-		p_ptr->to_h_b -= penalty;
-		p_ptr->dis_to_h_b -= penalty;
+		p_ptr->to_h_b -= (s16b)penalty;
+		p_ptr->dis_to_h_b -= (s16b)penalty;
 	}
 
 	/* Different calculation for monks with empty hands */
@@ -5340,10 +5344,10 @@ void calc_bonuses(void)
 			if (blow_base > 31) p_ptr->num_blow[0]++;
 			if (blow_base > 44) p_ptr->num_blow[0]++;
 			if (blow_base > 58) p_ptr->num_blow[0]++;
-			if (p_ptr->magic_num1[0])
+			if (P_PTR_KI)
 			{
-				p_ptr->to_d[0] += (p_ptr->magic_num1[0]/5);
-				p_ptr->dis_to_d[0] += (p_ptr->magic_num1[0]/5);
+				p_ptr->to_d[0] += P_PTR_KI / 5;
+				p_ptr->dis_to_d[0] += P_PTR_KI / 5;
 			}
 		}
 		else
@@ -5424,8 +5428,8 @@ void calc_bonuses(void)
 	{
 		if (buki_motteruka(INVEN_RARM+i))
 		{
-			int tval = inventory[INVEN_RARM+i].tval - TV_WEAPON_BEGIN;
-			int sval = inventory[INVEN_RARM+i].sval;
+			OBJECT_TYPE_VALUE tval = inventory[INVEN_RARM+i].tval - TV_WEAPON_BEGIN;
+			OBJECT_SUBTYPE_VALUE sval = inventory[INVEN_RARM+i].sval;
 
 			p_ptr->to_h[i] += (p_ptr->weapon_exp[tval][sval] - WEAPON_EXP_BEGINNER) / 200;
 			p_ptr->dis_to_h[i] += (p_ptr->weapon_exp[tval][sval] - WEAPON_EXP_BEGINNER) / 200;
@@ -5693,7 +5697,7 @@ void calc_bonuses(void)
 			if (p_ptr->icky_wield[i])
 			{
 				msg_print(_("今の装備はどうも自分にふさわしくない気がする。", "You do not feel comfortable with your weapon."));
-				if (hack_mind)
+				if (is_loading_now)
 				{
 					chg_virtue(V_FAITH, -1);
 				}
@@ -5740,7 +5744,7 @@ void calc_bonuses(void)
 		if (heavy_armor())
 		{
 			msg_print(_("装備が重くてバランスを取れない。", "The weight of your armor disrupts your balance."));
-			if (hack_mind)
+			if (is_loading_now)
 			{
 				chg_virtue(V_HARMONY, -1);
 			}
@@ -5762,10 +5766,9 @@ void calc_bonuses(void)
 		if ((inventory[i].tval == TV_NATURE_BOOK) && (inventory[i].sval == 2)) have_sw = TRUE;
 		if ((inventory[i].tval == TV_CRAFT_BOOK) && (inventory[i].sval == 2)) have_kabe = TRUE;
 	}
+
 	for (this_o_idx = cave[p_ptr->y][p_ptr->x].o_idx; this_o_idx; this_o_idx = next_o_idx)
 	{
-		object_type *o_ptr;
-
 		/* Acquire object */
 		o_ptr = &o_list[this_o_idx];
 
@@ -6299,7 +6302,7 @@ s16b empty_hands(bool riding_control)
  */
 bool heavy_armor(void)
 {
-	u16b monk_arm_wgt = 0;
+	WEIGHT monk_arm_wgt = 0;
 
 	if ((p_ptr->pclass != CLASS_MONK) && (p_ptr->pclass != CLASS_FORCETRAINER) && (p_ptr->pclass != CLASS_NINJA)) return FALSE;
 
@@ -6323,7 +6326,7 @@ void update_playtime(void)
 	/* Check if the game has started */
 	if (start_time != 0)
 	{
-		u32b tmp = time(NULL);
+		u32b tmp = (u32b)time(NULL);
 		playtime += (tmp - start_time);
 		start_time = tmp;
 	}

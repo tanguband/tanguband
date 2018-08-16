@@ -27,7 +27,7 @@ void check_experience(void)
 	bool level_mutation = FALSE;
 	bool level_inc_stat = FALSE;
 	bool android = (p_ptr->prace == RACE_ANDROID ? TRUE : FALSE);
-	int  old_lev = p_ptr->lev;
+	PLAYER_LEVEL old_lev = p_ptr->lev;
 
 	/* Hack -- lower limit */
 	if (p_ptr->exp < 0) p_ptr->exp = 0;
@@ -103,12 +103,7 @@ void check_experience(void)
 		sound(SOUND_LEVEL);
 
 		/* Message */
-#ifdef JP
-msg_format("レベル %d にようこそ。", p_ptr->lev);
-#else
-		msg_format("Welcome to level %d.", p_ptr->lev);
-
-#endif
+		msg_format(_("レベル %d にようこそ。", "Welcome to level %d."), p_ptr->lev);
 
 		/* Update some stuff */
 		p_ptr->update |= (PU_BONUS | PU_HP | PU_MANA | PU_SPELLS);
@@ -230,17 +225,17 @@ msg_format("レベル %d にようこそ。", p_ptr->lev);
  * Used to allocate proper treasure when "Creeping coins" die
  * XXX XXX XXX Note the use of actual "monster names"
  */
-static int get_coin_type(int r_idx)
+static int get_coin_type(MONRACE_IDX r_idx)
 {
 	/* Analyze monsters */
 	switch (r_idx)
 	{
-	case MON_COPPER_COINS: return 2;
-	case MON_SILVER_COINS: return 5;
-	case MON_GOLD_COINS: return 10;
-	case MON_MITHRIL_COINS:
-	case MON_MITHRIL_GOLEM: return 16;
-	case MON_ADAMANT_COINS: return 17;
+		case MON_COPPER_COINS: return 2;
+		case MON_SILVER_COINS: return 5;
+		case MON_GOLD_COINS: return 10;
+		case MON_MITHRIL_COINS:
+		case MON_MITHRIL_GOLEM: return 16;
+		case MON_ADAMANT_COINS: return 17;
 	}
 
 	/* Assume nothing */
@@ -254,7 +249,7 @@ static int get_coin_type(int r_idx)
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトがクロークならばTRUEを返す
  */
-static bool kind_is_cloak(int k_idx)
+static bool kind_is_cloak(KIND_OBJECT_IDX k_idx)
 {
 	object_kind *k_ptr = &k_info[k_idx];
 
@@ -275,7 +270,7 @@ static bool kind_is_cloak(int k_idx)
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトが竿状武器ならばTRUEを返す
  */
-static bool kind_is_polearm(int k_idx)
+static bool kind_is_polearm(KIND_OBJECT_IDX k_idx)
 {
 	object_kind *k_ptr = &k_info[k_idx];
 
@@ -296,7 +291,7 @@ static bool kind_is_polearm(int k_idx)
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトが剣ならばTRUEを返す
  */
-static bool kind_is_sword(int k_idx)
+static bool kind_is_sword(KIND_OBJECT_IDX k_idx)
 {
 	object_kind *k_ptr = &k_info[k_idx];
 
@@ -317,7 +312,7 @@ static bool kind_is_sword(int k_idx)
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトが魔法書ならばTRUEを返す
  */
-static bool kind_is_book(int k_idx)
+static bool kind_is_book(KIND_OBJECT_IDX k_idx)
 {
 	object_kind *k_ptr = &k_info[k_idx];
 
@@ -338,7 +333,7 @@ static bool kind_is_book(int k_idx)
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトがベースアイテム時点でGOODなアイテムならばTRUEを返す
  */
-static bool kind_is_good_book(int k_idx)
+static bool kind_is_good_book(KIND_OBJECT_IDX k_idx)
 {
 	object_kind *k_ptr = &k_info[k_idx];
 
@@ -359,7 +354,7 @@ static bool kind_is_good_book(int k_idx)
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトが鎧ならばTRUEを返す
  */
-static bool kind_is_armor(int k_idx)
+static bool kind_is_armor(KIND_OBJECT_IDX k_idx)
 {
 	object_kind *k_ptr = &k_info[k_idx];
 
@@ -380,7 +375,7 @@ static bool kind_is_armor(int k_idx)
  * @param k_idx 判定したいオブジェクトのベースアイテムID
  * @return オブジェクトが打撃武器ならばTRUEを返す
  */
-static bool kind_is_hafted(int k_idx)
+static bool kind_is_hafted(KIND_OBJECT_IDX k_idx)
 {
 	object_kind *k_ptr = &k_info[k_idx];
 
@@ -420,6 +415,7 @@ void complete_quest(int quest_num)
 
 	if (!(q_ptr->flags & QUEST_FLAG_SILENT))
 	{
+		play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_QUEST_CLEAR);
 		msg_print(_("クエストを達成した！", "You just completed your quest!"));
 		msg_print(NULL);
 	}
@@ -438,7 +434,7 @@ static int count_all_hostile_monsters(void)
 	{
 		for (y = 0; y < cur_hgt; ++ y)
 		{
-			int m_idx = cave[y][x].m_idx;
+			MONSTER_IDX m_idx = cave[y][x].m_idx;
 
 			if (m_idx > 0 && is_hostile(&m_list[m_idx]))
 			{
@@ -458,7 +454,7 @@ static int count_all_hostile_monsters(void)
  */
 void check_quest_completion(monster_type *m_ptr)
 {
-	int y, x;
+	POSITION y, x;
 
 	int quest_num;
 
@@ -466,7 +462,7 @@ void check_quest_completion(monster_type *m_ptr)
 	bool reward = FALSE;
 
 	object_type forge;
-	object_type *q_ptr;
+	object_type *o_ptr;
 
 	/* Get the location */
 	y = m_ptr->fy;
@@ -480,7 +476,7 @@ void check_quest_completion(monster_type *m_ptr)
 	{
 		int i;
 
-		for (i = max_quests - 1; i > 0; i--)
+		for (i = max_q_idx - 1; i > 0; i--)
 		{
 			quest_type* const q_ptr = &quest[i];
 			
@@ -623,7 +619,7 @@ void check_quest_completion(monster_type *m_ptr)
 	/* Create a magical staircase */
 	if (create_stairs)
 	{
-		int ny, nx;
+		POSITION ny, nx;
 
 		/* Stagger around */
 		while (cave_perma_bold(y, x) || cave[y][x].o_idx || (cave[y][x].info & CAVE_OBJECT) )
@@ -655,16 +651,16 @@ void check_quest_completion(monster_type *m_ptr)
 		for (i = 0; i < (dun_level / 15)+1; i++)
 		{
 			/* Get local object */
-			q_ptr = &forge;
+			o_ptr = &forge;
 
 			/* Wipe the object */
-			object_wipe(q_ptr);
+			object_wipe(o_ptr);
 
 			/* Make a great object */
-			make_object(q_ptr, AM_GOOD | AM_GREAT);
+			make_object(o_ptr, AM_GOOD | AM_GREAT);
 
 			/* Drop it in the dungeon */
-			(void)drop_near(q_ptr, -1, y, x);
+			(void)drop_near(o_ptr, -1, y, x);
 		}
 	}
 }
@@ -679,7 +675,7 @@ void check_find_art_quest_completion(object_type *o_ptr)
 {
 	int i;
 	/* Check if completed a quest */
-	for (i = 0; i < max_quests; i++)
+	for (i = 0; i < max_q_idx; i++)
 	{
 		if ((quest[i].type == QUEST_TYPE_FIND_ARTIFACT) &&
 		    (quest[i].status == QUEST_STATUS_TAKEN) &&
@@ -736,7 +732,7 @@ cptr extract_note_dies(monster_race *r_ptr)
  * it drops all of its objects, which may disappear in crowded rooms.
  * </pre>
  */
-void monster_death(int m_idx, bool drop_item)
+void monster_death(MONSTER_IDX m_idx, bool drop_item)
 {
 	int i, j, y, x;
 
@@ -791,11 +787,11 @@ void monster_death(int m_idx, bool drop_item)
 	{
 		if (r_ptr->blow[i].method == RBM_EXPLODE)
 		{
-			int flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
+			BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
 			int typ = mbe_info[r_ptr->blow[i].effect].explode_type;
-			int d_dice = r_ptr->blow[i].d_dice;
-			int d_side = r_ptr->blow[i].d_side;
-			int damage = damroll(d_dice, d_side);
+			DICE_NUMBER d_dice = r_ptr->blow[i].d_dice;
+			DICE_SID d_side = r_ptr->blow[i].d_side;
+			HIT_POINT damage = damroll(d_dice, d_side);
 
 			project(m_idx, 3, y, x, damage, typ, flg, -1);
 			break;
@@ -923,7 +919,7 @@ void monster_death(int m_idx, bool drop_item)
 			{
 				int wy = y, wx = x;
 				bool pet = is_pet(m_ptr);
-				u32b mode = 0L;
+				BIT_FLAGS mode = 0L;
 
 				if (pet) mode |= PM_FORCE_PET;
 
@@ -988,7 +984,7 @@ void monster_death(int m_idx, bool drop_item)
 		{
 			if (!one_in_(7))
 			{
-				int wy = y, wx = x;
+				POSITION wy = y, wx = x;
 				int attempts = 100;
 				bool pet = is_pet(m_ptr);
 
@@ -1000,7 +996,7 @@ void monster_death(int m_idx, bool drop_item)
 
 				if (attempts > 0)
 				{
-					u32b mode = 0L;
+					BIT_FLAGS mode = 0L;
 					if (pet) mode |= PM_FORCE_PET;
 
 					if (summon_specific((pet ? -1 : m_idx), wy, wx, 100, SUMMON_DAWN, mode))
@@ -1016,7 +1012,7 @@ void monster_death(int m_idx, bool drop_item)
 	case MON_UNMAKER:
 		/* One more ultra-hack: An Unmaker goes out with a big bang! */
 		{
-			int flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
+			BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
 			(void)project(m_idx, 6, y, x, 100, GF_CHAOS, flg, -1);
 		}
 		break;
@@ -1111,34 +1107,6 @@ void monster_death(int m_idx, bool drop_item)
 		}
 		break;
 
-	case MON_MIMIC_HEALING:
-		if (drop_chosen_item)
-		{
-			/* Get local object */
-			q_ptr = &forge;
-
-			/* Prepare to make a broken sword */
-			object_prep(q_ptr, lookup_kind(TV_POTION, SV_POTION_STAR_HEALING));
-
-			/* Drop it in the dungeon */
-			(void)drop_near(q_ptr, -1, y, x);
-		}
-		break;
-
-	case MON_MIMIC_MANA:
-		if (drop_chosen_item)
-		{
-			/* Get local object */
-			q_ptr = &forge;
-
-			/* Prepare to make a broken sword */
-			object_prep(q_ptr, lookup_kind(TV_POTION, SV_POTION_RESTORE_MANA));
-
-			/* Drop it in the dungeon */
-			(void)drop_near(q_ptr, -1, y, x);
-		}
-		break;
-
 	case MON_A_GOLD:
 	case MON_A_SILVER:
 		if (drop_chosen_item && ((m_ptr->r_idx == MON_A_GOLD) ||
@@ -1159,7 +1127,7 @@ void monster_death(int m_idx, bool drop_item)
 
 	case MON_ROLENTO:
 		{
-			int flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
+			BIT_FLAGS flg = PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
 			(void)project(m_idx, 3, y, x, damroll(20, 10), GF_FIRE, flg, -1);
 		}
 		break;
@@ -1275,7 +1243,6 @@ void monster_death(int m_idx, bool drop_item)
 	/* Mega-Hack -- drop fixed items */
 	if (drop_chosen_item)
 	{
-		/*int i; #tang */
 		int a_idx = 0;
 		int chance = 0;
 
@@ -1528,12 +1495,12 @@ void monster_death(int m_idx, bool drop_item)
 
 		if ((r_ptr->flags7 & RF7_GUARDIAN) && (d_info[dungeon_type].final_guardian == m_ptr->r_idx))
 		{
-			int k_idx = d_info[dungeon_type].final_object ? d_info[dungeon_type].final_object
+			IDX k_idx = d_info[dungeon_type].final_object ? d_info[dungeon_type].final_object
 				: lookup_kind(TV_SCROLL, SV_SCROLL_ACQUIREMENT);
 
 			if (d_info[dungeon_type].final_artifact)
 			{
-				int a_idx = d_info[dungeon_type].final_artifact;
+				a_idx = d_info[dungeon_type].final_artifact;
 				artifact_type *a_ptr = &a_info[a_idx];
 
 				if (!a_ptr->cur_num)
@@ -1654,6 +1621,8 @@ void monster_death(int m_idx, bool drop_item)
 		/* Redraw the "title" */
 		p_ptr->redraw |= (PR_TITLE);
 
+		play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_FINAL_QUEST_CLEAR);
+
 		do_cmd_write_nikki(NIKKI_BUNSHOU, 0, _("見事に短愚蛮怒の勝利者となった！", "become *WINNER* of tanguband finely!"));
 
 		if ((p_ptr->pclass == CLASS_CHAOS_WARRIOR) || (p_ptr->muta2 & MUT2_CHAOS_GIFT))
@@ -1684,7 +1653,7 @@ void monster_death(int m_idx, bool drop_item)
  * "type" is not yet used and should be 0.
  * </pre>
  */
-int mon_damage_mod(monster_type *m_ptr, int dam, bool is_psy_spear)
+HIT_POINT mon_damage_mod(monster_type *m_ptr, HIT_POINT dam, bool is_psy_spear)
 {
 	monster_race    *r_ptr = &r_info[m_ptr->r_idx];
 
@@ -1726,7 +1695,7 @@ int mon_damage_mod(monster_type *m_ptr, int dam, bool is_psy_spear)
  * experience point of a monster later.
  * </pre>
  */
-static void get_exp_from_mon(int dam, monster_type *m_ptr)
+static void get_exp_from_mon(HIT_POINT dam, monster_type *m_ptr)
 {
 	monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
@@ -1825,7 +1794,7 @@ static void get_exp_from_mon(int dam, monster_type *m_ptr)
  * to induce changes in the monster recall code.
  * </pre>
  */
-bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
+bool mon_take_hit(MONSTER_IDX m_idx, HIT_POINT dam, bool *fear, cptr note)
 {
 	monster_type    *m_ptr = &m_list[m_idx];
 	monster_race    *r_ptr = &r_info[m_ptr->r_idx];
@@ -1836,7 +1805,6 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 	bool        innocent = TRUE, thief = FALSE;
 	int         i;
 	int         expdam;
-	int			dealt_damage;
 
 	(void)COPY(&exp_mon, m_ptr, monster_type);
 	
@@ -1863,9 +1831,6 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 	/* Genocided by chaos patron */
 	if (!m_idx) return TRUE;
 	
-	/* Remember dealt_damage before this attack*/
-	dealt_damage = m_ptr->dealt_damage;
-
 	/* Hurt it */
 	m_ptr->hp -= dam;
 	
@@ -2089,7 +2054,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 			chg_virtue (V_JUSTICE, -1);
 		}
 
-		if ((r_ptr->flags3 & RF3_ANIMAL) && !(r_ptr->flags3 & RF3_EVIL) && !(r_ptr->flags4 & ~(RF4_NOMAGIC_MASK))  && !(r_ptr->flags5 & ~(RF5_NOMAGIC_MASK)) && !(r_ptr->flags6 & ~(RF6_NOMAGIC_MASK)))
+		if ((r_ptr->flags3 & RF3_ANIMAL) && !(r_ptr->flags3 & RF3_EVIL) && !(r_ptr->flags4 & ~(RF4_NOMAGIC_MASK))  && !(r_ptr->a_ability_flags1 & ~(RF5_NOMAGIC_MASK)) && !(r_ptr->a_ability_flags2 & ~(RF6_NOMAGIC_MASK)))
 		{
 			if (one_in_(4)) chg_virtue(V_NATURE, -1);
 		}
@@ -2121,7 +2086,7 @@ bool mon_take_hit(int m_idx, int dam, bool *fear, cptr note)
 			if ((p_ptr->pseikaku == SEIKAKU_COMBAT) || (inventory[INVEN_BOW].name1 == ART_CRIMSON))
 				msg_format("せっかくだから%sを殺した。", m_name);
 			else
-msg_format("%sを殺した。", m_name);
+				msg_format("%sを殺した。", m_name);
 #else
 				msg_format("You have killed %s.", m_name);
 #endif
@@ -2131,7 +2096,6 @@ msg_format("%sを殺した。", m_name);
 		/* Death by Physical attack -- non-living monster */
 		else if (!monster_living(r_ptr))
 		{
-			int i;
 			bool explode = FALSE;
 
 			for (i = 0; i < 4; i++)
@@ -2189,7 +2153,7 @@ msg_format("%sを葬り去った。", m_name);
 		{
 			int dummy_y = m_ptr->fy;
 			int dummy_x = m_ptr->fx;
-			u32b mode = 0L;
+			BIT_FLAGS mode = 0L;
 
 			if (is_pet(m_ptr)) mode |= PM_FORCE_PET;
 
@@ -2587,7 +2551,7 @@ void verify_panel(void)
 /*
  * Monster health description
  */
-cptr look_mon_desc(monster_type *m_ptr, u32b mode)
+cptr look_mon_desc(monster_type *m_ptr, BIT_FLAGS mode)
 {
 	monster_race *ap_r_ptr = &r_info[m_ptr->ap_r_idx];
 	bool         living;
@@ -2779,7 +2743,7 @@ void ang_sort(vptr u, vptr v, int n)
  * Future versions may restrict the ability to target "trappers"
  * and "mimics", but the semantics is a little bit weird.
  */
-bool target_able(int m_idx)
+bool target_able(MONSTER_IDX m_idx)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 
@@ -2847,10 +2811,10 @@ bool target_okay(void)
  */
 static bool ang_sort_comp_distance(vptr u, vptr v, int a, int b)
 {
-	byte *x = (byte*)(u);
-	byte *y = (byte*)(v);
+	POSITION *x = (POSITION*)(u);
+	POSITION *y = (POSITION*)(v);
 
-	int da, db, kx, ky;
+	POSITION da, db, kx, ky;
 
 	/* Absolute distance components */
 	kx = x[a]; kx -= p_ptr->x; kx = ABS(kx);
@@ -2879,8 +2843,8 @@ static bool ang_sort_comp_distance(vptr u, vptr v, int a, int b)
  */
 static bool ang_sort_comp_importance(vptr u, vptr v, int a, int b)
 {
-	byte *x = (byte*)(u);
-	byte *y = (byte*)(v);
+	POSITION *x = (POSITION*)(u);
+	POSITION *y = (POSITION*)(v);
 	cave_type *ca_ptr = &cave[y[a]][x[a]];
 	cave_type *cb_ptr = &cave[y[b]][x[b]];
 	monster_type *ma_ptr = &m_list[ca_ptr->m_idx];
@@ -2948,10 +2912,10 @@ static bool ang_sort_comp_importance(vptr u, vptr v, int a, int b)
  */
 static void ang_sort_swap_distance(vptr u, vptr v, int a, int b)
 {
-	byte *x = (byte*)(u);
-	byte *y = (byte*)(v);
+	POSITION *x = (POSITION*)(u);
+	POSITION *y = (POSITION*)(v);
 
-	byte temp;
+	POSITION temp;
 
 	/* Swap "x" */
 	temp = x[a];
@@ -2969,13 +2933,11 @@ static void ang_sort_swap_distance(vptr u, vptr v, int a, int b)
 /*
  * Hack -- help "select" a location (see below)
  */
-static s16b target_pick(int y1, int x1, int dy, int dx)
+static POSITION_IDX target_pick(POSITION y1, POSITION x1, POSITION dy, POSITION dx)
 {
-	int i, v;
-
-	int x2, y2, x3, y3, x4, y4;
-
-	int b_i = -1, b_v = 9999;
+	POSITION_IDX i, v;
+	POSITION x2, y2, x3, y3, x4, y4;
+	POSITION_IDX b_i = -1, b_v = 9999;
 
 
 	/* Scan the locations */
@@ -3085,7 +3047,7 @@ static bool target_set_accept(int y, int x)
  *
  * Return the number of target_able monsters in the set.
  */
-static void target_set_prepare(int mode)
+static void target_set_prepare(BIT_FLAGS mode)
 {
 	int y, x;
 	int min_hgt, max_hgt, min_wid, max_wid;
@@ -3153,7 +3115,7 @@ static void target_set_prepare(int mode)
 
 	if (p_ptr->riding && target_pet && (temp_n > 1) && (mode & (TARGET_KILL)))
 	{
-		byte tmp;
+		POSITION tmp;
 
 		tmp = temp_y[0];
 		temp_y[0] = temp_y[1];
@@ -3163,7 +3125,8 @@ static void target_set_prepare(int mode)
 		temp_x[1] = tmp;
 	}
 }
-void target_set_prepare_look(){
+
+void target_set_prepare_look(void){
 	target_set_prepare(TARGET_LOOK);
 }
 
@@ -3246,7 +3209,7 @@ bool show_gold_on_floor = FALSE;
  *
  * This function must handle blindness/hallucination.
  */
-static int target_set_aux(int y, int x, int mode, cptr info)
+static char target_set_aux(POSITION y, POSITION x, BIT_FLAGS mode, cptr info)
 {
 	cave_type *c_ptr = &cave[y][x];
 	s16b this_o_idx, next_o_idx = 0;
@@ -3254,11 +3217,12 @@ static int target_set_aux(int y, int x, int mode, cptr info)
 	bool boring = TRUE;
 	s16b feat;
 	feature_type *f_ptr;
-	int query = '\001';
+	char query = '\001';
 	char out_val[MAX_NLEN+80];
 
 #ifdef ALLOW_EASY_FLOOR
-	int floor_list[23], floor_num = 0;
+	OBJECT_IDX floor_list[23];
+	ITEM_NUMBER floor_num = 0;
 
 	/* Scan all objects in the grid */
 	if (easy_floor)
@@ -3512,10 +3476,10 @@ static int target_set_aux(int y, int x, int mode, cptr info)
 				/* Display rough information about items */
 #ifdef JP
 				sprintf(out_val, "%s %d個のアイテム%s%s ['x'で一覧, %s]",
-					s1, floor_num, s2, s3, info);
+					s1, (int)floor_num, s2, s3, info);
 #else
 				sprintf(out_val, "%s%s%sa pile of %d items [x,%s]",
-					s1, s2, s3, floor_num, info);
+					s1, s2, s3, (int)floor_num, info);
 #endif
 
 				prt(out_val, 0, 0);
@@ -3534,7 +3498,8 @@ static int target_set_aux(int y, int x, int mode, cptr info)
 			/* Continue scrolling list if requested */
 			while (1)
 			{
-				int i, o_idx;
+				int i;
+				IDX o_idx;
 
 				/* Save screen */
 				screen_save();
@@ -3547,10 +3512,10 @@ static int target_set_aux(int y, int x, int mode, cptr info)
 				/* Prompt */
 #ifdef JP
 				sprintf(out_val, "%s %d個のアイテム%s%s [Enterで次へ, %s]",
-					s1, floor_num, s2, s3, info);
+					s1, (int)floor_num, s2, s3, info);
 #else
 				sprintf(out_val, "%s%s%sa pile of %d items [Enter,%s]",
-					s1, s2, s3, floor_num, info);
+					s1, s2, s3, (int)floor_num, info);
 #endif
 				prt(out_val, 0, 0);
 
@@ -3671,7 +3636,7 @@ static int target_set_aux(int y, int x, int mode, cptr info)
 		if (have_flag(f_ptr->flags, FF_QUEST_ENTER))
 		{
 			/* Set the quest number temporary */
-			int old_quest = p_ptr->inside_quest;
+			IDX old_quest = p_ptr->inside_quest;
 			int j;
 
 			/* Clear the text */
@@ -3758,9 +3723,9 @@ static int target_set_aux(int y, int x, int mode, cptr info)
 			if (c_ptr->mimic) sprintf(f_idx_str, "%d/%d", c_ptr->feat, c_ptr->mimic);
 			else sprintf(f_idx_str, "%d", c_ptr->feat);
 #ifdef JP
-			sprintf(out_val, "%s%s%s%s[%s] %x %s %d %d %d (%d,%d) %d", s1, name, s2, s3, info, c_ptr->info, f_idx_str, c_ptr->dist, c_ptr->cost, c_ptr->when, y, x, travel.cost[y][x]);
+			sprintf(out_val, "%s%s%s%s[%s] %x %s %d %d %d (%d,%d) %d", s1, name, s2, s3, info, (unsigned int)c_ptr->info, f_idx_str, c_ptr->dist, c_ptr->cost, c_ptr->when, (int)y, (int)x, travel.cost[y][x]);
 #else
-			sprintf(out_val, "%s%s%s%s [%s] %x %s %d %d %d (%d,%d)", s1, s2, s3, name, info, c_ptr->info, f_idx_str, c_ptr->dist, c_ptr->cost, c_ptr->when, y, x);
+			sprintf(out_val, "%s%s%s%s [%s] %x %s %d %d %d (%d,%d)", s1, s2, s3, name, info, c_ptr->info, f_idx_str, c_ptr->dist, c_ptr->cost, c_ptr->when, (int)y, (int)x);
 #endif
 		}
 		else
@@ -3827,19 +3792,17 @@ static int target_set_aux(int y, int x, int mode, cptr info)
  * This command will cancel any old target, even if used from
  * inside the "look" command.
  */
-bool target_set(int mode)
+bool target_set(BIT_FLAGS mode)
 {
 	int		i, d, m, t, bd;
-	int		y = p_ptr->y;
-	int		x = p_ptr->x;
+	POSITION y = p_ptr->y;
+	POSITION x = p_ptr->x;
 
 	bool	done = FALSE;
-
 	bool	flag = TRUE;
-
 	char	query;
-
 	char	info[80];
+	char	same_key;
 
 	cave_type		*c_ptr;
 
@@ -3855,6 +3818,14 @@ bool target_set(int mode)
 	/* Cancel tracking */
 	/* health_track(0); */
 
+	if (rogue_like_commands)
+	{
+		same_key = 'x';
+	}
+	else
+	{
+		same_key = 'l';
+	}
 
 	/* Prepare the "temp" array */
 	target_set_prepare(mode);
@@ -3997,14 +3968,24 @@ bool target_set(int mode)
 
 				default:
 				{
-					/* Extract the action (if any) */
-					d = get_keymap_dir(query);
+					if(query == same_key)
+					{
+						if (++m == temp_n)
+						{
+							m = 0;
+							if (!expand_list) done = TRUE;
+						}
+					}
+					else
+					{
+						/* Extract the action (if any) */
+						d = get_keymap_dir(query);
 
-					if (!d) bell();
-					break;
+						if (!d) bell();
+						break;
+					}
 				}
 			}
-
 			/* Hack -- move around */
 			if (d)
 			{
@@ -4120,7 +4101,7 @@ bool target_set(int mode)
 			strcpy(info, _("q止 t決 p自 m近 +次 -前", "q,t,p,m,+,-,<dir>"));
 
 			/* Describe and Prompt (enable "TARGET_LOOK") */
-			while (!(query = target_set_aux(y, x, mode | TARGET_LOOK, info)));
+			while ((query = target_set_aux(y, x, mode | TARGET_LOOK, info)) == 0);
 
 			/* Cancel tracking */
 			/* health_track(0); */
@@ -4318,13 +4299,12 @@ bool target_set(int mode)
  *
  * Note that confusion over-rides any (explicit?) user choice.
  */
-bool get_aim_dir(int *dp)
+bool get_aim_dir(DIRECTION *dp)
 {
-	int		dir;
-
+	DIRECTION dir;
 	char	command;
-
 	cptr	p;
+	COMMAND_CODE code;
 
 	/* Initialize */
 	(*dp) = 0;
@@ -4337,17 +4317,18 @@ bool get_aim_dir(int *dp)
 
 #ifdef ALLOW_REPEAT /* TNB */
 
-	if (repeat_pull(dp))
+	if (repeat_pull(&code))
 	{
 		/* Confusion? */
 
 		/* Verify */
-		if (!(*dp == 5 && !target_okay()))
+		if (!(code == 5 && !target_okay()))
 		{
 /*			return (TRUE); */
-			dir = *dp;
+			dir = (DIRECTION)code;
 		}
 	}
+	*dp = (DIRECTION)code;
 
 #endif /* ALLOW_REPEAT -- TNB */
 
@@ -4442,7 +4423,7 @@ bool get_aim_dir(int *dp)
 #ifdef ALLOW_REPEAT /* TNB */
 
 /*	repeat_push(dir); */
-	repeat_push(command_dir);
+	repeat_push((COMMAND_CODE)command_dir);
 
 #endif /* ALLOW_REPEAT -- TNB */
 
@@ -4468,10 +4449,11 @@ bool get_aim_dir(int *dp)
  * This function tracks and uses the "global direction", and uses
  * that as the "desired direction", to which "confusion" is applied.
  */
-bool get_rep_dir(int *dp, bool under)
+bool get_rep_dir(DIRECTION *dp, bool under)
 {
-	int dir;
+	DIRECTION dir;
 	cptr prompt;
+	COMMAND_CODE code;
 
 	/* Initialize */
 	(*dp) = 0;
@@ -4481,11 +4463,12 @@ bool get_rep_dir(int *dp, bool under)
 
 #ifdef ALLOW_REPEAT /* TNB */
 
-	if (repeat_pull(dp))
+	if (repeat_pull(&code))
 	{
-		dir = *dp;
+		dir = (DIRECTION)code;
 /*		return (TRUE); */
 	}
+	*dp = (DIRECTION)code;
 
 #endif /* ALLOW_REPEAT -- TNB */
 
@@ -4597,7 +4580,7 @@ bool get_rep_dir(int *dp, bool under)
 #ifdef ALLOW_REPEAT /* TNB */
 
 /*	repeat_push(dir); */
-	repeat_push(command_dir);
+	repeat_push((COMMAND_CODE)command_dir);
 
 #endif /* ALLOW_REPEAT -- TNB */
 
@@ -4606,9 +4589,10 @@ bool get_rep_dir(int *dp, bool under)
 }
 
 
-bool get_rep_dir2(int *dp)
+bool get_rep_dir2(DIRECTION *dp)
 {
-	int dir;
+	DIRECTION dir;
+	COMMAND_CODE code;
 
 	/* Initialize */
 	(*dp) = 0;
@@ -4618,11 +4602,12 @@ bool get_rep_dir2(int *dp)
 
 #ifdef ALLOW_REPEAT /* TNB */
 
-	if (repeat_pull(dp))
+	if (repeat_pull(&code))
 	{
-		dir = *dp;
+		dir = (DIRECTION)code;
 /*		return (TRUE); */
 	}
+	*dp = (DIRECTION)code;
 
 #endif /* ALLOW_REPEAT -- TNB */
 
@@ -4674,7 +4659,7 @@ bool get_rep_dir2(int *dp)
 #ifdef ALLOW_REPEAT /* TNB */
 
 /*	repeat_push(dir); */
-	repeat_push(command_dir);
+	repeat_push((COMMAND_CODE)command_dir);
 
 #endif /* ALLOW_REPEAT -- TNB */
 
@@ -4688,7 +4673,8 @@ void gain_level_reward(int chosen_reward)
 	object_type forge;
 	char        wrath_reason[32] = "";
 	int         nasty_chance = 6;
-	int         dummy = 0, dummy2 = 0;
+	OBJECT_TYPE_VALUE dummy = 0;
+	OBJECT_SUBTYPE_VALUE dummy2 = 0;
 	int         type, effect;
 	cptr        reward = NULL;
 	char o_name[MAX_NLEN];
@@ -5373,7 +5359,7 @@ msg_format("%sはあなたを無視した。",
  * XAngband: determine if a given location is "interesting"
  * based on target_set_accept function.
  */
-static bool tgt_pt_accept(int y, int x)
+static bool tgt_pt_accept(POSITION y, POSITION x)
 {
 	cave_type *c_ptr;
 
@@ -5412,7 +5398,7 @@ static bool tgt_pt_accept(int y, int x)
  */
 static void tgt_pt_prepare(void)
 {
-	int y, x;
+	POSITION y, x;
 
 	/* Reset "temp" array */
 	temp_n = 0;
@@ -5445,10 +5431,11 @@ static void tgt_pt_prepare(void)
 /*
  * old -- from PsiAngband.
  */
-bool tgt_pt(int *x_ptr, int *y_ptr)
+bool tgt_pt(POSITION *x_ptr, POSITION *y_ptr)
 {
 	char ch = 0;
-	int d, x, y, n = 0;
+	int d, n = 0;
+	POSITION x, y;
 	bool success = FALSE;
 
 	int wid, hgt;
@@ -5630,12 +5617,11 @@ bool tgt_pt(int *x_ptr, int *y_ptr)
 }
 
 
-bool get_hack_dir(int *dp)
+bool get_hack_dir(DIRECTION *dp)
 {
-	int		dir;
+	DIRECTION dir;
 	cptr    p;
 	char    command;
-
 
 	/* Initialize */
 	(*dp) = 0;
@@ -5757,12 +5743,14 @@ s16b gain_energy(void)
 }
 
 
-/*
- * Return bow energy 
+/*!
+ * @brief 射撃武器の攻撃に必要な基本消費エネルギーを返す/Return bow energy
+ * @param sval 射撃武器のアイテム副分類ID 
+ * @return 消費する基本エネルギー
  */
-s16b bow_energy(int sval)
+ENERGY bow_energy(OBJECT_SUBTYPE_VALUE sval)
 {
-	int energy = 100;
+	ENERGY energy = 10000;
 
 	/* Analyze the launcher */
 	switch (sval)
@@ -5817,7 +5805,7 @@ s16b bow_energy(int sval)
 /*
  * Return bow tmul
  */
-int bow_tmul(int sval)
+int bow_tmul(OBJECT_SUBTYPE_VALUE sval)
 {
 	int tmul = 0;
 
@@ -5938,10 +5926,10 @@ int spell_exp_level(int spell_exp)
  * Display a rumor and apply its effects
  */
 
-int rumor_num(char *zz, int max_idx)
+IDX rumor_num(char *zz, IDX max_idx)
 {
 	if (strcmp(zz, "*") == 0) return randint1(max_idx - 1);
-	return atoi(zz);
+	return (IDX)atoi(zz);
 }
 
 cptr rumor_bind_name(char *base, cptr fullname)
@@ -5964,7 +5952,7 @@ cptr rumor_bind_name(char *base, cptr fullname)
 
 void display_rumor(bool ex)
 {
-	bool err;
+	errr err;
 	int section = 0;
 	char Rumor[1024];
 
@@ -5990,7 +5978,7 @@ void display_rumor(bool ex)
 		{
 			if (strcmp(zz[0], "ARTIFACT") == 0)
 			{
-				int a_idx, k_idx;
+				IDX a_idx, k_idx;
 				object_type forge;
 				object_type *q_ptr = &forge;
 				artifact_type *a_ptr;
@@ -6011,7 +5999,7 @@ void display_rumor(bool ex)
 			}
 			else if  (strcmp(zz[0], "MONSTER") == 0)
 			{
-				int r_idx;
+				MONRACE_IDX r_idx;
 				monster_race *r_ptr;
 
 				while(1)
@@ -6051,7 +6039,7 @@ void display_rumor(bool ex)
 			}
 			else if  (strcmp(zz[0], "TOWN") == 0)
 			{
-				int t_idx;
+				IDX t_idx;
 				s32b visit;
 
 				while(1)

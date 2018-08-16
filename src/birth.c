@@ -1753,7 +1753,7 @@ static cptr race_jouhou[MAX_RACES] =
 
 "One of the several fairy races, Sprites are very small.  They have tiny wings and can fly over traps that may open up beneath them.  They enjoy sunlight intensely, and need worry little about light based attacks.  Although physically among the weakest races, Sprites are very talented in magic, and can become highly skilled wizards.  Sprites have the special power of spraying Sleeping Dust, and at higher levels they learn to fly faster.",
 
- "This race is a blasphemous abomination produced by Chaos.  It is not an independent race but rather a humanoid creature, most often a human, twisted by the Chaos, or a nightmarish crossbreed of a human and a beast.  All Beastmen are accustomed to Chaos so much that they are untroubled by confusion and sound, although raw logrus can still have effects on them.  Beastmen revel in chaos, as it twists them more and more.  Beastmen are subject to mutations: when they have been created, they receive a random mutation.  After that, every time they advance a level they have a small chance of gaining yet another mutation.",
+"This race is a blasphemous abomination produced by Chaos.  It is not an independent race but rather a humanoid creature, most often a human, twisted by the Chaos, or a nightmarish crossbreed of a human and a beast.  All Beastmen are accustomed to Chaos so much that they are untroubled by confusion and sound, although raw logrus can still have effects on them.  Beastmen revel in chaos, as it twists them more and more.  Beastmen are subject to mutations: when they have been created, they receive a random mutation.  After that, every time they advance a level they have a small chance of gaining yet another mutation.",
 
 "The Ents are a powerful race dating from the beginning of the world, oldest of all animals or plants who inhabit Arda.  Spirits of the land, they were summoned to guard the forests of Middle-earth.  Being much like trees they are very clumsy but strong, and very susceptible to fire.  They gain very little nutrition from the food of mortals, but they can absorb water from potions as their nutrition.",
 
@@ -2349,7 +2349,7 @@ static byte choose_realm(s32b choices, int *count)
 	/* Clean up */
 	clear_from(10);
 
-	return (picks[k]);
+	return (byte_hack)(picks[k]);
 }
 
 
@@ -2682,7 +2682,7 @@ static void get_stats(void)
 		for (i = 0; i < 2; i++)
 		{
 			s32b tmp = randint0(60*60*60);
-			int val;
+			BASE_STATUS val;
 
 			/* Extract 5 + 1d3 + 1d4 + 1d5 */
 			val = 5 + 3;
@@ -2708,7 +2708,7 @@ static void get_stats(void)
 			val = 5 + 3;
 			val += tmp % 3; tmp /= 3;
 			val += tmp % 4; tmp /= 4;
-			val += tmp;
+			val += (BASE_STATUS)tmp;
 
 			/* Save that value */
 			sum += val;
@@ -2751,14 +2751,14 @@ void get_max_stats(void)
 	/* Acquire the stats */
 	for (i = 0; i < 6; i++)
 	{
-		j = 18 + 60 + dice[i]*10;
+		BASE_STATUS max_max = 18 + 60 + dice[i]*10;
 
 		/* Save that value */
-		p_ptr->stat_max_max[i] = j;
-		if (p_ptr->stat_max[i] > j)
-			p_ptr->stat_max[i] = j;
-		if (p_ptr->stat_cur[i] > j)
-			p_ptr->stat_cur[i] = j;
+		p_ptr->stat_max_max[i] = max_max;
+		if (p_ptr->stat_max[i] > max_max)
+			p_ptr->stat_max[i] = max_max;
+		if (p_ptr->stat_cur[i] > max_max)
+			p_ptr->stat_cur[i] = max_max;
 	}
 	p_ptr->knowledge &= ~(KNOW_STAT);
 
@@ -2803,7 +2803,7 @@ static void get_extra(bool roll_hitdie)
 		p_ptr->weapon_exp[TV_HAFTED-TV_WEAPON_BEGIN][SV_WHIP] = WEAPON_EXP_BEGINNER;
 	}
 
-	for (i = 0; i < 10; i++)
+	for (i = 0; i < GINOU_MAX; i++)
 		p_ptr->skill_exp[i] = s_info[p_ptr->pclass].s_start[i];
 
 	/* Hitdice */
@@ -3054,7 +3054,7 @@ static void get_history(void)
 	else if (social_class < 1) social_class = 1;
 
 	/* Save the social class */
-	p_ptr->sc = social_class;
+	p_ptr->sc = (s16b)social_class;
 
 
 	/* Skip leading spaces */
@@ -3267,7 +3267,7 @@ static void player_wipe_without_name(void)
 	}
 
 	/* Wipe the quests */
-	for (i = 0; i < max_quests; i++)
+	for (i = 0; i < max_q_idx; i++)
 	{
 		quest_type* const q_ptr = &quest[i];
 		
@@ -3363,6 +3363,8 @@ static void player_wipe_without_name(void)
 	cheat_know = FALSE;
 	cheat_live = FALSE;
 	cheat_save = FALSE;
+	cheat_diary_output = FALSE;
+	cheat_turn = FALSE;
 
 	/* Assume no winning game */
 	p_ptr->total_winner = FALSE;
@@ -3429,15 +3431,15 @@ static void player_wipe_without_name(void)
 	/* Reset virtues*/
 	for (i = 0; i < 8; i++) p_ptr->virtues[i]=0;
 
+	dungeon_type = 0;
+
 	/* Set the recall dungeon accordingly */
-	if (vanilla_town)
+	if (vanilla_town || ironman_downward)
 	{
-		dungeon_type = 0;
 		p_ptr->recall_dungeon = DUNGEON_ANGBAND;
 	}
 	else
 	{
-		dungeon_type = 0;
 		p_ptr->recall_dungeon = DUNGEON_GALGALS;
 	}
 
@@ -3451,7 +3453,7 @@ static void player_wipe_without_name(void)
  * @param r_idx モンスターＩＤ
  * @return 討伐対象にできるならTRUEを返す。
  */
-static bool mon_hook_quest(int r_idx)
+static bool mon_hook_quest(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -3478,7 +3480,7 @@ static bool mon_hook_quest(int r_idx)
  */
 void determine_random_questor(quest_type *q_ptr)
 {
-	int          r_idx;
+	MONRACE_IDX r_idx;
 	monster_race *r_ptr;
 
 	/* Prepare allocation table */
@@ -3490,7 +3492,7 @@ void determine_random_questor(quest_type *q_ptr)
 		 * Random monster 5 - 10 levels out of depth
 		 * (depending on level)
 		 */
-		r_idx = get_mon_num(q_ptr->level + 1 + randint1(q_ptr->level / 40));/* 10 -> 40 */
+		r_idx = get_mon_num(q_ptr->level + 1 + randint1(q_ptr->level / 40)); /* #tang 10 -> 40 */
 		r_ptr = &r_info[r_idx];
 
 		if (!(r_ptr->flags1 & RF1_UNIQUE)) continue;
@@ -3511,10 +3513,10 @@ void determine_random_questor(quest_type *q_ptr)
 		 * Accept monsters that are 2 - 6 levels
 		 * out of depth depending on the quest level
 		 */
-		if (r_ptr->level > (q_ptr->level + (q_ptr->level / 80))) break;/* 20 -> 80  */
+		if (r_ptr->level > (q_ptr->level + (q_ptr->level / 80))) break; /* #tang 20 -> 80  */
 	}
 
-	q_ptr->r_idx = r_idx;
+	q_ptr->r_idx = (s16b)r_idx;
 }
 
 /*!
@@ -3574,9 +3576,9 @@ static void init_dungeon_quests(void)
 static void init_turn(void)
 {
 	if ((p_ptr->prace == RACE_VAMPIRE) ||
-	    (p_ptr->prace == RACE_SKELETON) ||
-	    (p_ptr->prace == RACE_ZOMBIE) ||
-	    (p_ptr->prace == RACE_SPECTRE))
+		(p_ptr->prace == RACE_SKELETON) ||
+		(p_ptr->prace == RACE_ZOMBIE) ||
+		(p_ptr->prace == RACE_SPECTRE))
 	{
 		/* Undead start just after midnight */
 		turn = (TURNS_PER_TICK*3 * TOWN_DAWN) / 4 + 1;
@@ -3865,7 +3867,7 @@ static byte player_init[MAX_CLASS][3][2] =
  * @param r_idx モンスターＩＤ
  * @return 死体を食べられるならTRUEを返す。
  */
-static bool monster_hook_human(int r_idx)
+static bool monster_hook_human(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -3905,7 +3907,9 @@ static void add_outfit(object_type *o_ptr)
  */
 void player_outfit(void)
 {
-	int i, tv, sv;
+	int i;
+	OBJECT_TYPE_VALUE tv;
+	OBJECT_SUBTYPE_VALUE sv;
 
 	object_type	forge;
 	object_type	*q_ptr;
@@ -4043,10 +4047,11 @@ void player_outfit(void)
 	}
 	else if (p_ptr->pclass == CLASS_SORCERER)
 	{
-		for (i = TV_LIFE_BOOK; i <= TV_LIFE_BOOK+MAX_MAGIC-1; i++)
+		OBJECT_TYPE_VALUE book_tval;
+		for (book_tval = TV_LIFE_BOOK; book_tval <= TV_LIFE_BOOK+MAX_MAGIC-1; book_tval++)
 		{
 			/* Hack -- Give the player some arrows */
-			object_prep(q_ptr, lookup_kind(i, 0));
+			object_prep(q_ptr, lookup_kind(book_tval, 0));
 			q_ptr->number = 1;
 
 			add_outfit(q_ptr);
@@ -4332,7 +4337,7 @@ static bool get_player_race(void)
 	}
 
 	/* Set race */
-	p_ptr->prace = k;
+	p_ptr->prace = (byte_hack)k;
 
 	rp_ptr = &race_info[p_ptr->prace];
 
@@ -4548,7 +4553,7 @@ static bool get_player_class(void)
 	}
 
 	/* Set class */
-	p_ptr->pclass = k;
+	p_ptr->pclass = (byte_hack)k;
 	cp_ptr = &class_info[p_ptr->pclass];
 	mp_ptr = &m_info[p_ptr->pclass];
 
@@ -4786,7 +4791,7 @@ static bool get_player_seikaku(void)
 	}
 
 	/* Set seikaku */
-	p_ptr->pseikaku = k;
+	p_ptr->pseikaku = (byte_hack)k;
 	ap_ptr = &seikaku_info[p_ptr->pseikaku];
 #ifdef JP
 	strcpy(tmp, ap_ptr->title);
@@ -5064,7 +5069,7 @@ static bool get_stat_limits(void)
 	for (i = 0; i < 6; i++)
 	{
 		/* Save the minimum stat */
-		stat_limit[i] = cval[i];
+		stat_limit[i] = (s16b)cval[i];
 	}
 
 	return TRUE;
@@ -5369,14 +5374,14 @@ static bool get_chara_limits(void)
 	}
 
 	/* Input the minimum stats */
-	chara_limit.agemin = cval[0];
-	chara_limit.agemax = cval[1];
-	chara_limit.htmin = cval[2];
-	chara_limit.htmax = cval[3];
-	chara_limit.wtmin = cval[4];
-	chara_limit.wtmax = cval[5];
-	chara_limit.scmin = cval[6];
-	chara_limit.scmax = cval[7];
+	chara_limit.agemin = (s16b)cval[0];
+	chara_limit.agemax = (s16b)cval[1];
+	chara_limit.htmin = (s16b)cval[2];
+	chara_limit.htmax = (s16b)cval[3];
+	chara_limit.wtmin = (s16b)cval[4];
+	chara_limit.wtmax = (s16b)cval[5];
+	chara_limit.scmin = (s16b)cval[6];
+	chara_limit.scmax = (s16b)cval[7];
 
 	return TRUE;
 }
@@ -5723,7 +5728,7 @@ static bool player_birth_aux(void)
 {
 	int i, k, n, cs, os;
 
-	int mode = 0;
+	BIT_FLAGS mode = 0;
 
 	bool flag = FALSE;
 	bool prev = FALSE;
@@ -5904,7 +5909,7 @@ static bool player_birth_aux(void)
 	}
 
 	/* Set sex */
-	p_ptr->psex = k;
+	p_ptr->psex = (byte_hack)k;
 	sp_ptr = &sex_info[p_ptr->psex];
 
 	/* Display */
@@ -6496,8 +6501,8 @@ static bool ask_quick_start(void)
 	}
 
 	load_prev_data(FALSE);
-	init_dungeon_quests();
 	init_turn();
+	init_dungeon_quests();
 
 	sp_ptr = &sex_info[p_ptr->psex];
 	rp_ptr = &race_info[p_ptr->prace];

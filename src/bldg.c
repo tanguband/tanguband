@@ -241,7 +241,7 @@ static void arena_comm(int cmd)
 					msg_print(NULL);
 					if (get_check(_("挑戦するかね？", "Do you fight? ")))
 					{	
-                        msg_print(_("死ぬがよい。", "Die, maggots."));
+						msg_print(_("死ぬがよい。", "Die, maggots."));
 						msg_print(NULL);
 					
 						p_ptr->exit_bldg = FALSE;
@@ -299,6 +299,11 @@ static void arena_comm(int cmd)
 				r_ptr = &r_info[arena_info[p_ptr->arena_number].r_idx];
 				name = (r_name + r_ptr->name);
 				msg_format(_("%s に挑戦するものはいないか？", "Do I hear any challenges against: %s"), name);
+
+				p_ptr->monster_race_idx = arena_info[p_ptr->arena_number].r_idx;
+				p_ptr->window |= (PW_MONSTER);
+				window_stuff();
+
 			}
 			break;
 		case BACT_ARENA_RULES:
@@ -492,13 +497,14 @@ static bool yaku_check_flush(void)
 }
 
 /*!
- * @brief ポーカーの手札がストレート役を得ているかを帰す。
- * @return 役の判定結果
+ * @brief ポーカーの手札がストレートを含んだ高位の役を得ているかを帰す。
+ * @return 役の判定結果 0…ストレート、フラッシュいずれもなし/1…ストレートのみ/2…ストレートフラッシュ/3…ロイヤルストレートフラッシュ
  */
 static int yaku_check_straight(void)
 {
 	int i, lowest = 99;
 	bool joker_is_used = FALSE;
+	bool straight = FALSE;
 
 	/* get lowest */
 	for (i = 0; i < 5; i++)
@@ -507,6 +513,7 @@ static int yaku_check_straight(void)
 			lowest = NUM_OF(cards[i]);
 	}
 	
+	/* Check Royal Straight Flush */
 	if (yaku_check_flush())
 	{
 	  if( lowest == 0 ){
@@ -519,33 +526,51 @@ static int yaku_check_straight(void)
 				  break;
 			}
 		}
-		if (i == 4) return 3; /* Wow! Royal Flush!!! */
+		if (i == 4) return 3; /* Wow! Royal Straight Flush!!! */
 	  }
-	  if( lowest == 9 ){
+	  if(lowest == 9){
 		for (i = 0; i < 3; i++)
 		{
 			if (!find_card_num(10 + i))
 				break;
 		}
-		if (i == 3 && have_joker()) return 3; /* Wow! Royal Flush!!! */
+		if (i == 3 && have_joker()) return 3; /* Wow! Royal Straight Flush!!! */
 	  }
 	}
 
 	joker_is_used = FALSE;
+
+	/* Straight Only Check */
+
+	if (lowest == 0) { /* (10 - J - Q - K)[JOKER] - A */
+		for (i = 0; i < 4; i++)
+		{
+			if (!find_card_num(9 + i)) {
+				if (have_joker() && !joker_is_used)
+					joker_is_used = TRUE;
+				else
+					break; /* None */
+			}
+		}
+		if(i == 4) straight = TRUE;
+	}
+
+	joker_is_used = FALSE;
+
 	for (i = 0; i < 5; i++)
 	{
-		if (!find_card_num(lowest + i)){
-		  if( have_joker() && !joker_is_used )
-		    joker_is_used = TRUE;
-		  else
-		    return 0;
+		if(!find_card_num(lowest + i)){
+			if( have_joker() && !joker_is_used )
+				joker_is_used = TRUE;
+			else
+				break; /* None */
 		}
 	}
+	if(i == 5) straight = TRUE;
 	
-	if (yaku_check_flush())
-		return 2; /* Straight Flush */
-
-	return 1;
+	if (straight && yaku_check_flush()) return 2; /* Straight Flush */
+	else if(straight) return 1; /* Only Straight */
+	else return 0;
 }
 
 /*!
@@ -650,7 +675,7 @@ static int yaku_check(void)
 		c_put_str(TERM_YELLOW, _("フォーカード", "Four of a kind"),  4,  3);
 		return ODDS_4C;
 	case 7:
-		if (!NUM_OF(cards[0]) || !NUM_OF(cards[1]))
+		if (!NUM_OF(cards[0]) && !NUM_OF(cards[1]))
 		{
 			c_put_str(TERM_YELLOW, _("ファイブエース", "Five ace"),  4,  3);
 			return ODDS_5A;
@@ -980,12 +1005,60 @@ static int do_poker(void)
 	cards[4] = 51;
 #endif
 #if 0
-	/* debug:Straight */
+	/* debug:Straight1 */
 	cards[0] = 1;
 	cards[1] = 0 + 13;
 	cards[2] = 3;
 	cards[3] = 2 + 26;
 	cards[4] = 4;
+#endif
+#if 0
+	/* debug:Straight2 */
+	cards[0] = 12;
+	cards[1] = 0;
+	cards[2] = 9;
+	cards[3] = 11 + 13 * 2;
+	cards[4] = 10;
+#endif
+#if 0
+	/* debug:Straight3 */
+	cards[0] = 52;
+	cards[1] = 0;
+	cards[2] = 9;
+	cards[3] = 11 + 13 * 2;
+	cards[4] = 10;
+#endif
+#if 0
+	/* debug:Straight4 */
+	cards[0] = 12;
+	cards[1] = 52;
+	cards[2] = 9;
+	cards[3] = 11 + 13 * 2;
+	cards[4] = 10;
+#endif
+#if 0
+	/* debug:Straight5 */
+	cards[0] = 4;
+	cards[1] = 5 + 13;
+	cards[2] = 6;
+	cards[3] = 7 + 26;
+	cards[4] = 3;
+#endif
+#if 0
+	/* debug:Five Card1 */
+	cards[0] = 4;
+	cards[1] = 52;
+	cards[2] = 4 + 13;
+	cards[3] = 4 + 26;
+	cards[4] = 4 + 39;
+#endif
+#if 0
+	/* debug:Five Card2 */
+	cards[1] = 52;
+	cards[0] = 4;
+	cards[2] = 4 + 13;
+	cards[3] = 4 + 26;
+	cards[4] = 4 + 39;
 #endif
 #if 0
 	/* debug */
@@ -1365,10 +1438,10 @@ static bool gamble_comm(int cmd)
  * 自爆以外のなんらかのHP攻撃手段を持っていること。
  * @return 参加できるか否か
  */
-static bool vault_aux_battle(int r_idx)
+static bool vault_aux_battle(MONRACE_IDX r_idx)
 {
 	int i;
-	int dam = 0;
+	HIT_POINT dam = 0;
 
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1390,7 +1463,7 @@ static bool vault_aux_battle(int r_idx)
 		if (r_ptr->blow[i].method == RBM_EXPLODE) return (FALSE);
 		if (r_ptr->blow[i].effect != RBE_DR_MANA) dam += r_ptr->blow[i].d_dice;
 	}
-	if (!dam && !(r_ptr->flags4 & (RF4_BOLT_MASK | RF4_BEAM_MASK | RF4_BALL_MASK | RF4_BREATH_MASK)) && !(r_ptr->flags5 & (RF5_BOLT_MASK | RF5_BEAM_MASK | RF5_BALL_MASK | RF5_BREATH_MASK)) && !(r_ptr->flags6 & (RF6_BOLT_MASK | RF6_BEAM_MASK | RF6_BALL_MASK | RF6_BREATH_MASK))) return (FALSE);
+	if (!dam && !(r_ptr->flags4 & (RF4_BOLT_MASK | RF4_BEAM_MASK | RF4_BALL_MASK | RF4_BREATH_MASK)) && !(r_ptr->a_ability_flags1 & (RF5_BOLT_MASK | RF5_BEAM_MASK | RF5_BALL_MASK | RF5_BREATH_MASK)) && !(r_ptr->a_ability_flags2 & (RF6_BOLT_MASK | RF6_BEAM_MASK | RF6_BALL_MASK | RF6_BREATH_MASK))) return (FALSE);
 
 	/* Okay */
 	return (TRUE);
@@ -1428,9 +1501,10 @@ void battle_monsters(void)
 	{
 		total = 0;
 		tekitou = FALSE;
-		for(i=0;i<4;i++)
+		for(i = 0; i < 4; i++)
 		{
-			int r_idx, j;
+			MONRACE_IDX r_idx;
+			int j;
 			while (1)
 			{
 				get_mon_num_prep(vault_aux_battle, NULL);
@@ -1470,11 +1544,11 @@ void battle_monsters(void)
 				power[i] = power[i] * (r_ptr->speed - 20) / 100;
 			if (num_taisei > 2)
 				power[i] = power[i] * (num_taisei*2+5) / 10;
-			else if (r_ptr->flags6 & RF6_INVULNER)
+			else if (r_ptr->a_ability_flags2 & RF6_INVULNER)
 				power[i] = power[i] * 4 / 3;
-			else if (r_ptr->flags6 & RF6_HEAL)
+			else if (r_ptr->a_ability_flags2 & RF6_HEAL)
 				power[i] = power[i] * 4 / 3;
-			else if (r_ptr->flags5 & RF5_DRAIN_MANA)
+			else if (r_ptr->a_ability_flags1 & RF5_DRAIN_MANA)
 				power[i] = power[i] * 11 / 10;
 			if (r_ptr->flags1 & RF1_RAND_25)
 				power[i] = power[i] * 9 / 10;
@@ -1642,9 +1716,9 @@ static void today_target(void)
 	c_put_str(TERM_YELLOW, _("本日の賞金首", "Wanted monster that changes from day to day"), 5, 10);
 	sprintf(buf,_("ターゲット： %s", "target: %s"),r_name + r_ptr->name);
 	c_put_str(TERM_YELLOW, buf, 6, 10);
-	sprintf(buf,_("死体 ---- $%d", "corpse   ---- $%d"),r_ptr->level * 50 + 100);
+	sprintf(buf,_("死体 ---- $%d", "corpse   ---- $%d"), (int)r_ptr->level * 50 + 100);
 	prt(buf, 8, 10);
-	sprintf(buf,_("骨   ---- $%d", "skeleton ---- $%d"),r_ptr->level * 30 + 60);
+	sprintf(buf,_("骨   ---- $%d", "skeleton ---- $%d"), (int)r_ptr->level * 30 + 60);
 	prt(buf, 9, 10);
 	p_ptr->today_mon = today_mon;
 }
@@ -1712,8 +1786,8 @@ static void shoukinkubi(void)
  * 賞金首の報酬テーブル / List of prize object
  */
 static struct {
-	s16b tval; /*!< ベースアイテムのメイン種別ID */
-	s16b sval; /*!< ベースアイテムのサブ種別ID */
+	OBJECT_TYPE_VALUE tval; /*!< ベースアイテムのメイン種別ID */
+	OBJECT_SUBTYPE_VALUE sval; /*!< ベースアイテムのサブ種別ID */
 } prize_list[MAX_KUBI] = 
 {
 	{TV_POTION, SV_POTION_CURING},
@@ -1953,7 +2027,7 @@ static bool kankin(void)
  * @param r_idx 判定対象となるモンスターのＩＤ
  * @return 悪夢の元凶となり得るか否か。
  */
-bool get_nightmare(int r_idx)
+bool get_nightmare(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -2011,10 +2085,10 @@ static bool inn_comm(int cmd)
 				else
 					do_cmd_write_nikki(NIKKI_BUNSHOU, 0, _("宿屋に泊まった。", "stay over night at the inn."));
 				
-				turn = (turn / (TURNS_PER_TICK*TOWN_DAWN/2) + 1) * (TURNS_PER_TICK*TOWN_DAWN/2);
+				turn = (turn / (TURNS_PER_TICK * TOWN_DAWN / 2) + 1) * (TURNS_PER_TICK * TOWN_DAWN / 2);
 				if (dungeon_turn < dungeon_turn_limit)
 				{
-					dungeon_turn += MIN(turn - oldturn, TURNS_PER_TICK * 250);
+					dungeon_turn += MIN((turn - oldturn), TURNS_PER_TICK * 250) * INN_DUNGEON_TURN_ADJ;
 					if (dungeon_turn > dungeon_turn_limit) dungeon_turn = dungeon_turn_limit;
 				}
 
@@ -2049,7 +2123,7 @@ static bool inn_comm(int cmd)
 						int i;
 						for (i = 0; i < 72; i++)
 						{
-							p_ptr->magic_num1[i] = p_ptr->magic_num2[i]*EATER_CHARGE;
+							p_ptr->magic_num1[i] = p_ptr->magic_num2[i] * EATER_CHARGE;
 						}
 						for (; i < 108; i++)
 						{
@@ -2088,12 +2162,11 @@ static bool inn_comm(int cmd)
  * @param do_init クエストの開始処理(TRUE)、結果処理か(FALSE)
  * @return なし
  */
-static void get_questinfo(int questnum, bool do_init)
+static void get_questinfo(IDX questnum, bool do_init)
 {
 	int     i;
-	int     old_quest;
+	IDX     old_quest;
 	char    tmp_str[80];
-
 
 	/* Clear the text */
 	for (i = 0; i < 10; i++)
@@ -2117,7 +2190,7 @@ static void get_questinfo(int questnum, bool do_init)
 	p_ptr->inside_quest = old_quest;
 
 	/* Print the quest info */
-	sprintf(tmp_str, _("クエスト情報 (危険度: %d 階相当)", "Quest Information (Danger level: %d)"), quest[questnum].level);
+	sprintf(tmp_str, _("クエスト情報 (危険度: %d 階相当)", "Quest Information (Danger level: %d)"), (int)quest[questnum].level);
 
 	prt(tmp_str, 5, 0);
 
@@ -2135,7 +2208,7 @@ static void get_questinfo(int questnum, bool do_init)
  */
 static void castle_quest(void)
 {
-	int             q_index = 0;
+	IDX q_index = 0;
 	monster_race    *r_ptr;
 	quest_type      *q_ptr;
 	cptr            name;
@@ -2250,9 +2323,9 @@ static void town_history(void)
  * @return ダメージ期待値
  * @note 基本ダメージ量と重量はこの部位では計算に加わらない。
  */
-s16b calc_crit_ratio_shot(int plus_ammo, int plus_bow)
+HIT_POINT calc_crit_ratio_shot(HIT_POINT plus_ammo, HIT_POINT plus_bow)
 {
-	int i;
+	HIT_POINT i;
 	object_type *j_ptr =  &inventory[INVEN_BOW];
 	
 	/* Extract "shot" power */
@@ -2283,7 +2356,7 @@ s16b calc_crit_ratio_shot(int plus_ammo, int plus_bow)
  * @param dam 基本ダメージ量
  * @return ダメージ期待値
  */
-s16b calc_expect_crit_shot(int weight, int plus_ammo, int plus_bow,  int dam)
+HIT_POINT calc_expect_crit_shot(int weight, int plus_ammo, int plus_bow,  HIT_POINT dam)
 {
 	u32b num;
 	int i, k, crit;
@@ -2325,7 +2398,7 @@ s16b calc_expect_crit_shot(int weight, int plus_ammo, int plus_bow,  int dam)
  * @param dokubari 毒針処理か否か
  * @return ダメージ期待値
  */
-s16b calc_expect_crit(int weight, int plus, int dam, s16b meichuu, bool dokubari)
+HIT_POINT calc_expect_crit(int weight, int plus, HIT_POINT dam, s16b meichuu, bool dokubari)
 {
 	u32b k, num;
 	int i;
@@ -2369,7 +2442,7 @@ s16b calc_expect_crit(int weight, int plus, int dam, s16b meichuu, bool dokubari
  * @param force 理力特別計算フラグ
  * @return ダメージ期待値
  */
-static s16b calc_slaydam(int dam, int mult, int div, bool force)
+static HIT_POINT calc_slaydam(HIT_POINT dam, int mult, int div, bool force)
 {
 	int tmp;
 	if(force)
@@ -2682,7 +2755,7 @@ static int hit_chance(int to_h, int ac)
 	if (chance > 95) chance = 95;
 	if (chance < 5) chance = 5;
 	if (p_ptr->pseikaku == SEIKAKU_NAMAKE)
-		chance = (chance*19+9)/20;
+		chance = (chance * 19 + 9) / 20;
 	return chance;
 }
 
@@ -2728,14 +2801,14 @@ static void list_weapon(object_type *o_ptr, int row, int col)
 
 	/* Damage for one blow (if it hits) */
 	sprintf(tmp_str, _("攻撃一回につき %d-%d", "One Strike: %d-%d damage"),
-	    eff_dd + o_ptr->to_d + p_ptr->to_d[0],
-	    eff_ds * eff_dd + o_ptr->to_d + p_ptr->to_d[0]);
+	    (int)(eff_dd + o_ptr->to_d + p_ptr->to_d[0]),
+		(int)(eff_ds * eff_dd + o_ptr->to_d + p_ptr->to_d[0]));
 	put_str(tmp_str, row+6, col+1);
 
 	/* Damage for the complete attack (if all blows hit) */
 	sprintf(tmp_str, _("１ターンにつき %d-%d", "One Attack: %d-%d damage"),
-	    p_ptr->num_blow[0] * (eff_dd + o_ptr->to_d + p_ptr->to_d[0]),
-	    p_ptr->num_blow[0] * (eff_ds * eff_dd + o_ptr->to_d + p_ptr->to_d[0]));
+		(int)(p_ptr->num_blow[0] * (eff_dd + o_ptr->to_d + p_ptr->to_d[0])),
+			(int)(p_ptr->num_blow[0] * (eff_ds * eff_dd + o_ptr->to_d + p_ptr->to_d[0])));
 	put_str(tmp_str, row+7, col+1);
 }
 
@@ -2798,7 +2871,7 @@ static bool item_tester_hook_ammo(object_type *o_ptr)
 static int compare_weapons(int bcost)
 {
 	int i, n;
-	int item, item2;
+	OBJECT_IDX item, item2;
 	object_type *o_ptr[2];
 	object_type orig_weapon;
 	object_type *i_ptr;
@@ -3111,10 +3184,11 @@ static void give_one_ability_of_object(object_type *to_ptr, object_type *from_pt
 static int repair_broken_weapon_aux(int bcost)
 {
 	s32b cost;
-	int item, mater;
+	OBJECT_IDX item, mater;
 	object_type *o_ptr, *mo_ptr; /* broken weapon and material weapon */
 	object_kind *k_ptr;
-	int i, k_idx, dd_bonus, ds_bonus;
+	int i, dd_bonus, ds_bonus;
+	IDX k_idx;
 	char basenm[MAX_NLEN];
 	cptr q, s; /* For get_item prompt */
 	int row = 7;
@@ -3194,24 +3268,25 @@ static int repair_broken_weapon_aux(int bcost)
 
 	if (o_ptr->sval == SV_BROKEN_DAGGER)
 	{
-		int i, n = 1;
+		IDX j;
+		int n = 1;
 
 		/* Suppress compiler warning */
 		k_idx = 0;
 
-		for (i = 1; i < max_k_idx; i++)
+		for (j = 1; j < max_k_idx; j++)
 		{
-			object_kind *k_ptr = &k_info[i];
+			object_kind *k_aux_ptr = &k_info[j];
 
-			if (k_ptr->tval != TV_SWORD) continue;
-			if ((k_ptr->sval == SV_BROKEN_DAGGER) ||
-				(k_ptr->sval == SV_BROKEN_SWORD) ||
-				(k_ptr->sval == SV_DOKUBARI)) continue;
-			if (k_ptr->weight > 99) continue;
+			if (k_aux_ptr->tval != TV_SWORD) continue;
+			if ((k_aux_ptr->sval == SV_BROKEN_DAGGER) ||
+				(k_aux_ptr->sval == SV_BROKEN_SWORD) ||
+				(k_aux_ptr->sval == SV_DOKUBARI)) continue;
+			if (k_aux_ptr->weight > 99) continue;
 
 			if (one_in_(n)) 
 			{
-				k_idx = i;
+				k_idx = j;
 				n++;
 			}
 		}
@@ -3219,7 +3294,7 @@ static int repair_broken_weapon_aux(int bcost)
 	else /* TV_BROKEN_SWORD */
 	{
 		/* Repair to a sword or sometimes material's type weapon */
-		int tval = (one_in_(5) ? mo_ptr->tval : TV_SWORD);
+		OBJECT_TYPE_VALUE tval = (one_in_(5) ? mo_ptr->tval : TV_SWORD);
 
 		while(1)
 		{
@@ -3269,13 +3344,13 @@ static int repair_broken_weapon_aux(int bcost)
 	/* Copy base object's ability */
 	for (i = 0; i < TR_FLAG_SIZE; i++) o_ptr->art_flags[i] |= k_ptr->flags[i];
 	if (k_ptr->pval) o_ptr->pval = MAX(o_ptr->pval, randint1(k_ptr->pval));
-	if (have_flag(k_ptr->flags, TR_ACTIVATE)) o_ptr->xtra2 = k_ptr->act_idx;
+	if (have_flag(k_ptr->flags, TR_ACTIVATE)) o_ptr->xtra2 = (byte_hack)k_ptr->act_idx;
 
 	/* Dice up */
 	if (dd_bonus > 0)
 	{
 		o_ptr->dd++;
-		for (i = 0; i < dd_bonus; i++)
+		for (i = 1; i < dd_bonus; i++)
 		{
 			if (one_in_(o_ptr->dd + i)) o_ptr->dd++;
 		}
@@ -3283,7 +3358,7 @@ static int repair_broken_weapon_aux(int bcost)
 	if (ds_bonus > 0)
 	{
 		o_ptr->ds++;
-		for (i = 0; i < ds_bonus; i++)
+		for (i = 1; i < ds_bonus; i++)
 		{
 			if (one_in_(o_ptr->ds + i)) o_ptr->ds++;
 		}
@@ -3383,7 +3458,8 @@ static int repair_broken_weapon(int bcost)
  */
 static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac)
 {
-	int         i, item;
+	int         i;
+	OBJECT_IDX  item;
 	bool        okay = FALSE;
 	object_type *o_ptr;
 	cptr        q, s;
@@ -3501,12 +3577,13 @@ static bool enchant_item(int cost, int to_hit, int to_dam, int to_ac)
  */
 static void building_recharge(void)
 {
-	int         item, lev;
+	OBJECT_IDX  item;
+	int         lev;
 	object_type *o_ptr;
 	object_kind *k_ptr;
 	cptr        q, s;
 	int         price;
-	int         charges;
+	PARAMETER_VALUE charges;
 	int         max_charges;
 	char        tmp_str[MAX_NLEN];
 
@@ -3678,7 +3755,7 @@ if (get_check(format("そのロッドを＄%d で再充填しますか？",
 			max_charges = o_ptr->number * k_ptr->pval - o_ptr->pval;
 
 		/* Get the quantity for staves and wands */
-		charges = get_quantity(format(_("一回分＄%d で何回分充填しますか？", "Add how many charges for %d gold? "), price), 
+		charges = (PARAMETER_VALUE)get_quantity(format(_("一回分＄%d で何回分充填しますか？", "Add how many charges for %d gold? "), price), 
 					MIN(p_ptr->au / price, max_charges));
 
 		/* Do nothing */
@@ -3945,7 +4022,9 @@ bool tele_town(void)
  */
 static bool research_mon(void)
 {
-	int i, n, r_idx;
+	IDX i;
+	int n;
+	MONRACE_IDX r_idx;
 	char sym, query;
 	char buf[128];
 
@@ -3955,7 +4034,7 @@ static bool research_mon(void)
 
 	u16b why = 0;
 
-	u16b	*who;
+	IDX *who;
 
 	/* XTRA HACK WHATSEARCH */
 	bool    all = FALSE;
@@ -3965,7 +4044,7 @@ static bool research_mon(void)
 
 	/* XTRA HACK REMEMBER_IDX */
 	static int old_sym = '\0';
-	static int old_i = 0;
+	static IDX old_i = 0;
 
 
 	/* Save the screen */
@@ -4032,7 +4111,7 @@ static bool research_mon(void)
 
 
 	/* Allocate the "who" array */
-	C_MAKE(who, max_r_idx, u16b);
+	C_MAKE(who, max_r_idx, IDX);
 
 	/* Collect matching monsters */
 	for (n = 0, i = 1; i < max_r_idx; i++)
@@ -4064,7 +4143,7 @@ static bool research_mon(void)
 					continue;
 				}
 #endif
-				if (isupper(temp[xx])) temp[xx] = tolower(temp[xx]);
+				if (isupper(temp[xx])) temp[xx] = (char)tolower(temp[xx]);
 			}
   
 #ifdef JP
@@ -4073,7 +4152,7 @@ static bool research_mon(void)
 			strcpy(temp2, r_name + r_ptr->name);
 #endif
 			for (xx = 0; temp2[xx] && xx < 80; xx++)
-				if (isupper(temp2[xx])) temp2[xx] = tolower(temp2[xx]);
+				if (isupper(temp2[xx])) temp2[xx] = (char)tolower(temp2[xx]);
 
 #ifdef JP
 			if (my_strstr(temp2, temp) || my_strstr(r_name + r_ptr->name, temp))
@@ -4089,7 +4168,7 @@ static bool research_mon(void)
 	if (!n)
 	{
 		/* Free the "who" array */
-		C_KILL(who, max_r_idx, u16b);
+		C_KILL(who, max_r_idx, IDX);
 
 		/* Restore */
 		screen_load();
@@ -4197,7 +4276,7 @@ static bool research_mon(void)
 	/* prt(buf, 5, 5);*/
 
 	/* Free the "who" array */
-	C_KILL(who, max_r_idx, u16b);
+	C_KILL(who, max_r_idx, IDX);
 
 	/* Restore */
 	screen_load();
@@ -4214,8 +4293,8 @@ static bool research_mon(void)
  */
 static void bldg_process_command(building_type *bldg, int i)
 {
-	int bact = bldg->actions[i];
-	int bcost;
+	BACT_IDX bact = bldg->actions[i];
+	PRICE bcost;
 	bool paid = FALSE;
 	int amt;
 
@@ -4355,8 +4434,8 @@ static void bldg_process_command(building_type *bldg, int i)
 		break;
 	case BACT_TELEPORT_LEVEL:
 	{
-		int select_dungeon;
-		int max_depth;
+		IDX select_dungeon;
+		DEPTH max_depth;
 
 		clear_bldg(4, 20);
 		select_dungeon = choose_dungeon(_("にテレポート", "teleport"), 4, 0);
@@ -4368,11 +4447,11 @@ static void bldg_process_command(building_type *bldg, int i)
 		/* Limit depth in Angband */
 		if (select_dungeon == DUNGEON_ANGBAND)
 		{
-			if (quest[QUEST_OBERON].status != QUEST_STATUS_FINISHED) max_depth = 23; /* #tang 98 -> 23 */
-			else if(quest[QUEST_SERPENT].status != QUEST_STATUS_FINISHED) max_depth = 24; /* #tang 99 -> 24 */
+			if (quest[QUEST_OBERON].status != QUEST_STATUS_FINISHED) max_depth = 98;
+			else if(quest[QUEST_SERPENT].status != QUEST_STATUS_FINISHED) max_depth = 99;
 		}
 		amt = get_quantity(format(_("%sの何階にテレポートしますか？", "Teleport to which level of %s? "), 
-							d_name + d_info[select_dungeon].name), max_depth);
+							d_name + d_info[select_dungeon].name), (QUANTITY)max_depth);
 
 		if (amt > 0)
 		{
@@ -4727,15 +4806,15 @@ void quest_discovery(int q_idx)
  * @param level 検索対象になる階
  * @return クエストIDを返す。該当がない場合0を返す。
  */
-int quest_number(int level)
+IDX quest_number(DEPTH level)
 {
-	int i;
+	IDX i;
 
 	/* Check quests */
 	if (p_ptr->inside_quest)
 		return (p_ptr->inside_quest);
 
-	for (i = 0; i < max_quests; i++)
+	for (i = 0; i < max_q_idx; i++)
 	{
 		if (quest[i].status != QUEST_STATUS_TAKEN) continue;
 
@@ -4755,18 +4834,18 @@ int quest_number(int level)
  * @param level 検索対象になる階
  * @return クエストIDを返す。該当がない場合0を返す。
  */
-int random_quest_number(int level)
+IDX random_quest_number(DEPTH level)
 {
-	int i;
+	IDX i;
 
 	if (dungeon_type != DUNGEON_ANGBAND) return 0;
 
 	for (i = MIN_RANDOM_QUEST; i < MAX_RANDOM_QUEST + 1; i++)
 	{
 		if ((quest[i].type == QUEST_TYPE_RANDOM) &&
-		    (quest[i].status == QUEST_STATUS_TAKEN) &&
-		    (quest[i].level == level) &&
-		    (quest[i].dungeon == DUNGEON_ANGBAND))
+			(quest[i].status == QUEST_STATUS_TAKEN) &&
+			(quest[i].level == level) &&
+			(quest[i].dungeon == DUNGEON_ANGBAND))
 		{
 			return i;
 		}

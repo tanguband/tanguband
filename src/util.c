@@ -503,7 +503,7 @@ errr my_fgets(FILE *fff, char *buf, huge n)
 			}
 #endif
 			/* Handle printables */
-			else if (isprint(*s))
+			else if (isprint((unsigned char)*s))
 			{
 				/* Copy */
 				buf[i++] = *s;
@@ -696,7 +696,7 @@ errr fd_copy(cptr file, cptr what)
  * of "O_RDONLY", "O_WRONLY", and "O_RDWR" in "A-win-h", and then
  * we must simulate the effect of the proper "open()" call below.
  */
-int fd_make(cptr file, int mode)
+int fd_make(cptr file, BIT_FLAGS mode)
 {
 	char buf[1024];
 
@@ -1197,8 +1197,8 @@ void text_to_ascii(char *buf, cptr str)
 			/* Hex-mode XXX */
 			if (*str == 'x')
 			{
-				*s = 16 * dehex(*++str);
-				*s++ += dehex(*++str);
+				*s = 16 * (char)dehex(*++str);
+				*s++ += (char)dehex(*++str);
 			}
 
 			/* Hack -- simple way to specify "backslash" */
@@ -1252,29 +1252,29 @@ void text_to_ascii(char *buf, cptr str)
 			/* Octal-mode */
 			else if (*str == '0')
 			{
-				*s = 8 * deoct(*++str);
-				*s++ += deoct(*++str);
+				*s = 8 * (char)deoct(*++str);
+				*s++ += (char)deoct(*++str);
 			}
 
 			/* Octal-mode */
 			else if (*str == '1')
 			{
-				*s = 64 + 8 * deoct(*++str);
-				*s++ += deoct(*++str);
+				*s = 64 + 8 * (char)deoct(*++str);
+				*s++ += (char)deoct(*++str);
 			}
 
 			/* Octal-mode */
 			else if (*str == '2')
 			{
-				*s = 64 * 2 + 8 * deoct(*++str);
-				*s++ += deoct(*++str);
+				*s = 64 * 2 + 8 * (char)deoct(*++str);
+				*s++ += (char)deoct(*++str);
 			}
 
 			/* Octal-mode */
 			else if (*str == '3')
 			{
-				*s = 64 * 3 + 8 * deoct(*++str);
-				*s++ += deoct(*++str);
+				*s = 64 * 3 + 8 * (char)deoct(*++str);
+				*s++ += (char)deoct(*++str);
 			}
 
 			/* Skip the final char */
@@ -1322,7 +1322,7 @@ static bool trigger_ascii_to_text(char **bufptr, cptr *strptr)
 		switch(ch)
 		{
 		case '&':
-			while ((tmp = my_strchr(macro_modifier_chr, *str)))
+			while ((tmp = my_strchr(macro_modifier_chr, *str)) != 0)
 			{
 				j = (int)(tmp - macro_modifier_chr);
 				tmp = macro_modifier_name[j];
@@ -1721,11 +1721,17 @@ errr play_music(int type, int val)
 /*
  * Hack -- Select floor music.
  */
-void select_floor_music()
+void select_floor_music(void)
 {
 	int i;
 	/* No sound */
 	if (!use_music) return;
+
+	if(ambush_flag)
+	{
+		play_music(TERM_XTRA_MUSIC_BASIC, MUSIC_BASIC_AMBUSH);
+		return;
+	}
 
 	if(p_ptr->wild_mode)
 	{
@@ -1754,7 +1760,7 @@ void select_floor_music()
 		return;
 	}
 
-	for(i = 0; i < max_quests; i++)
+	for(i = 0; i < max_q_idx; i++)
 	{ // TODO マクロで類似条件を統合すること
 		if(quest[i].status == QUEST_STATUS_TAKEN &&
 			(quest[i].type == QUEST_TYPE_KILL_LEVEL || quest[i].type == QUEST_TYPE_RANDOM) &&
@@ -2345,9 +2351,9 @@ void quark_init(void)
 /*
  * Add a new "quark" to the set of quarks.
  */
-s16b quark_add(cptr str)
+u16b quark_add(cptr str)
 {
-	int i;
+	u16b i;
 
 	/* Look for an existing quark */
 	for (i = 1; i < quark__num; i++)
@@ -2373,7 +2379,7 @@ s16b quark_add(cptr str)
 /*
  * This function looks up a quark
  */
-cptr quark_str(s16b i)
+cptr quark_str(STR_OFFSET i)
 {
 	cptr q;
 
@@ -2413,10 +2419,11 @@ cptr quark_str(s16b i)
 
 
 
-/*
- * How many messages are "available"?
+/*!
+ * @brief 保存中の過去ゲームメッセージの数を返す。 / How many messages are "available"?
+ * @return 残っているメッセージの数
  */
-s16b message_num(void)
+s32b message_num(void)
 {
 	int last, next, n;
 
@@ -2435,14 +2442,15 @@ s16b message_num(void)
 }
 
 
-
-/*
- * Recall the "text" of a saved message
+/*!
+ * @brief 過去のゲームメッセージを返す。 / Recall the "text" of a saved message
+ * @params age メッセージの世代
+ * @return メッセージの文字列ポインタ
  */
 cptr message_str(int age)
 {
-	s16b x;
-	s16b o;
+	s32b x;
+	s32b o;
 	cptr s;
 
 	/* Forgotten messages have no text */
@@ -2462,15 +2470,17 @@ cptr message_str(int age)
 }
 
 
-
-/*
- * Add a new message, with great efficiency
+/*!
+ * @brief ゲームメッセージをログに追加する。 / Add a new message, with great efficiency
+ * @params str 保存したいメッセージ
+ * @return なし
  */
 void message_add(cptr str)
 {
-	int i, k, x, m, n;
+	u32b i, n;
+	int k, x, m;
 
-	char u[1024];
+	char u[4096];
 	char splitted1[81];
 	cptr splitted2;
 
@@ -2485,39 +2495,37 @@ void message_add(cptr str)
 	/* Important Hack -- Ignore "long" messages */
 	if (n >= MESSAGE_BUF / 4) return;
 
-	/* extra step -- split the message if n>80.   (added by Mogami) */
+	/* extra step -- split the message if n>80.(added by Mogami) */
 	if (n > 80) {
 #ifdef JP
-	  cptr t = str;
+		cptr t = str;
 
-	  for (n = 0; n < 80; n++, t++)
-	    if(iskanji(*t)) {
-	      t++;
-	      n++;
-	    }
-	  if (n == 81) n = 79; /* 最後の文字が漢字半分 */
+		for (n = 0; n < 80; n++, t++)
+		{
+			if(iskanji(*t)) {
+				t++;
+				n++;
+			}
+		}
+		if (n == 81) n = 79; /* 最後の文字が漢字半分 */
 #else
-	  for (n = 80; n > 60; n--)
-		  if (str[n] == ' ') break;
-	  if (n == 60)
-		  n = 80;
+		for (n = 80; n > 60; n--)
+			if (str[n] == ' ') break;
+		if (n == 60) n = 80;
 #endif
-	  splitted2 = str + n;
-	  strncpy(splitted1, str ,n);
-	  splitted1[n] = '\0';
-	  str = splitted1;
+		splitted2 = str + n;
+		strncpy(splitted1, str ,n);
+		splitted1[n] = '\0';
+		str = splitted1;
 	} else {
-	  splitted2 = NULL;
+		splitted2 = NULL;
 	}
 
-	/*** Step 2 -- Attempt to optimize ***/
+	/*** Step 2 -- 最適化の試行 / Attempt to optimize ***/
 
 	/* Limit number of messages to check */
 	m = message_num();
-
 	k = m / 4;
-
-	/* Limit number of messages to check */
 	if (k > MESSAGE_MAX / 32) k = MESSAGE_MAX / 32;
 
 	/* Check previous message */
@@ -2543,8 +2551,8 @@ void message_add(cptr str)
 
 		/* Find multiple */
 #ifdef JP
- for (t = buf; *t && (*t != '<' || (*(t+1) != 'x' )); t++) 
-     if( iskanji(*t))t++;
+		for (t = buf; *t && (*t != '<' || (*(t+1) != 'x' )); t++) 
+			if(iskanji(*t))t++;
 #else
 		for (t = buf; *t && (*t != '<'); t++);
 #endif
@@ -2592,8 +2600,7 @@ void message_add(cptr str)
 	/* Check the last few messages (if any to count) */
 	for (i = message__next; k; k--)
 	{
-		u16b q;
-
+		int q;
 		cptr old;
 
 		/* Back up and wrap if needed */
@@ -2732,7 +2739,7 @@ void message_add(cptr str)
 	message__head += n + 1;
 
 	/* recursively add splitted message (added by Mogami) */
- end_of_message_add:
+end_of_message_add:
 	if (splitted2 != NULL)
 	  message_add(splitted2);
 }
@@ -2821,11 +2828,8 @@ static void msg_flush(int x)
 void msg_print(cptr msg)
 {
 	static int p = 0;
-
 	int n;
-
 	char *t;
-
 	char buf[1024];
 
 	if (world_monster) return;
@@ -2837,7 +2841,7 @@ void msg_print(cptr msg)
 		p = 0;
 	}
 
-	/* Message Length */
+	/* Original Message Length */
 	n = (msg ? strlen(msg) : 0);
 
 	/* Hack -- flush when requested or needed */
@@ -2853,20 +2857,27 @@ void msg_print(cptr msg)
 		p = 0;
 	}
 
-
 	/* No message */
 	if (!msg) return;
 
 	/* Paranoia */
 	if (n > 1000) return;
 
+	/* Copy it */
+	if (!cheat_turn)
+	{
+		strcpy(buf, msg);
+	}
+	else
+	{
+		sprintf(buf, ("T:%d - %s"), (int)turn, msg);
+	}
+
+	/* New Message Length */
+	n = strlen(buf);
 
 	/* Memorize the message */
-	if (character_generated) message_add(msg);
-
-
-	/* Copy it */
-	strcpy(buf, msg);
+	if (character_generated) message_add(buf);
 
 	/* Analyze the buffer */
 	t = buf;
@@ -2942,7 +2953,6 @@ void msg_print(cptr msg)
 		t += split; n -= split;
 	}
 
-
 	/* Display the tail of the message */
 	Term_putstr(p, 0, n, TERM_WHITE, t);
 
@@ -2963,11 +2973,28 @@ void msg_print(cptr msg)
 	p += n + 1;
 #endif
 
-
 	/* Optional refresh */
 	if (fresh_message) Term_fresh();
 }
 
+void msg_print_wizard(int cheat_type, cptr msg)
+{
+	if (!cheat_room && cheat_type == CHEAT_DUNGEON) return;
+	if (!cheat_peek && cheat_type == CHEAT_OBJECT) return;
+	if (!cheat_hear && cheat_type == CHEAT_MONSTER) return;
+	if (!cheat_xtra && cheat_type == CHEAT_MISC) return;
+
+	cptr cheat_mes[] = {"ITEM", "MONS", "DUNG", "MISC"};
+	char buf[1024];
+	sprintf(buf, "WIZ-%s:%s", cheat_mes[cheat_type], msg);
+	msg_print(buf);
+
+	if (cheat_diary_output)
+	{
+		do_cmd_write_nikki(NIKKI_WIZARD_LOG, 0, buf);
+	}
+
+}
 
 /*
  * Hack -- prevent "accidents" in "screen_save()" or "screen_load()"
@@ -3031,6 +3058,32 @@ void msg_format(cptr fmt, ...)
 
 	/* Display */
 	msg_print(buf);
+}
+
+/*
+ * Display a formatted message, using "vstrnfmt()" and "msg_print()".
+ */
+void msg_format_wizard(int cheat_type, cptr fmt, ...)
+{
+	if(!cheat_room && cheat_type == CHEAT_DUNGEON) return;
+	if(!cheat_peek && cheat_type == CHEAT_OBJECT) return;
+	if(!cheat_hear && cheat_type == CHEAT_MONSTER) return;
+	if(!cheat_xtra && cheat_type == CHEAT_MISC) return;
+
+	va_list vp;
+	char buf[1024];
+
+	/* Begin the Varargs Stuff */
+	va_start(vp, fmt);
+
+	/* Format the args, save the length */
+	(void)vstrnfmt(buf, 1024, fmt, vp);
+
+	/* End the Varargs Stuff */
+	va_end(vp);
+
+	/* Display */
+	msg_print_wizard(cheat_type, buf);
 }
 
 
@@ -3606,7 +3659,7 @@ bool get_check(cptr prompt)
  * mode & CHECK_NO_HISTORY  : no message_add
  * mode & CHECK_DEFAULT_Y   : accept any key as y, except n and Esc.
  */
-bool get_check_strict(cptr prompt, int mode)
+bool get_check_strict(cptr prompt, BIT_FLAGS mode)
 {
 	int i;
 	char buf[80];
@@ -3750,12 +3803,13 @@ bool get_com(cptr prompt, char *command, bool z_escape)
  *
  * Hack -- allow "command_arg" to specify a quantity
  */
-s16b get_quantity(cptr prompt, int max)
+QUANTITY get_quantity(cptr prompt, QUANTITY max)
 {
-	bool res;
-	int amt;
+	bool res, result;
+	QUANTITY amt;
 	char tmp[80];
 	char buf[80];
+	COMMAND_CODE code;
 
 
 	/* Use "command_arg" */
@@ -3777,7 +3831,9 @@ s16b get_quantity(cptr prompt, int max)
 #ifdef ALLOW_REPEAT /* TNB */
 
 	/* Get the item index */
-	if ((max != 1) && repeat_pull(&amt))
+	result = repeat_pull(&code);
+	amt = (QUANTITY)code;
+	if ((max != 1) && result)
 	{
 		/* Enforce the maximum */
 		if (amt > max) amt = max;
@@ -3826,7 +3882,7 @@ s16b get_quantity(cptr prompt, int max)
 	if (!res) return 0;
 
 	/* Extract a number */
-	amt = atoi(buf);
+	amt = (COMMAND_CODE)atoi(buf);
 
 	/* A letter means "all" */
 	if (isalpha(buf[0])) amt = max;
@@ -3839,7 +3895,7 @@ s16b get_quantity(cptr prompt, int max)
 
 #ifdef ALLOW_REPEAT /* TNB */
 
-	if (amt) repeat_push(amt);
+	if (amt) repeat_push((COMMAND_CODE)amt);
 
 #endif /* ALLOW_REPEAT -- TNB */
 
@@ -4352,7 +4408,7 @@ void request_command(int shopping)
 {
 	int i;
 
-	char cmd;
+	s16b cmd;
 	int mode;
 
 	cptr act;
@@ -4426,7 +4482,7 @@ void request_command(int shopping)
 		/* Command Count */
 		if (cmd == '0')
 		{
-			int old_arg = command_arg;
+			COMMAND_ARG old_arg = command_arg;
 
 			/* Reset */
 			command_arg = 0;
@@ -4568,7 +4624,7 @@ void request_command(int shopping)
 	if (always_repeat && (command_arg <= 0))
 	{
 		/* Hack -- auto repeat certain commands */
-		if (my_strchr("TBDoc+", command_cmd))
+		if (my_strchr("TBDoc+", (char)command_cmd))
 		{
 			/* Repeat 99 times */
 			command_arg = 99;
@@ -4761,7 +4817,7 @@ int get_keymap_dir(char ch)
 	}
 	else
 	{
-		int mode;
+		BIT_FLAGS mode;
 		cptr act, s;
 
 		/* Roguelike */
@@ -4810,10 +4866,10 @@ static int repeat__cnt = 0;
 static int repeat__idx = 0;
 
 /* Saved "stuff" */
-static int repeat__key[REPEAT_MAX];
+static COMMAND_CODE repeat__key[REPEAT_MAX];
 
 
-void repeat_push(int what)
+void repeat_push(COMMAND_CODE what)
 {
 	/* Too many keys */
 	if (repeat__cnt == REPEAT_MAX) return;
@@ -4826,7 +4882,7 @@ void repeat_push(int what)
 }
 
 
-bool repeat_pull(int *what)
+bool repeat_pull(COMMAND_CODE *what)
 {
 	/* All out of keys */
 	if (repeat__idx == repeat__cnt) return (FALSE);
@@ -4840,7 +4896,7 @@ bool repeat_pull(int *what)
 
 void repeat_check(void)
 {
-	int		what;
+	COMMAND_CODE what;
 
 	/* Ignore some commands */
 	if (command_cmd == ESCAPE) return;
@@ -5401,7 +5457,7 @@ void str_tolower(char *str)
 			continue;
 		}
 #endif
-		*str = tolower(*str);
+		*str = (char)tolower(*str);
 	}
 }
 

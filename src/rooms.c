@@ -400,7 +400,7 @@ static bool find_space_aux(int blocks_high, int blocks_wide, int block_y, int bl
  * Return TRUE and values for the center of the room if all went well.\n
  * Otherwise, return FALSE.\n
  */
-static bool find_space(int *y, int *x, int height, int width)
+static bool find_space(POSITION *y, POSITION *x, POSITION height, POSITION width)
 {
 	int candidates, pick;
 	int by, bx, by1, bx1, by2, bx2;
@@ -486,8 +486,8 @@ static bool find_space(int *y, int *x, int height, int width)
 	/* Save the room location */
 	if (dun->cent_n < CENT_MAX)
 	{
-		dun->cent[dun->cent_n].y = *y;
-		dun->cent[dun->cent_n].x = *x;
+		dun->cent[dun->cent_n].y = (byte_hack)*y;
+		dun->cent[dun->cent_n].x = (byte_hack)*x;
 		dun->cent_n++;
 	}
 
@@ -521,8 +521,8 @@ static bool find_space(int *y, int *x, int height, int width)
  */
 static bool build_type1(void)
 {
-	int y, x, y2, x2, yval, xval;
-	int y1, x1, xsize, ysize;
+	POSITION y, x, y2, x2, yval, xval;
+	POSITION y1, x1, xsize, ysize;
 
 	bool light;
 
@@ -716,9 +716,9 @@ static bool build_type1(void)
  */
 static bool build_type2(void)
 {
-	int			y, x, xval, yval;
-	int			y1a, x1a, y2a, x2a;
-	int			y1b, x1b, y2b, x2b;
+	POSITION	y, x, xval, yval;
+	POSITION	y1a, x1a, y2a, x2a;
+	POSITION	y1b, x1b, y2b, x2b;
 	bool		light;
 	cave_type   *c_ptr;
 
@@ -840,10 +840,10 @@ static bool build_type2(void)
  */
 static bool build_type3(void)
 {
-	int			y, x, dy, dx, wy, wx;
-	int			y1a, x1a, y2a, x2a;
-	int			y1b, x1b, y2b, x2b;
-	int			yval, xval;
+	POSITION y, x, dy, dx, wy, wx;
+	POSITION y1a, x1a, y2a, x2a;
+	POSITION y1b, x1b, y2b, x2b;
+	POSITION yval, xval;
 	bool		light;
 	cave_type   *c_ptr;
 
@@ -1098,8 +1098,8 @@ static bool build_type3(void)
  */
 static bool build_type4(void)
 {
-	int         y, x, y1, x1;
-	int         y2, x2, tmp, yval, xval;
+	POSITION y, x, y1, x1;
+	POSITION y2, x2, tmp, yval, xval;
 	bool        light;
 	cave_type   *c_ptr;
 
@@ -1446,7 +1446,7 @@ static u32b vault_aux_dragon_mask4;
  * @param r_idx 確認したいモンスター種族ID
  * @return Vault生成の最低必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_simple(int r_idx)
+static bool vault_aux_simple(MONRACE_IDX r_idx)
 {
 	/* Okay */
 	return (vault_monster_okay(r_idx));
@@ -1459,7 +1459,7 @@ static bool vault_aux_simple(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_jelly(int r_idx)
+static bool vault_aux_jelly(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1484,7 +1484,7 @@ static bool vault_aux_jelly(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_animal(int r_idx)
+static bool vault_aux_animal(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1505,7 +1505,7 @@ static bool vault_aux_animal(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_undead(int r_idx)
+static bool vault_aux_undead(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1525,7 +1525,7 @@ static bool vault_aux_undead(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_chapel_g(int r_idx)
+static bool vault_aux_chapel_g(MONRACE_IDX r_idx)
 {
 	static int chapel_list[] = {
 		MON_NOV_PRIEST, MON_NOV_PALADIN, MON_NOV_PRIEST_G, MON_NOV_PALADIN_G, 
@@ -1559,7 +1559,7 @@ static bool vault_aux_chapel_g(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_kennel(int r_idx)
+static bool vault_aux_kennel(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1579,7 +1579,7 @@ static bool vault_aux_kennel(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_mimic(int r_idx)
+static bool vault_aux_mimic(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1599,7 +1599,7 @@ static bool vault_aux_mimic(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_clone(int r_idx)
+static bool vault_aux_clone(MONRACE_IDX r_idx)
 {
 	/* Validate the monster */
 	if (!vault_monster_okay(r_idx)) return (FALSE);
@@ -1614,7 +1614,7 @@ static bool vault_aux_clone(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_symbol_e(int r_idx)
+static bool vault_aux_symbol_e(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1639,7 +1639,7 @@ static bool vault_aux_symbol_e(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_symbol_g(int r_idx)
+static bool vault_aux_symbol_g(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1664,7 +1664,7 @@ static bool vault_aux_symbol_g(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_orc(int r_idx)
+static bool vault_aux_orc(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1688,7 +1688,7 @@ static bool vault_aux_orc(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_troll(int r_idx)
+static bool vault_aux_troll(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1712,7 +1712,7 @@ static bool vault_aux_troll(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_giant(int r_idx)
+static bool vault_aux_giant(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1738,7 +1738,7 @@ static bool vault_aux_giant(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_dragon(int r_idx)
+static bool vault_aux_dragon(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1765,7 +1765,7 @@ static bool vault_aux_dragon(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_demon(int r_idx)
+static bool vault_aux_demon(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1788,7 +1788,7 @@ static bool vault_aux_demon(int r_idx)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_cthulhu(int r_idx)
+static bool vault_aux_cthulhu(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -1828,7 +1828,7 @@ static void vault_prep_clone(void)
  */
 static void vault_prep_symbol(void)
 {
-	int r_idx;
+	MONRACE_IDX r_idx;
 
 	/* Apply the monster restriction */
 	get_mon_num_prep(vault_aux_simple, NULL);
@@ -1923,7 +1923,7 @@ static void vault_prep_dragon(void)
  * @param r_idx 確認したいモンスター種族ID
  * @return 生成必要条件を満たしているならTRUEを返す。
  */
-static bool vault_aux_dark_elf(int r_idx)
+static bool vault_aux_dark_elf(MONRACE_IDX r_idx)
 {
 	int i;
 	static int dark_elf_list[] =
@@ -1951,7 +1951,7 @@ typedef struct vault_aux_type vault_aux_type;
 struct vault_aux_type
 {
 	cptr name;
-	bool (*hook_func)(int r_idx);
+	bool (*hook_func)(MONRACE_IDX r_idx);
 	void (*prep_func)(void);
 	int level;
 	int chance;
@@ -2260,7 +2260,7 @@ static void ang_sort_swap_nest_mon_info(vptr u, vptr v, int a, int b)
  */
 static bool build_type5(void)
 {
-	int y, x, y1, x1, y2, x2, xval, yval;
+	POSITION y, x, y1, x1, y2, x2, xval, yval;
 	int i;
 	nest_mon_info_type nest_mon_info[NUM_NEST_MON_TYPE];
 
@@ -2287,7 +2287,8 @@ static bool build_type5(void)
 	/* Pick some monster types */
 	for (i = 0; i < NUM_NEST_MON_TYPE; i++)
 	{
-		int r_idx = 0, attempts = 100;
+		MONRACE_IDX r_idx = 0;
+		int attempts = 100;
 		monster_race *r_ptr = NULL;
 
 		while (attempts--)
@@ -2310,7 +2311,7 @@ static bool build_type5(void)
 		if (r_ptr->flags3 & RF3_EVIL) align.sub_align |= SUB_ALIGN_EVIL;
 		if (r_ptr->flags3 & RF3_GOOD) align.sub_align |= SUB_ALIGN_GOOD;
 
-		nest_mon_info[i].r_idx = r_idx;
+		nest_mon_info[i].r_idx = (s16b)r_idx;
 		nest_mon_info[i].used = FALSE;
 	}
 
@@ -2390,19 +2391,14 @@ static bool build_type5(void)
 		case 4: place_secret_door(yval, x2 + 1, DOOR_DEFAULT); break;
 	}
 
-	/* Describe */
-	if (cheat_room)
-	{
-		/* Room type */
-		msg_format(_("モンスター部屋(nest)(%s%s)", "Monster nest (%s%s)"), n_ptr->name, pit_subtype_string(cur_nest_type, TRUE));
-	}
+	msg_format_wizard(CHEAT_DUNGEON, _("モンスター部屋(nest)(%s%s)を生成します。", "Monster nest (%s%s)"), n_ptr->name, pit_subtype_string(cur_nest_type, TRUE));
 
 	/* Place some monsters */
 	for (y = yval - 2; y <= yval + 2; y++)
 	{
 		for (x = xval - 9; x <= xval + 9; x++)
 		{
-			int r_idx;
+			MONRACE_IDX r_idx;
 
 			i = randint0(NUM_NEST_MON_TYPE);
 			r_idx = nest_mon_info[i].r_idx;
@@ -2414,7 +2410,7 @@ static bool build_type5(void)
 		}
 	}
 
-	if (cheat_room && cheat_hear)
+	if (cheat_room)
 	{
 		ang_sort_comp = ang_sort_comp_nest_mon_info;
 		ang_sort_swap = ang_sort_swap_nest_mon_info;
@@ -2429,7 +2425,7 @@ static bool build_type5(void)
 				if (nest_mon_info[i].r_idx != nest_mon_info[i + 1].r_idx) break;
 				if (!nest_mon_info[i + 1].used) break;
 			}
-			msg_print(r_name + r_info[nest_mon_info[i].r_idx].name);
+			msg_format_wizard(CHEAT_DUNGEON, "Nest構成モンスターNo.%d:%s", i, r_name + r_info[nest_mon_info[i].r_idx].name);
 		}
 	}
 
@@ -2476,10 +2472,10 @@ static bool build_type5(void)
  */
 static bool build_type6(void)
 {
-	int y, x, y1, x1, y2, x2, xval, yval;
+	POSITION y, x, y1, x1, y2, x2, xval, yval;
 	int i, j;
 
-	int what[16];
+	MONRACE_IDX what[16];
 
 	monster_type align;
 
@@ -2504,7 +2500,8 @@ static bool build_type6(void)
 	/* Pick some monster types */
 	for (i = 0; i < 16; i++)
 	{
-		int r_idx = 0, attempts = 100;
+		MONRACE_IDX r_idx = 0;
+		int attempts = 100;
 		monster_race *r_ptr = NULL;
 
 		while (attempts--)
@@ -2619,31 +2616,21 @@ static bool build_type6(void)
 			/* Bubble */
 			if (p1 > p2)
 			{
-				int tmp = what[i1];
+				MONRACE_IDX tmp = what[i1];
 				what[i1] = what[i2];
 				what[i2] = tmp;
 			}
 		}
 	}
 
-	/* Message */
-	if (cheat_room)
-	{
-		/* Room type */
-		msg_format(_("モンスター部屋(pit)(%s%s)", "Monster pit (%s%s)"), n_ptr->name, pit_subtype_string(cur_pit_type, FALSE));
-	}
+	msg_format_wizard(CHEAT_DUNGEON, _("モンスター部屋(pit)(%s%s)を生成します。", "Monster pit (%s%s)"), n_ptr->name, pit_subtype_string(cur_pit_type, FALSE));
 
 	/* Select the entries */
 	for (i = 0; i < 8; i++)
 	{
 		/* Every other entry */
 		what[i] = what[i * 2];
-
-		if (cheat_hear)
-		{
-			/* Message */
-			msg_print(r_name + r_info[what[i]].name);
-		}
+		msg_format_wizard(CHEAT_DUNGEON, _("Nest構成モンスター選択No.%d:%s", "Nest Monster Select No.%d:%s"), i, r_name + r_info[what[i]].name);
 	}
 
 	/* Top and bottom rows */
@@ -2708,7 +2695,7 @@ static bool build_type6(void)
  * @param transno 処理ID
  * @return なし
  */
-static void coord_trans(int *x, int *y, int xoffset, int yoffset, int transno)
+static void coord_trans(POSITION *x, POSITION *y, POSITION xoffset, POSITION yoffset, int transno)
 {
 	int i;
 	int temp;
@@ -2753,15 +2740,12 @@ static void coord_trans(int *x, int *y, int xoffset, int yoffset, int transno)
  * @param transno 変換ID
  * @return なし
  */
-static void build_vault(int yval, int xval, int ymax, int xmax, cptr data,
-		int xoffset, int yoffset, int transno)
+static void build_vault(POSITION yval, POSITION xval, POSITION ymax, POSITION xmax, cptr data,
+		POSITION xoffset, POSITION yoffset, int transno)
 {
-	int dx, dy, x, y, i, j;
-
+	POSITION dx, dy, x, y, i, j;
 	cptr t;
-
 	cave_type *c_ptr;
-
 
 	/* Place dungeon features and objects */
 	for (t = data, dy = 0; dy < ymax; dy++)
@@ -3019,9 +3003,9 @@ static bool build_type7(void)
 {
 	vault_type *v_ptr = NULL;
 	int dummy;
-	int x, y;
-	int xval, yval;
-	int xoffset, yoffset;
+	POSITION x, y;
+	POSITION xval, yval;
+	POSITION xoffset, yoffset;
 	int transno;
 
 	/* Pick a lesser vault */
@@ -3037,10 +3021,7 @@ static bool build_type7(void)
 	/* No lesser vault found */
 	if (dummy >= SAFE_MAX_ATTEMPTS)
 	{
-		if (cheat_room)
-		{
-			msg_print(_("警告！小さな地下室を配置できません！", "Warning! Could not place lesser vault!"));
-		}
+		msg_print_wizard(CHEAT_DUNGEON, _("小型固定Vaultを配置できませんでした。", "Could not place lesser vault."));
 		return FALSE;
 	}
 
@@ -3086,7 +3067,7 @@ static bool build_type7(void)
 #endif
 
 	/* Message */
-	if (cheat_room) msg_format(_("小さな地下室(%s)", "Lesser vault (%s)"), v_name + v_ptr->name);
+	msg_format_wizard(CHEAT_DUNGEON, _("小型Vault(%s)を生成しました。", "Lesser vault (%s)."), v_name + v_ptr->name);
 
 	/* Hack -- Build the vault */
 	build_vault(yval, xval, v_ptr->hgt, v_ptr->wid,
@@ -3103,8 +3084,8 @@ static bool build_type8(void)
 {
 	vault_type *v_ptr;
 	int dummy;
-	int xval, yval;
-	int x, y;
+	POSITION xval, yval;
+	POSITION x, y;
 	int transno;
 	int xoffset, yoffset;
 
@@ -3121,10 +3102,7 @@ static bool build_type8(void)
 	/* No greater vault found */
 	if (dummy >= SAFE_MAX_ATTEMPTS)
 	{
-		if (cheat_room)
-		{
-			msg_print(_("警告！巨大な地下室を配置できません！", "Warning! Could not place greater vault!"));
-		}
+		msg_print_wizard(CHEAT_DUNGEON, _("大型固定Vaultを配置できませんでした。", "Could not place greater vault."));
 		return FALSE;
 	}
 
@@ -3169,14 +3147,13 @@ static bool build_type8(void)
 	 * prevent generation of vaults with no-entrance.
 	 */
 	/* Find and reserve some space in the dungeon.  Get center of room. */
-	if (!find_space(&yval, &xval, abs(y) + 2, abs(x) + 2)) return FALSE;
+	if (!find_space(&yval, &xval, (POSITION)(abs(y) + 2), (POSITION)(abs(x) + 2))) return FALSE;
 
 #ifdef FORCE_V_IDX
 	v_ptr = &v_info[76 + randint1(3)];
 #endif
 
-	/* Message */
-	if (cheat_room) msg_format(_("巨大な地下室(%s)", "Greater vault (%s)"), v_name + v_ptr->name);
+	msg_format_wizard(CHEAT_DUNGEON, _("大型固定Vault(%s)を生成しました。", "Greater vault (%s)."), v_name + v_ptr->name);
 
 	/* Hack -- Build the vault */
 	build_vault(yval, xval, v_ptr->hgt, v_ptr->wid,
@@ -3230,7 +3207,7 @@ static void store_height(int x, int y, int val)
 	    (val <= fill_data.c1)) val = fill_data.c1 + 1;
 
 	/* store the value in height-map format */
-	cave[y][x].feat = val;
+	cave[y][x].feat = (s16b)val;
 
 	return;
 }
@@ -3355,10 +3332,10 @@ static void generate_hmap(int y0, int x0, int xsiz, int ysiz, int grd, int roug,
 	}
 
 	/* Boundaries are walls */
-	cave[fill_data.ymin][fill_data.xmin].feat = maxsize;
-	cave[fill_data.ymax][fill_data.xmin].feat = maxsize;
-	cave[fill_data.ymin][fill_data.xmax].feat = maxsize;
-	cave[fill_data.ymax][fill_data.xmax].feat = maxsize;
+	cave[fill_data.ymin][fill_data.xmin].feat = (s16b)maxsize;
+	cave[fill_data.ymax][fill_data.xmin].feat = (s16b)maxsize;
+	cave[fill_data.ymin][fill_data.xmax].feat = (s16b)maxsize;
+	cave[fill_data.ymax][fill_data.xmax].feat = (s16b)maxsize;
 
 	/* Set the middle square to be an open area. */
 	cave[y0][x0].feat = 0;
@@ -3510,14 +3487,14 @@ static bool hack_isnt_wall(int y, int x, int c1, int c2, int c3, int feat1, int 
 			/* 25% of the time use the other tile : it looks better this way */
 			if (randint1(100) < 75)
 			{
-				cave[y][x].feat = feat1;
+				cave[y][x].feat = (s16b)feat1;
 				cave[y][x].info &= ~(CAVE_MASK);
 				cave[y][x].info |= info1;
 				return TRUE;
 			}
 			else
 			{
-				cave[y][x].feat = feat2;
+				cave[y][x].feat = (s16b)feat2;
 				cave[y][x].info &= ~(CAVE_MASK);
 				cave[y][x].info |= info2;
 				return TRUE;
@@ -3528,14 +3505,14 @@ static bool hack_isnt_wall(int y, int x, int c1, int c2, int c3, int feat1, int 
 			/* 25% of the time use the other tile : it looks better this way */
 			if (randint1(100) < 75)
 			{
-				cave[y][x].feat = feat2;
+				cave[y][x].feat = (s16b)feat2;
 				cave[y][x].info &= ~(CAVE_MASK);
 				cave[y][x].info |= info2;
 				return TRUE;
 			}
 			else
 			{
-				cave[y][x].feat = feat1;
+				cave[y][x].feat = (s16b)feat1;
 				cave[y][x].info &= ~(CAVE_MASK);
 				cave[y][x].info |= info1;
 				return TRUE;
@@ -3543,7 +3520,7 @@ static bool hack_isnt_wall(int y, int x, int c1, int c2, int c3, int feat1, int 
 		}
 		else if (cave[y][x].feat <= c3)
 		{
-			cave[y][x].feat = feat3;
+			cave[y][x].feat = (s16b)feat3;
 			cave[y][x].info &= ~(CAVE_MASK);
 			cave[y][x].info |= info3;
 			return TRUE;
@@ -3564,7 +3541,7 @@ static bool hack_isnt_wall(int y, int x, int c1, int c2, int c3, int feat1, int 
  * Quick and nasty fill routine used to find the connected region
  * of floor in the middle of the cave
  */
-static void cave_fill(byte y, byte x)
+static void cave_fill(POSITION y, POSITION x)
 {
 	int i, j, d;
 	int ty, tx;
@@ -3618,8 +3595,8 @@ static void cave_fill(byte y, byte x)
 					fill_data.info1, fill_data.info2, fill_data.info3))
 				{
 					/* Enqueue that entry */
-					temp_y[flow_tail] = j;
-					temp_x[flow_tail] = i;
+					temp_y[flow_tail] = (byte_hack)j;
+					temp_x[flow_tail] = (byte_hack)i;
 
 					/* Advance the queue */
 					if (++flow_tail == TEMP_MAX) flow_tail = 0;
@@ -3836,7 +3813,8 @@ static bool generate_fracave(int y0, int x0, int xsize, int ysize, int cutoff, b
  */
 static bool build_type9(void)
 {
-	int grd, roug, cutoff, xsize, ysize, y0, x0;
+	int grd, roug, cutoff;
+	POSITION xsize, ysize, y0, x0;
 
 	bool done, light, room;
 
@@ -4345,8 +4323,7 @@ static void build_bubble_vault(int x0, int y0, int xsize, int ysize)
 	int xhsize = xsize / 2;
 	int yhsize = ysize / 2;
 
-
-	if (cheat_room) msg_print("Bubble Vault");
+	msg_print_wizard(CHEAT_DUNGEON, _("泡型ランダムVaultを生成しました。", "Room Vault."));
 
 	/* Allocate center of bubbles */
 	center[0].x = (byte)randint1(xsize - 3) + 1;
@@ -4371,31 +4348,31 @@ static void build_bubble_vault(int x0, int y0, int xsize, int ysize)
 			}
 		}
 
-		center[i].x = x;
-		center[i].y = y;
+		center[i].x = (byte_hack)x;
+		center[i].y = (byte_hack)y;
 	}
 
 
 	/* Top and bottom boundaries */
 	for (i = 0; i < xsize; i++)
 	{
-		int x = x0 - xhsize + i;
+		int side_x = x0 - xhsize + i;
 
-		place_outer_noperm_bold(y0 - yhsize + 0, x);
-		cave[y0 - yhsize + 0][x].info |= (CAVE_ROOM | CAVE_ICKY);
-		place_outer_noperm_bold(y0 - yhsize + ysize - 1, x);
-		cave[y0 - yhsize + ysize - 1][x].info |= (CAVE_ROOM | CAVE_ICKY);
+		place_outer_noperm_bold(y0 - yhsize + 0, side_x);
+		cave[y0 - yhsize + 0][side_x].info |= (CAVE_ROOM | CAVE_ICKY);
+		place_outer_noperm_bold(y0 - yhsize + ysize - 1, side_x);
+		cave[y0 - yhsize + ysize - 1][side_x].info |= (CAVE_ROOM | CAVE_ICKY);
 	}
 
 	/* Left and right boundaries */
 	for (i = 1; i < ysize - 1; i++)
 	{
-		int y = y0 - yhsize + i;
+		int side_y = y0 - yhsize + i;
 
-		place_outer_noperm_bold(y, x0 - xhsize + 0);
-		cave[y][x0 - xhsize + 0].info |= (CAVE_ROOM | CAVE_ICKY);
-		place_outer_noperm_bold(y, x0 - xhsize + xsize - 1);
-		cave[y][x0 - xhsize + xsize - 1].info |= (CAVE_ROOM | CAVE_ICKY);
+		place_outer_noperm_bold(side_y, x0 - xhsize + 0);
+		cave[side_y][x0 - xhsize + 0].info |= (CAVE_ROOM | CAVE_ICKY);
+		place_outer_noperm_bold(side_y, x0 - xhsize + xsize - 1);
+		cave[side_y][x0 - xhsize + xsize - 1].info |= (CAVE_ROOM | CAVE_ICKY);
 	}
 
 	/* Fill in middle with bubbles */
@@ -4406,8 +4383,8 @@ static void build_bubble_vault(int x0, int y0, int xsize, int ysize)
 			/* Get distances to two closest centers */
 
 			/* initialize */
-			min1 = distance(x, y, center[0].x, center[0].y);
-			min2 = distance(x, y, center[1].x, center[1].y);
+			min1 = (u16b)distance(x, y, center[0].x, center[0].y);
+			min2 = (u16b)distance(x, y, center[1].x, center[1].y);
 
 			if (min1 > min2)
 			{
@@ -4420,7 +4397,7 @@ static void build_bubble_vault(int x0, int y0, int xsize, int ysize)
 			/* Scan the rest */
 			for (i = 2; i < BUBBLENUM; i++)
 			{
-				temp = distance(x, y, center[i].x, center[i].y);
+				temp = (u16b)distance(x, y, center[i].x, center[i].y);
 
 				if (temp < min1)
 				{
@@ -4547,7 +4524,7 @@ static void build_room_vault(int x0, int y0, int xsize, int ysize)
 	xhsize = xsize / 2;
 	yhsize = ysize / 2;
 
-	if (cheat_room) msg_print("Room Vault");
+	msg_print_wizard(CHEAT_DUNGEON, _("部屋型ランダムVaultを生成しました。", "Room Vault."));
 
 	/* fill area so don't get problems with arena levels */
 	for (x1 = 0; x1 < xsize; x1++)
@@ -4598,7 +4575,7 @@ static void build_cave_vault(int x0, int y0, int xsiz, int ysiz)
 	xsize = xhsize * 2;
 	ysize = yhsize * 2;
 
-	if (cheat_room) msg_print("Cave Vault");
+	msg_print_wizard(CHEAT_DUNGEON, _("洞穴ランダムVaultを生成しました。", "Cave Vault."));
 
 	light = done = FALSE;
 	room = TRUE;
@@ -4746,8 +4723,7 @@ void build_maze_vault(int x0, int y0, int xsize, int ysize, bool is_vault)
 	bool light;
 	cave_type *c_ptr;
 
-
-	if (cheat_room && is_vault) msg_print("Maze Vault");
+	msg_print_wizard(CHEAT_DUNGEON, _("迷路ランダムVaultを生成しました。", "Maze Vault."));
 
 	/* Choose lite or dark */
 	light = ((dun_level <= randint1(25)) && is_vault && !(d_info[dungeon_type].flags1 & DF1_DARKNESS));
@@ -4817,7 +4793,7 @@ static void build_mini_c_vault(int x0, int y0, int xsize, int ysize)
 	int m, n, num_vertices;
 	int *visited;
 
-	if (cheat_room) msg_print("Mini Checker Board Vault");
+	msg_print_wizard(CHEAT_DUNGEON, _("小型チェッカーランダムVaultを生成しました。", "Mini Checker Board Vault."));
 
 	/* Pick a random room size */
 	dy = ysize / 2 - 1;
@@ -5156,7 +5132,7 @@ static void build_castle_vault(int x0, int y0, int xsize, int ysize)
 	y2 = y0 + dy;
 	x2 = x0 + dx;
 
-	if (cheat_room) msg_print("Castle Vault");
+	msg_print_wizard(CHEAT_DUNGEON, _("城型ランダムVaultを生成しました。", "Castle Vault"));
 
 	/* generate the room */
 	for (y = y1 - 1; y <= y2 + 1; y++)
@@ -5273,7 +5249,7 @@ static void build_target_vault(int x0, int y0, int xsize, int ysize)
 	h3 = randint1(32);
 	h4 = randint1(32) - 16;
 
-	if (cheat_room) msg_print("Target Vault");
+	msg_print_wizard(CHEAT_DUNGEON, _("対称形ランダムVaultを生成しました。", "Elemental Vault"));
 
 	/* work out outer radius */
 	if (xsize > ysize)
@@ -5394,8 +5370,7 @@ static void build_elemental_vault(int x0, int y0, int xsiz, int ysiz)
 	int xsize, ysize, xhsize, yhsize, x, y, i;
 	int type;
 
-
-	if (cheat_room) msg_print("Elemental Vault");
+	msg_print_wizard(CHEAT_DUNGEON, _("精霊界ランダムVaultを生成しました。", "Elemental Vault"));
 
 	/* round to make sizes even */
 	xhsize = xsiz / 2;
@@ -5478,7 +5453,7 @@ static void build_elemental_vault(int x0, int y0, int xsiz, int ysiz)
  */
 static bool build_type10(void)
 {
-	int y0, x0, xsize, ysize, vtype;
+	POSITION y0, x0, xsize, ysize, vtype;
 
 	/* Get size */
 	/* big enough to look good, small enough to be fairly common. */
@@ -5539,7 +5514,7 @@ static bool build_type10(void)
  */
 static bool build_type11(void)
 {
-	int rad, x, y, x0, y0;
+	POSITION rad, x, y, x0, y0;
 	int light = FALSE;
 
 	/* Occasional light */
@@ -5586,7 +5561,7 @@ static bool build_type11(void)
  */
 static bool build_type12(void)
 {
-	int rad, x, y, x0, y0;
+	POSITION rad, x, y, x0, y0;
 	int light = FALSE;
 	bool emptyflag = TRUE;
 
@@ -5676,7 +5651,7 @@ static bool build_type12(void)
 /*
  * Helper function for "trapped monster pit"
  */
-static bool vault_aux_trapped_pit(int r_idx)
+static bool vault_aux_trapped_pit(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -5767,10 +5742,10 @@ static bool build_type13(void)
 		{0, 0, -1}
 	};
 
-	int y, x, y1, x1, y2, x2, xval, yval;
+	POSITION y, x, y1, x1, y2, x2, xval, yval;
 	int i, j;
 
-	int what[16];
+	MONRACE_IDX what[16];
 
 	monster_type align;
 
@@ -5798,7 +5773,8 @@ static bool build_type13(void)
 	/* Pick some monster types */
 	for (i = 0; i < 16; i++)
 	{
-		int r_idx = 0, attempts = 100;
+		MONRACE_IDX r_idx = 0;
+		int attempts = 100;
 		monster_race *r_ptr = NULL;
 
 		while (attempts--)
@@ -5942,19 +5918,15 @@ static bool build_type13(void)
 			/* Bubble */
 			if (p1 > p2)
 			{
-				int tmp = what[i1];
+				MONRACE_IDX tmp = what[i1];
 				what[i1] = what[i2];
 				what[i2] = tmp;
 			}
 		}
 	}
 
-	/* Message */
-	if (cheat_room)
-	{
-		/* Room type */
-		msg_format(_("%s%sの罠ピット", "Trapped monster pit (%s%s)"), n_ptr->name, pit_subtype_string(cur_pit_type, FALSE));
-	}
+	msg_format_wizard(CHEAT_DUNGEON, _("%s%sの罠ピットが生成されました。", "Trapped monster pit (%s%s)"),
+		n_ptr->name, pit_subtype_string(cur_pit_type, FALSE));
 
 	/* Select the entries */
 	for (i = 0; i < 8; i++)
@@ -5988,8 +5960,8 @@ static bool build_type13(void)
  */
 static bool build_type14(void)
 {
-	int y, x, y2, x2, yval, xval;
-	int y1, x1, xsize, ysize;
+	POSITION y, x, y2, x2, yval, xval;
+	POSITION y1, x1, xsize, ysize;
 
 	bool light;
 
@@ -6057,11 +6029,7 @@ static bool build_type14(void)
 	c_ptr->mimic = c_ptr->feat;
 	c_ptr->feat = trap;
 
-	/* Message */
-	if (cheat_room)
-	{
-		msg_format(_("%sの部屋", "Room of %s"), f_name + f_info[trap].name);
-	}
+	msg_format_wizard(CHEAT_DUNGEON, _("%sの部屋が生成されました。", "Room of %s was generated."), f_name + f_info[trap].name);
 
 	return TRUE;
 }
@@ -6070,7 +6038,7 @@ static bool build_type14(void)
 /*
  * Helper function for "glass room"
  */
-static bool vault_aux_lite(int r_idx)
+static bool vault_aux_lite(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -6078,7 +6046,7 @@ static bool vault_aux_lite(int r_idx)
 	if (!vault_monster_okay(r_idx)) return FALSE;
 
 	/* Require lite attack */
-	if (!(r_ptr->flags4 & RF4_BR_LITE) && !(r_ptr->flags5 & RF5_BA_LITE)) return FALSE;
+	if (!(r_ptr->flags4 & RF4_BR_LITE) && !(r_ptr->a_ability_flags1 & RF5_BA_LITE)) return FALSE;
 
 	/* No wall passing monsters */
 	if (r_ptr->flags2 & (RF2_PASS_WALL | RF2_KILL_WALL)) return FALSE;
@@ -6092,7 +6060,7 @@ static bool vault_aux_lite(int r_idx)
 /*
  * Helper function for "glass room"
  */
-static bool vault_aux_shards(int r_idx)
+static bool vault_aux_shards(MONRACE_IDX r_idx)
 {
 	monster_race *r_ptr = &r_info[r_idx];
 
@@ -6108,7 +6076,7 @@ static bool vault_aux_shards(int r_idx)
 /*
  * Hack -- determine if a template is potion
  */
-static bool kind_is_potion(int k_idx)
+static bool kind_is_potion(KIND_OBJECT_IDX k_idx)
 {
 	return k_info[k_idx].tval == TV_POTION;
 }
@@ -6119,8 +6087,8 @@ static bool kind_is_potion(int k_idx)
  */
 static bool build_type15(void)
 {
-	int y, x, y2, x2, yval, xval;
-	int y1, x1, xsize, ysize;
+	POSITION y, x, y2, x2, yval, xval;
+	POSITION y1, x1, xsize, ysize;
 	bool light;
 
 	cave_type *c_ptr;
@@ -6186,7 +6154,7 @@ static bool build_type15(void)
 			/* Place fixed lite berathers */
 			for (dir1 = 4; dir1 < 8; dir1++)
 			{
-				int r_idx = get_mon_num(dun_level);
+				MONRACE_IDX r_idx = get_mon_num(dun_level);
 
 				y = yval + 2 * ddy_ddd[dir1];
 				x = xval + 2 * ddx_ddd[dir1];
@@ -6229,7 +6197,8 @@ static bool build_type15(void)
 
 	case 2: /* 1 lite breather + random object */
 		{
-			int r_idx, dir1;
+			MONRACE_IDX r_idx;
+			DIRECTION dir1;
 
 			/* Pillars */
 			c_ptr = &cave[y1 + 1][x1 + 1];
@@ -6316,7 +6285,7 @@ static bool build_type15(void)
 			/* Place shard berathers */
 			for (dir1 = 4; dir1 < 8; dir1++)
 			{
-				int r_idx = get_mon_num(dun_level);
+				MONRACE_IDX r_idx = get_mon_num(dun_level);
 
 				y = yval + ddy_ddd[dir1];
 				x = xval + ddx_ddd[dir1];
@@ -6347,11 +6316,7 @@ static bool build_type15(void)
 		break;
 	}
 
-	/* Message */
-	if (cheat_room)
-	{
-		msg_print(_("ガラスの部屋", "Glass room"));
-	}
+	msg_print_wizard(CHEAT_DUNGEON, _("ガラスの部屋が生成されました。", "Glass room was generated."));
 
 	return TRUE;
 }
@@ -6499,7 +6464,8 @@ static bool precalc_ugarcade(int town_hgt, int town_wid, int n)
  */
 static void build_stores(int ltcy, int ltcx, int stores[], int n)
 {
-	int i, j, y, x;
+	int i, y, x;
+	IDX j;
 	ugbldg_type *cur_ugbldg;
 
 	for (i = 0; i < n; i++)
@@ -6592,7 +6558,7 @@ static bool build_type16(void)
 		STORE_ALCHEMIST, STORE_MAGIC, STORE_BLACK, STORE_BOOK,
 	};
 	int n = sizeof stores / sizeof (int);
-	int i, y, x, y1, x1, yval, xval;
+	POSITION i, y, x, y1, x1, yval, xval;
 	int town_hgt = rand_range(MIN_TOWN_HGT, MAX_TOWN_HGT);
 	int town_wid = rand_range(MIN_TOWN_WID, MAX_TOWN_WID);
 	bool prevent_bm = FALSE;
@@ -6646,7 +6612,7 @@ static bool build_type16(void)
 	/* Build stores */
 	build_stores(y1, x1, stores, n);
 
-	if (cheat_room) msg_print(_("地下街", "Underground Arcade"));
+	msg_print_wizard(CHEAT_DUNGEON, _("地下街を生成しました", "Underground arcade was generated."));
 
 	/* Free buildings array */
 	C_KILL(ugbldg, n, ugbldg_type);
@@ -6901,12 +6867,14 @@ bool generate_rooms(void)
 		if (!remain) break;
 	}
 
-	if (rooms_built < 2) return FALSE; /*! @details 部屋生成数が2未満の場合生成失敗を返す */
-
-	if (cheat_room)
+	/*! @details 部屋生成数が2未満の場合生成失敗を返す */
+	if (rooms_built < 2)
 	{
-		msg_format(_("部屋数: %d", "Number of Rooms: %d"), rooms_built);
+		msg_format_wizard(CHEAT_DUNGEON, _("部屋数が2未満でした。生成を再試行します。", "Number of rooms was under 2. Retry."), rooms_built);
+		return FALSE;
 	}
+
+	msg_format_wizard(CHEAT_DUNGEON, _("このダンジョンの部屋数は %d です。", "Number of Rooms: %d"), rooms_built);
 
 	return TRUE;
 }

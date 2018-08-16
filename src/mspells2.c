@@ -73,28 +73,28 @@ static bool direct_beam(int y1, int x1, int y2, int x2, monster_type *m_ptr)
  * @param is_friend TRUEならば、プレイヤーを巻き込む時にブレスの判定をFALSEにする。
  * @return ブレスを直接当てられるならばTRUEを返す
  */
-static bool breath_direct(int y1, int x1, int y2, int x2, int rad, int typ, bool is_friend)
+static bool breath_direct(POSITION y1, POSITION x1, POSITION y2, POSITION x2, POSITION rad, int typ, bool is_friend)
 {
 	/* Must be the same as projectable() */
 
 	int i;
 
 	/* Initial grid */
-	int y = y1;
-	int x = x1;
+	POSITION y = y1;
+	POSITION x = x1;
 
 	int grid_n = 0;
 	u16b grid_g[512];
 
 	int grids = 0;
-	byte gx[1024], gy[1024];
-	byte gm[32];
-	int gm_rad = rad;
+	POSITION gx[1024], gy[1024];
+	POSITION gm[32];
+	POSITION gm_rad = rad;
 
 	bool hit2 = FALSE;
 	bool hityou = FALSE;
 
-	int flg;
+	BIT_FLAGS flg;
 
 	switch (typ)
 	{
@@ -191,7 +191,7 @@ static bool breath_direct(int y1, int x1, int y2, int x2, int rad, int typ, bool
  * @param flg 判定のフラグ配列
  * @return なし
  */
-void get_project_point(int sy, int sx, int *ty, int *tx, int flg)
+void get_project_point(int sy, int sx, int *ty, int *tx, BIT_FLAGS flg)
 {
 	u16b path_g[128];
 	int  path_n, i;
@@ -222,7 +222,7 @@ void get_project_point(int sy, int sx, int *ty, int *tx, int flg)
  * @param t_idx 目標のモンスターID
  * @return 魔力消去を使うべきならばTRUEを変えす。
  */
-static bool dispel_check_monster(int m_idx, int t_idx)
+static bool dispel_check_monster(MONSTER_IDX m_idx, IDX t_idx)
 {
 	monster_type *t_ptr = &m_list[t_idx];
 
@@ -253,12 +253,13 @@ static bool dispel_check_monster(int m_idx, int t_idx)
  * @details
  * The player is only disturbed if able to be affected by the spell.
  */
-bool monst_spell_monst(int m_idx)
+bool monst_spell_monst(MONSTER_IDX m_idx)
 {
-	int y = 0, x = 0;
-	int i, k, t_idx = 0;
+	POSITION y = 0, x = 0;
+	int i, k;
+	MONSTER_IDX t_idx = 0;
 	int thrown_spell;
-	int dam = 0;
+	HIT_POINT dam = 0;
 	int start;
 	int plus = 1;
 
@@ -275,14 +276,11 @@ bool monst_spell_monst(int m_idx)
 	monster_type *t_ptr = NULL;
 
 	monster_race *r_ptr = &r_info[m_ptr->r_idx];
-	monster_race *tr_ptr = NULL;
 
 	u32b f4, f5, f6;
 
 	bool see_m = is_seen(m_ptr);
 	bool maneable = player_has_los_bold(m_ptr->fy, m_ptr->fx);
-	bool see_t;
-	bool see_either;
 	bool pet = is_pet(m_ptr);
 
 	bool in_no_magic_dungeon = (d_info[dungeon_type].flags1 & DF1_NO_MAGIC) && dun_level
@@ -296,8 +294,8 @@ bool monst_spell_monst(int m_idx)
 
 	/* Extract the racial spell flags */
 	f4 = r_ptr->flags4;
-	f5 = r_ptr->flags5;
-	f6 = r_ptr->flags6;
+	f5 = r_ptr->a_ability_flags1;
+	f6 = r_ptr->a_ability_flags2;
 
 	/* Target is given for pet? */
 	if (pet_t_m_idx && pet)
@@ -353,7 +351,7 @@ bool monst_spell_monst(int m_idx)
 		/* Scan thru all monsters */
 		for (i = start; ((i < start + m_max) && (i > start - m_max)); i += plus)
 		{
-			int dummy = (i % m_max);
+			MONSTER_IDX dummy = (i % m_max);
 			if (!dummy) continue;
 
 			t_idx = dummy;
@@ -381,7 +379,6 @@ bool monst_spell_monst(int m_idx)
 	/* OK -- we've got a target */
 	y = t_ptr->fy;
 	x = t_ptr->fx;
-	tr_ptr = &r_info[t_ptr->r_idx];
 
 	/* Forget old counter attack target */
 	reset_target(m_ptr);
@@ -682,9 +679,6 @@ bool monst_spell_monst(int m_idx)
 
 	/* Choose a spell to cast */
 	thrown_spell = spell[randint0(num)];
-
-	see_t = is_seen(t_ptr);
-	see_either = (see_m || see_t);
 
 	if (p_ptr->riding && (m_idx == p_ptr->riding)) disturb(1, 1);
 

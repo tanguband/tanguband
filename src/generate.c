@@ -166,7 +166,7 @@ static bool alloc_stairs_aux(int y, int x, int walls)
  * @param walls 最低減隣接させたい外壁の数
  * @return 規定数通りに生成に成功したらTRUEを返す。
  */
-static bool alloc_stairs(int feat, int num, int walls)
+static bool alloc_stairs(IDX feat, int num, int walls)
 {
 	int i;
 	int shaft_num = 0;
@@ -331,15 +331,7 @@ static void alloc_object(int set, int typ, int num)
 
 		if (dummy >= SAFE_MAX_ATTEMPTS)
 		{
-			if (cheat_room)
-			{
-#ifdef JP
-msg_print("警告！アイテムを配置できません！");
-#else
-				msg_print("Warning! Could not place object!");
-#endif
-
-			}
+			msg_print_wizard(CHEAT_DUNGEON, _("アイテムの配置に失敗しました。", "Failed to place object."));
 			return;
 		}
 
@@ -491,10 +483,10 @@ bool place_quest_monsters(void)
 	int i;
 
 	/* Handle the quest monster placements */
-	for (i = 0; i < max_quests; i++)
+	for (i = 0; i < max_q_idx; i++)
 	{
 		monster_race *r_ptr;
-		u32b mode;
+		BIT_FLAGS mode;
 		int j;
 
 		if (quest[i].status != QUEST_STATUS_TAKEN ||
@@ -666,13 +658,7 @@ static void gen_caverns_and_lakes(void)
 
 		if (dun->laketype)
 		{
-			if (cheat_room)
-#ifdef JP
-				msg_print("湖を生成。");
-#else
-				msg_print("Lake on the level.");
-#endif
-
+			msg_print_wizard(CHEAT_DUNGEON, _("湖を生成します。", "Lake on the level."));
 			build_lake(dun->laketype);
 		}
 	}
@@ -685,13 +671,7 @@ static void gen_caverns_and_lakes(void)
 
 		/* make a large fractal cave in the middle of the dungeon */
 
-		if (cheat_room)
-#ifdef JP
-			msg_print("洞窟を生成。");
-#else
-			msg_print("Cavern on level.");
-#endif
-
+		msg_print_wizard(CHEAT_DUNGEON, _("洞窟を生成。", "Cavern on level."));
 		build_cavern();
 	}
 #endif /* ALLOW_CAVERNS_AND_LAKES */
@@ -753,13 +733,7 @@ static bool cave_gen(void)
 	if (ironman_empty_levels || ((d_info[dungeon_type].flags1 & DF1_ARENA) && (empty_levels && one_in_(EMPTY_LEVEL))))
 	{
 		dun->empty_level = TRUE;
-
-		if (cheat_room)
-#ifdef JP
-			msg_print("アリーナレベル");
-#else
-			msg_print("Arena level.");
-#endif
+		msg_print_wizard(CHEAT_DUNGEON, _("アリーナレベルを生成。", "Arena level."));
 	}
 
 	if (dun->empty_level)
@@ -842,7 +816,7 @@ static bool cave_gen(void)
 		/* Hack -- Add some rivers */
 		if (one_in_(3) && (randint1(dun_level) > 5))
 		{
-			int feat1 = 0, feat2 = 0;
+			IDX feat1 = 0, feat2 = 0;
 
 			/* Choose water or lava */
 			if ((randint1(MAX_DEPTH * 2) - 1 > dun_level) && (d_info[dungeon_type].flags1 & DF1_WATER_RIVER))
@@ -1049,15 +1023,9 @@ static bool cave_gen(void)
 		i += 1;
 
 		if (i > small_tester) i = small_tester;
-		else if (cheat_hear)
-		{
-#ifdef JP
-msg_format("モンスター数基本値を %d から %d に減らします", small_tester, i);
-#else
-			msg_format("Reduced monsters base from %d to %d", small_tester, i);
-#endif
+		else msg_format_wizard(CHEAT_DUNGEON,
+			_("モンスター数基本値を %d から %d に減らします", "Reduced monsters base from %d to %d"), small_tester, i);
 
-		}
 	}
 
 	i += randint1(8);
@@ -1287,7 +1255,8 @@ static void build_battle(void)
  */
 static void battle_gen(void)
 {
-	int y, x, i;
+	int y, x;
+	MONSTER_IDX i;
 	int qy = 0;
 	int qx = 0;
 
@@ -1316,7 +1285,7 @@ static void battle_gen(void)
 
 	build_battle();
 
-	for(i=0;i<4;i++)
+	for(i = 0; i < 4; i++)
 	{
 		place_monster_aux(0, p_ptr->y + 8 + (i/2)*4, p_ptr->x - 2 + (i%2)*4, battle_mon[i],
 				  (PM_NO_KAGE | PM_NO_PET));
@@ -1384,13 +1353,6 @@ static bool level_gen(cptr *why)
 	    (d_info[dungeon_type].flags1 & DF1_SMALLEST)) &&
 	    !(d_info[dungeon_type].flags1 & DF1_BIG))
 	{
-		if (cheat_room)
-#ifdef JP
-			msg_print("小さなフロア");
-#else
-			msg_print("A 'small' dungeon level.");
-#endif
-
 		if (d_info[dungeon_type].flags1 & DF1_SMALLEST)
 		{
 			level_height = 1;
@@ -1419,8 +1381,9 @@ static bool level_gen(cptr *why)
 		panel_row_min = cur_hgt;
 		panel_col_min = cur_wid;
 
-		if (cheat_room)
-		  msg_format("X:%d, Y:%d.", cur_wid, cur_hgt);
+		msg_format_wizard(CHEAT_DUNGEON,
+			_("小さなフロア: X:%d, Y:%d", "A 'small' dungeon level: X:%d, Y:%d."),
+			cur_wid, cur_hgt);
 	}
 	else
 	{

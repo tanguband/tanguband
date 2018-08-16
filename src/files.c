@@ -122,9 +122,9 @@ void safe_setuid_grab(void)
  * Hack -- We will always extract at least one token
  * </pre>
  */
-s16b tokenize(char *buf, s16b num, char **tokens, int mode)
+s16b tokenize(char *buf, s16b num, char **tokens, BIT_FLAGS mode)
 {
-	int i = 0;
+	s16b i = 0;
 
 	char *s = buf;
 
@@ -239,7 +239,7 @@ static named_num gf_desc[] =
 	{"GF_OLD_SLOW",			GF_OLD_SLOW			},
 	{"GF_OLD_CONF",			GF_OLD_CONF			},
 	{"GF_OLD_SLEEP",			GF_OLD_SLEEP		},
-	{"GF_OLD_DRAIN",			GF_OLD_DRAIN		},
+	{"GF_HYPODYNAMIA",			GF_HYPODYNAMIA		},
 	{"GF_AWAY_UNDEAD",		GF_AWAY_UNDEAD		},
 	{"GF_AWAY_EVIL",			GF_AWAY_EVIL		},
 	{"GF_AWAY_ALL",			GF_AWAY_ALL			},
@@ -355,7 +355,10 @@ static named_num gf_desc[] =
  */
 errr process_pref_file_command(char *buf)
 {
-	int i, j, n1, n2;
+	int i, j;
+	SYMBOL_COLOR n1;
+	SYMBOL_CODE n2;
+
 
 	char *zz[16];
 
@@ -366,371 +369,370 @@ errr process_pref_file_command(char *buf)
 
 	switch (buf[0])
 	{
-	/* Mega-Hack -- read external player's history file */
-	/* Process "H:<history>" */
-	case 'H':
-		add_history_from_pref_line(buf + 2);
-		return 0;
-
-	/* Process "R:<num>:<a>/<c>" -- attr/char for monster races */
-	case 'R':
-		if (tokenize(buf+2, 3, zz, TOKENIZE_CHECKQUOTE) == 3)
-		{
-			monster_race *r_ptr;
-			i = (huge)strtol(zz[0], NULL, 0);
-			n1 = strtol(zz[1], NULL, 0);
-			n2 = strtol(zz[2], NULL, 0);
-			if (i >= max_r_idx) return 1;
-			r_ptr = &r_info[i];
-			if (n1 || (!(n2 & 0x80) && n2)) r_ptr->x_attr = n1; /* Allow TERM_DARK text */
-			if (n2) r_ptr->x_char = n2;
+		/* Mega-Hack -- read external player's history file */
+		/* Process "H:<history>" */
+		case 'H':
+			add_history_from_pref_line(buf + 2);
 			return 0;
-		}
-		break;
 
-	/* Process "K:<num>:<a>/<c>"  -- attr/char for object kinds */
-	case 'K':
-		if (tokenize(buf+2, 3, zz, TOKENIZE_CHECKQUOTE) == 3)
-		{
-			object_kind *k_ptr;
-			i = (huge)strtol(zz[0], NULL, 0);
-			n1 = strtol(zz[1], NULL, 0);
-			n2 = strtol(zz[2], NULL, 0);
-			if (i >= max_k_idx) return 1;
-			k_ptr = &k_info[i];
-			if (n1 || (!(n2 & 0x80) && n2)) k_ptr->x_attr = n1; /* Allow TERM_DARK text */
-			if (n2) k_ptr->x_char = n2;
-			return 0;
-		}
-		break;
-
-	/* Process "F:<num>:<a>/<c>" -- attr/char for terrain features */
-	/* "F:<num>:<a>/<c>" */
-	/* "F:<num>:<a>/<c>:LIT" */
-	/* "F:<num>:<a>/<c>:<la>/<lc>:<da>/<dc>" */
-	case 'F':
-		{
-			feature_type *f_ptr;
-			int num = tokenize(buf + 2, F_LIT_MAX * 2 + 1, zz, TOKENIZE_CHECKQUOTE);
-
-			if ((num != 3) && (num != 4) && (num != F_LIT_MAX * 2 + 1)) return 1;
-			else if ((num == 4) && !streq(zz[3], "LIT")) return 1;
-
-			i = (huge)strtol(zz[0], NULL, 0);
-			if (i >= max_f_idx) return 1;
-			f_ptr = &f_info[i];
-
-			n1 = strtol(zz[1], NULL, 0);
-			n2 = strtol(zz[2], NULL, 0);
-			if (n1 || (!(n2 & 0x80) && n2)) f_ptr->x_attr[F_LIT_STANDARD] = n1; /* Allow TERM_DARK text */
-			if (n2) f_ptr->x_char[F_LIT_STANDARD] = n2;
-
-			/* Mega-hack -- feat supports lighting */
-			switch (num)
+		/* Process "R:<num>:<a>/<c>" -- attr/char for monster races */
+		case 'R':
+			if (tokenize(buf+2, 3, zz, TOKENIZE_CHECKQUOTE) == 3)
 			{
-			/* No lighting support */
-			case 3:
-				n1 = f_ptr->x_attr[F_LIT_STANDARD];
-				n2 = f_ptr->x_char[F_LIT_STANDARD];
-				for (j = F_LIT_NS_BEGIN; j < F_LIT_MAX; j++)
-				{
-					f_ptr->x_attr[j] = n1;
-					f_ptr->x_char[j] = n2;
-				}
-				break;
-
-			/* Use default lighting */
-			case 4:
-				apply_default_feat_lighting(f_ptr->x_attr, f_ptr->x_char);
-				break;
-
-			/* Use desired lighting */
-			case F_LIT_MAX * 2 + 1:
-				for (j = F_LIT_NS_BEGIN; j < F_LIT_MAX; j++)
-				{
-					n1 = strtol(zz[j * 2 + 1], NULL, 0);
-					n2 = strtol(zz[j * 2 + 2], NULL, 0);
-					if (n1 || (!(n2 & 0x80) && n2)) f_ptr->x_attr[j] = n1; /* Allow TERM_DARK text */
-					if (n2) f_ptr->x_char[j] = n2;
-				}
-				break;
+				monster_race *r_ptr;
+				i = (huge)strtol(zz[0], NULL, 0);
+				n1 = (SYMBOL_COLOR)strtol(zz[1], NULL, 0);
+				n2 = (SYMBOL_CODE)strtol(zz[2], NULL, 0);
+				if (i >= max_r_idx) return 1;
+				r_ptr = &r_info[i];
+				if (n1 || (!(n2 & 0x80) && n2)) r_ptr->x_attr = n1; /* Allow TERM_DARK text */
+				if (n2) r_ptr->x_char = n2;
+				return 0;
 			}
-		}
-		return 0;
+			break;
 
-	/* Process "S:<num>:<a>/<c>" -- attr/char for special things */
-	case 'S':
-		if (tokenize(buf+2, 3, zz, TOKENIZE_CHECKQUOTE) == 3)
-		{
-			j = (byte)strtol(zz[0], NULL, 0);
-			n1 = strtol(zz[1], NULL, 0);
-			n2 = strtol(zz[2], NULL, 0);
-			misc_to_attr[j] = n1;
-			misc_to_char[j] = n2;
-			return 0;
-		}
-		break;
-
-	/* Process "U:<tv>:<a>/<c>" -- attr/char for unaware items */
-	case 'U':
-		if (tokenize(buf+2, 3, zz, TOKENIZE_CHECKQUOTE) == 3)
-		{
-			j = (huge)strtol(zz[0], NULL, 0);
-			n1 = strtol(zz[1], NULL, 0);
-			n2 = strtol(zz[2], NULL, 0);
-			for (i = 1; i < max_k_idx; i++)
+		/* Process "K:<num>:<a>/<c>"  -- attr/char for object kinds */
+		case 'K':
+			if (tokenize(buf+2, 3, zz, TOKENIZE_CHECKQUOTE) == 3)
 			{
-				object_kind *k_ptr = &k_info[i];
-				if (k_ptr->tval == j)
+				object_kind *k_ptr;
+				i = (huge)strtol(zz[0], NULL, 0);
+				n1 = (SYMBOL_COLOR)strtol(zz[1], NULL, 0);
+				n2 = (SYMBOL_CODE)strtol(zz[2], NULL, 0);
+				if (i >= max_k_idx) return 1;
+				k_ptr = &k_info[i];
+				if (n1 || (!(n2 & 0x80) && n2)) k_ptr->x_attr = n1; /* Allow TERM_DARK text */
+				if (n2) k_ptr->x_char = n2;
+				return 0;
+			}
+			break;
+
+		/* Process "F:<num>:<a>/<c>" -- attr/char for terrain features */
+		/* "F:<num>:<a>/<c>" */
+		/* "F:<num>:<a>/<c>:LIT" */
+		/* "F:<num>:<a>/<c>:<la>/<lc>:<da>/<dc>" */
+		case 'F':
+			{
+				feature_type *f_ptr;
+				int num = tokenize(buf + 2, F_LIT_MAX * 2 + 1, zz, TOKENIZE_CHECKQUOTE);
+
+				if ((num != 3) && (num != 4) && (num != F_LIT_MAX * 2 + 1)) return 1;
+				else if ((num == 4) && !streq(zz[3], "LIT")) return 1;
+
+				i = (huge)strtol(zz[0], NULL, 0);
+				if (i >= max_f_idx) return 1;
+				f_ptr = &f_info[i];
+
+				n1 = (SYMBOL_COLOR)strtol(zz[1], NULL, 0);
+				n2 = (SYMBOL_CODE)strtol(zz[2], NULL, 0);
+				if (n1 || (!(n2 & 0x80) && n2)) f_ptr->x_attr[F_LIT_STANDARD] = n1; /* Allow TERM_DARK text */
+				if (n2) f_ptr->x_char[F_LIT_STANDARD] = n2;
+
+				/* Mega-hack -- feat supports lighting */
+				switch (num)
 				{
-					if (n1) k_ptr->d_attr = n1;
-					if (n2) k_ptr->d_char = n2;
+				/* No lighting support */
+				case 3:
+					n1 = f_ptr->x_attr[F_LIT_STANDARD];
+					n2 = f_ptr->x_char[F_LIT_STANDARD];
+					for (j = F_LIT_NS_BEGIN; j < F_LIT_MAX; j++)
+					{
+						f_ptr->x_attr[j] = n1;
+						f_ptr->x_char[j] = n2;
+					}
+					break;
+
+				/* Use default lighting */
+				case 4:
+					apply_default_feat_lighting(f_ptr->x_attr, f_ptr->x_char);
+					break;
+
+				/* Use desired lighting */
+				case F_LIT_MAX * 2 + 1:
+					for (j = F_LIT_NS_BEGIN; j < F_LIT_MAX; j++)
+					{
+						n1 = (SYMBOL_COLOR)strtol(zz[j * 2 + 1], NULL, 0);
+						n2 = (SYMBOL_CODE)strtol(zz[j * 2 + 2], NULL, 0);
+						if (n1 || (!(n2 & 0x80) && n2)) f_ptr->x_attr[j] = n1; /* Allow TERM_DARK text */
+						if (n2) f_ptr->x_char[j] = n2;
+					}
+					break;
 				}
 			}
 			return 0;
-		}
-		break;
 
-	/* Process "E:<tv>:<a>" -- attribute for inventory objects */
-	case 'E':
-		if (tokenize(buf+2, 2, zz, TOKENIZE_CHECKQUOTE) == 2)
-		{
-			j = (byte)strtol(zz[0], NULL, 0) % 128;
-			n1 = strtol(zz[1], NULL, 0);
-			if (n1) tval_to_attr[j] = n1;
-			return 0;
-		}
-		break;
-
-	/* Process "A:<str>" -- save an "action" for later */
-	case 'A':
-		text_to_ascii(macro__buf, buf+2);
-		return 0;
-
-	/* Process "P:<str>" -- normal macro */
-	case 'P':
-	{
-		char tmp[1024];
-
-		text_to_ascii(tmp, buf+2);
-		macro_add(tmp, macro__buf);
-		return 0;
-	}
-
-	/* Process "C:<str>" -- create keymap */
-	case 'C':
-	{
-		int mode;
-		char tmp[1024];
-
-		if (tokenize(buf+2, 2, zz, TOKENIZE_CHECKQUOTE) != 2) return 1;
-
-		mode = strtol(zz[0], NULL, 0);
-		if ((mode < 0) || (mode >= KEYMAP_MODES)) return 1;
-
-		text_to_ascii(tmp, zz[1]);
-		if (!tmp[0] || tmp[1]) return 1;
-		i = (byte)(tmp[0]);
-
-		string_free(keymap_act[mode][i]);
-
-		keymap_act[mode][i] = string_make(macro__buf);
-
-		return 0;
-	}
-
-	/* Process "V:<num>:<kv>:<rv>:<gv>:<bv>" -- visual info */
-	case 'V':
-		if (tokenize(buf+2, 5, zz, TOKENIZE_CHECKQUOTE) == 5)
-		{
-			i = (byte)strtol(zz[0], NULL, 0);
-			angband_color_table[i][0] = (byte)strtol(zz[1], NULL, 0);
-			angband_color_table[i][1] = (byte)strtol(zz[2], NULL, 0);
-			angband_color_table[i][2] = (byte)strtol(zz[3], NULL, 0);
-			angband_color_table[i][3] = (byte)strtol(zz[4], NULL, 0);
-			return 0;
-		}
-		break;
-
-	/* Process "X:<str>" -- turn option off */
-	/* Process "Y:<str>" -- turn option on */
-	case 'X':
-	case 'Y':
-		for (i = 0; option_info[i].o_desc; i++)
-		{
-			if (option_info[i].o_var &&
-			    option_info[i].o_text &&
-			    streq(option_info[i].o_text, buf + 2))
+		/* Process "S:<num>:<a>/<c>" -- attr/char for special things */
+		case 'S':
+			if (tokenize(buf+2, 3, zz, TOKENIZE_CHECKQUOTE) == 3)
 			{
-				int os = option_info[i].o_set;
-				int ob = option_info[i].o_bit;
+				j = (byte)strtol(zz[0], NULL, 0);
+				n1 = (SYMBOL_COLOR)strtol(zz[1], NULL, 0);
+				n2 = (SYMBOL_CODE)strtol(zz[2], NULL, 0);
+				misc_to_attr[j] = n1;
+				misc_to_char[j] = n2;
+				return 0;
+			}
+			break;
 
-				if ((p_ptr->playing || character_xtra) &&
-					(OPT_PAGE_BIRTH == option_info[i].o_page) && !p_ptr->wizard)
+		/* Process "U:<tv>:<a>/<c>" -- attr/char for unaware items */
+		case 'U':
+			if (tokenize(buf+2, 3, zz, TOKENIZE_CHECKQUOTE) == 3)
+			{
+				j = (huge)strtol(zz[0], NULL, 0);
+				n1 = (SYMBOL_COLOR)strtol(zz[1], NULL, 0);
+				n2 = (SYMBOL_CODE)strtol(zz[2], NULL, 0);
+				for (i = 1; i < max_k_idx; i++)
 				{
-					msg_format(_("初期オプションは変更できません! '%s'", "Birth options can not changed! '%s'"), buf);
-					msg_print(NULL);
+					object_kind *k_ptr = &k_info[i];
+					if (k_ptr->tval == j)
+					{
+						if (n1) k_ptr->d_attr = n1;
+						if (n2) k_ptr->d_char = n2;
+					}
+				}
+				return 0;
+			}
+			break;
+
+		/* Process "E:<tv>:<a>" -- attribute for inventory objects */
+		case 'E':
+			if (tokenize(buf+2, 2, zz, TOKENIZE_CHECKQUOTE) == 2)
+			{
+				j = (byte)strtol(zz[0], NULL, 0) % 128;
+				n1 = (SYMBOL_COLOR)strtol(zz[1], NULL, 0);
+				if (n1) tval_to_attr[j] = n1;
+				return 0;
+			}
+			break;
+
+		/* Process "A:<str>" -- save an "action" for later */
+		case 'A':
+			text_to_ascii(macro__buf, buf+2);
+			return 0;
+
+		/* Process "P:<str>" -- normal macro */
+		case 'P':
+		{
+			char tmp[1024];
+
+			text_to_ascii(tmp, buf+2);
+			macro_add(tmp, macro__buf);
+			return 0;
+		}
+
+		/* Process "C:<str>" -- create keymap */
+		case 'C':
+		{
+			int mode;
+			char tmp[1024];
+
+			if (tokenize(buf+2, 2, zz, TOKENIZE_CHECKQUOTE) != 2) return 1;
+
+			mode = strtol(zz[0], NULL, 0);
+			if ((mode < 0) || (mode >= KEYMAP_MODES)) return 1;
+
+			text_to_ascii(tmp, zz[1]);
+			if (!tmp[0] || tmp[1]) return 1;
+			i = (byte)(tmp[0]);
+
+			string_free(keymap_act[mode][i]);
+
+			keymap_act[mode][i] = string_make(macro__buf);
+
+			return 0;
+		}
+
+		/* Process "V:<num>:<kv>:<rv>:<gv>:<bv>" -- visual info */
+		case 'V':
+			if (tokenize(buf+2, 5, zz, TOKENIZE_CHECKQUOTE) == 5)
+			{
+				i = (byte)strtol(zz[0], NULL, 0);
+				angband_color_table[i][0] = (byte)strtol(zz[1], NULL, 0);
+				angband_color_table[i][1] = (byte)strtol(zz[2], NULL, 0);
+				angband_color_table[i][2] = (byte)strtol(zz[3], NULL, 0);
+				angband_color_table[i][3] = (byte)strtol(zz[4], NULL, 0);
+				return 0;
+			}
+			break;
+
+		/* Process "X:<str>" -- turn option off */
+		/* Process "Y:<str>" -- turn option on */
+		case 'X':
+		case 'Y':
+			for (i = 0; option_info[i].o_desc; i++)
+			{
+				if (option_info[i].o_var &&
+					option_info[i].o_text &&
+					streq(option_info[i].o_text, buf + 2))
+				{
+					int os = option_info[i].o_set;
+					int ob = option_info[i].o_bit;
+
+					if ((p_ptr->playing || character_xtra) &&
+						(OPT_PAGE_BIRTH == option_info[i].o_page) && !p_ptr->wizard)
+					{
+						msg_format(_("初期オプションは変更できません! '%s'", "Birth options can not changed! '%s'"), buf);
+						msg_print(NULL);
+						return 0;
+					}
+
+					if (buf[0] == 'X')
+					{
+						/* Clear */
+						option_flag[os] &= ~(1L << ob);
+						(*option_info[i].o_var) = FALSE;
+					}
+					else
+					{
+						/* Set */
+						option_flag[os] |= (1L << ob);
+						(*option_info[i].o_var) = TRUE;
+					}
 					return 0;
 				}
+			}
 
-				if (buf[0] == 'X')
+			/* don't know that option. ignore it.*/
+			msg_format(_("オプションの名前が正しくありません： %s", "Ignored invalid option: %s"), buf);
+			msg_print(NULL);
+			return 0;
+
+		/* Process "Z:<type>:<str>" -- set spell color */
+		case 'Z':
+		{
+			/* Find the colon */
+			char *t = my_strchr(buf + 2, ':');
+
+			/* Oops */
+			if (!t) return 1;
+
+			/* Nuke the colon */
+			*(t++) = '\0';
+
+			for (i = 0; gf_desc[i].name; i++)
+			{
+				/* Match this type */
+				if (streq(gf_desc[i].name, buf + 2))
 				{
-					/* Clear */
-					option_flag[os] &= ~(1L << ob);
-					(*option_info[i].o_var) = FALSE;
+					/* Remember this color set */
+					gf_color[gf_desc[i].num] = quark_add(t);
+
+					/* Success */
+					return 0;
+				}
+			}
+
+			break;
+		}
+
+		/* Initialize macro trigger names and a template */
+		/* Process "T:<trigger>:<keycode>:<shift-keycode>" */
+		/* Process "T:<template>:<modifier chr>:<modifier name>:..." */
+		case 'T':
+		{
+			int tok = tokenize(buf+2, 2+MAX_MACRO_MOD, zz, 0);
+
+			/* Process "T:<template>:<modifier chr>:<modifier name>:..." */
+			if (tok >= 4)
+			{
+				int num;
+
+				if (macro_template != NULL)
+				{
+					num = strlen(macro_modifier_chr);
+
+					/* Kill the template string */
+					string_free(macro_template);
+					macro_template = NULL;
+
+					/* Kill flag characters of modifier keys */
+					string_free(macro_modifier_chr);
+
+					/* Kill corresponding modifier names */
+					for (i = 0; i < num; i++)
+					{
+						string_free(macro_modifier_name[i]);
+					}
+
+					/* Kill trigger name strings */
+					for (i = 0; i < max_macrotrigger; i++)
+					{
+						string_free(macro_trigger_name[i]);
+						string_free(macro_trigger_keycode[0][i]);
+						string_free(macro_trigger_keycode[1][i]);
+					}
+
+					max_macrotrigger = 0;
+				}
+
+				if (*zz[0] == '\0') return 0; /* clear template */
+
+				/* Number of modifier flags */
+				num = strlen(zz[1]);
+
+				/* Limit the number */
+				num = MIN(MAX_MACRO_MOD, num);
+
+				/* Stop if number of modifier is not correct */
+				if (2 + num != tok) return 1;
+
+				/* Get a template string */
+				macro_template = string_make(zz[0]);
+
+				/* Get flag characters of modifier keys */
+				macro_modifier_chr = string_make(zz[1]);
+
+				/* Get corresponding modifier names */
+				for (i = 0; i < num; i++)
+				{
+					macro_modifier_name[i] = string_make(zz[2+i]);
+				}
+			}
+
+			/* Process "T:<trigger>:<keycode>:<shift-keycode>" */
+			else if (tok >= 2)
+			{
+				char buf_aux[1024];
+				int m;
+				char *t, *s;
+				if (max_macrotrigger >= MAX_MACRO_TRIG)
+				{
+					msg_print(_("マクロトリガーの設定が多すぎます!", "Too many macro triggers!"));
+					return 1;
+				}
+				m = max_macrotrigger;
+				max_macrotrigger++;
+
+				/* Take into account the escape character  */
+				t = buf_aux;
+				s = zz[0];
+				while (*s)
+				{
+					if ('\\' == *s) s++;
+					*t++ = *s++;
+				}
+				*t = '\0';
+
+				/* Get a trigger name */
+				macro_trigger_name[m] = string_make(buf_aux);
+
+				/* Get the corresponding key code */
+				macro_trigger_keycode[0][m] = string_make(zz[1]);
+
+				if (tok == 3)
+				{
+					/* Key code of a combination of it with the shift key */
+					macro_trigger_keycode[1][m] = string_make(zz[2]);
 				}
 				else
 				{
-					/* Set */
-					option_flag[os] |= (1L << ob);
-					(*option_info[i].o_var) = TRUE;
+					macro_trigger_keycode[1][m] = string_make(zz[1]);
 				}
-				return 0;
 			}
+
+			/* No error */
+			return 0;
 		}
-
-		/* don't know that option. ignore it.*/
-		msg_format(_("オプションの名前が正しくありません： %s", "Ignored invalid option: %s"), buf);
-		msg_print(NULL);
-		return 0;
-
-	/* Process "Z:<type>:<str>" -- set spell color */
-	case 'Z':
-	{
-		/* Find the colon */
-		char *t = my_strchr(buf + 2, ':');
-
-		/* Oops */
-		if (!t) return 1;
-
-		/* Nuke the colon */
-		*(t++) = '\0';
-
-		for (i = 0; gf_desc[i].name; i++)
-		{
-			/* Match this type */
-			if (streq(gf_desc[i].name, buf + 2))
-			{
-				/* Remember this color set */
-				gf_color[gf_desc[i].num] = quark_add(t);
-
-				/* Success */
-				return 0;
-			}
-		}
-
-		break;
-	}
-
-	/* Initialize macro trigger names and a template */
-	/* Process "T:<trigger>:<keycode>:<shift-keycode>" */
-	/* Process "T:<template>:<modifier chr>:<modifier name>:..." */
-	case 'T':
-	{
-		int tok = tokenize(buf+2, 2+MAX_MACRO_MOD, zz, 0);
-
-		/* Process "T:<template>:<modifier chr>:<modifier name>:..." */
-		if (tok >= 4)
-		{
-			int i;
-			int num;
-
-			if (macro_template != NULL)
-			{
-				num = strlen(macro_modifier_chr);
-
-				/* Kill the template string */
-				string_free(macro_template);
-				macro_template = NULL;
-
-				/* Kill flag characters of modifier keys */
-				string_free(macro_modifier_chr);
-
-				/* Kill corresponding modifier names */
-				for (i = 0; i < num; i++)
-				{
-					string_free(macro_modifier_name[i]);
-				}
-
-				/* Kill trigger name strings */
-				for (i = 0; i < max_macrotrigger; i++)
-				{
-					string_free(macro_trigger_name[i]);
-					string_free(macro_trigger_keycode[0][i]);
-					string_free(macro_trigger_keycode[1][i]);
-				}
-
-				max_macrotrigger = 0;
-			}
-
-			if (*zz[0] == '\0') return 0; /* clear template */
-
-			/* Number of modifier flags */
-			num = strlen(zz[1]);
-
-			/* Limit the number */
-			num = MIN(MAX_MACRO_MOD, num);
-
-			/* Stop if number of modifier is not correct */
-			if (2 + num != tok) return 1;
-
-			/* Get a template string */
-			macro_template = string_make(zz[0]);
-
-			/* Get flag characters of modifier keys */
-			macro_modifier_chr = string_make(zz[1]);
-
-			/* Get corresponding modifier names */
-			for (i = 0; i < num; i++)
-			{
-				macro_modifier_name[i] = string_make(zz[2+i]);
-			}
-		}
-
-		/* Process "T:<trigger>:<keycode>:<shift-keycode>" */
-		else if (tok >= 2)
-		{
-			char buf[1024];
-			int m;
-			char *t, *s;
-			if (max_macrotrigger >= MAX_MACRO_TRIG)
-			{
-				msg_print(_("マクロトリガーの設定が多すぎます!", "Too many macro triggers!"));
-				return 1;
-			}
-			m = max_macrotrigger;
-			max_macrotrigger++;
-
-			/* Take into account the escape character  */
-			t = buf;
-			s = zz[0];
-			while (*s)
-			{
-				if ('\\' == *s) s++;
-				*t++ = *s++;
-			}
-			*t = '\0';
-
-			/* Get a trigger name */
-			macro_trigger_name[m] = string_make(buf);
-
-			/* Get the corresponding key code */
-			macro_trigger_keycode[0][m] = string_make(zz[1]);
-
-			if (tok == 3)
-			{
-				/* Key code of a combination of it with the shift key */
-				macro_trigger_keycode[1][m] = string_make(zz[2]);
-			}
-			else
-			{
-				macro_trigger_keycode[1][m] = string_make(zz[1]);
-			}
-		}
-
-		/* No error */
-		return 0;
-	}
 	}
 
 	/* Failure */
@@ -764,7 +766,7 @@ cptr process_pref_file_expr(char **sp, char *fp)
 	char b2 = ']';
 
 	char f = ' ';
-	static char tmp[10];
+	static char tmp[16];
 
 	/* Initial */
 	s = (*sp);
@@ -2028,7 +2030,7 @@ static void display_player_various(void)
 	/* If the player is wielding one? */
 	if (o_ptr->k_idx)
 	{
-		s16b energy_fire = bow_energy(o_ptr->sval);
+		ENERGY energy_fire = bow_energy(o_ptr->sval);
 
 		/* Calculate shots per round */
 		shots = p_ptr->num_fire * 100;
@@ -3781,7 +3783,7 @@ c_put_str(TERM_YELLOW, "現在", row, stat_col+35);
  * Mode 4 = mutations
  * </pre>
  */
-void display_player(int mode)
+void display_player(BIT_FLAGS mode)
 {
 	int i;
 
@@ -3938,7 +3940,7 @@ void display_player(int mode)
 				else
 				{
 #ifdef JP
-					sprintf(statmsg, "…あなたは、%sの%d階で%sに殺された。", map_name(), dun_level, p_ptr->died_from);
+					sprintf(statmsg, "…あなたは、%sの%d階で%sに殺された。", map_name(), (int)dun_level, p_ptr->died_from);
 #else
 					sprintf(statmsg, "...You were killed by %s on level %d of %s.", p_ptr->died_from, dun_level, map_name());
 #endif
@@ -3970,7 +3972,7 @@ void display_player(int mode)
 				else
 				{
 #ifdef JP
-					sprintf(statmsg, "…あなたは現在、 %s の %d 階で探索している。", map_name(), dun_level);
+					sprintf(statmsg, "…あなたは現在、 %s の %d 階で探索している。", map_name(), (int)dun_level);
 #else
 					sprintf(statmsg, "...Now, you are exploring level %d of %s.", dun_level, map_name());
 #endif
@@ -4327,8 +4329,11 @@ static void dump_aux_class_special(FILE *fff)
 	else if (p_ptr->pclass == CLASS_MAGIC_EATER)
 	{
 		char s[EATER_EXT][MAX_NLEN];
-		int tval, ext, k_idx;
-		int i, magic_num;
+		OBJECT_TYPE_VALUE tval;
+		int ext;
+		IDX k_idx;
+		OBJECT_SUBTYPE_VALUE i;
+		int magic_num;
 
 		fprintf(fff, _("\n\n  [取り込んだ魔法道具]\n", "\n\n  [Magic devices eaten]\n"));
 
@@ -4404,9 +4409,9 @@ static void dump_aux_class_special(FILE *fff)
 		for (i = 0; i < row; i++)
 		{
 			fprintf(fff, "\n");
-			fprintf(fff, "%-11s %5d     ", essence_name[id[i]], p_ptr->magic_num1[id[i]]);
-			if(i + row < n) fprintf(fff, "%-11s %5d     ", essence_name[id[i + row]], p_ptr->magic_num1[id[i + row]]);
-			if(i + row * 2 < n) fprintf(fff, "%-11s %5d", essence_name[id[i + row * 2]], p_ptr->magic_num1[id[i + row * 2]]);
+			fprintf(fff, "%-11s %5d     ", essence_name[id[i]], (int)p_ptr->magic_num1[id[i]]);
+			if(i + row < n) fprintf(fff, "%-11s %5d     ", essence_name[id[i + row]], (int)p_ptr->magic_num1[id[i + row]]);
+			if(i + row * 2 < n) fprintf(fff, "%-11s %5d", essence_name[id[i + row * 2]], (int)p_ptr->magic_num1[id[i + row * 2]]);
 		}
 
 		fputs("\n", fff);
@@ -4422,20 +4427,20 @@ static void dump_aux_class_special(FILE *fff)
  */
 static void dump_aux_quest(FILE *fff)
 {
-	int i;
-	int *quest_num;
+	IDX i;
+	IDX *quest_num;
 	int dummy;
 
 	fprintf(fff, _("\n\n  [クエスト情報]\n", "\n\n  [Quest Information]\n"));
 
 	/* Allocate Memory */
-	C_MAKE(quest_num, max_quests, int);
+	C_MAKE(quest_num, max_q_idx, IDX);
 
 	/* Sort by compete level */
-	for (i = 1; i < max_quests; i++) quest_num[i] = i;
+	for (i = 1; i < max_q_idx; i++) quest_num[i] = i;
 	ang_sort_comp = ang_sort_comp_quest_num;
 	ang_sort_swap = ang_sort_swap_quest_num;
-	ang_sort(quest_num, &dummy, max_quests);
+	ang_sort(quest_num, &dummy, max_q_idx);
 
 	/* Dump Quest Information */
 	fputc('\n', fff);
@@ -4445,7 +4450,7 @@ static void dump_aux_quest(FILE *fff)
 	fputc('\n', fff);
 
 	/* Free Memory */
-	C_KILL(quest_num, max_quests, int);
+	C_KILL(quest_num, max_q_idx, IDX);
 }
 
 
@@ -4502,11 +4507,8 @@ static void dump_aux_recall(FILE *fff)
 		}
 		else if (max_dlv[y] == d_info[y].maxdepth) seiha = TRUE;
 
-#ifdef JP
-		fprintf(fff, "   %c%-12s: %3d 階\n", seiha ? '!' : ' ', d_name+d_info[y].name, max_dlv[y]);
-#else
-		fprintf(fff, "   %c%-16s: level %3d\n", seiha ? '!' : ' ', d_name+d_info[y].name, max_dlv[y]);
-#endif
+		fprintf(fff, _("   %c%-12s: %3d 階\n", "   %c%-16s: level %3d\n"),
+			seiha ? '!' : ' ', d_name+d_info[y].name, (int)max_dlv[y]);
 	}
 }
 
@@ -4628,10 +4630,10 @@ static void dump_aux_monsters(FILE *fff)
 {
 	/* Monsters slain */
 
-	int k;
+	IDX k;
 	long uniq_total = 0;
 	long norm_total = 0;
-	s16b *who;
+	IDX *who;
 
 	/* Sort by monster level */
 	u16b why = 2;
@@ -4711,7 +4713,7 @@ static void dump_aux_monsters(FILE *fff)
 		for (k = uniq_total - 1; k >= 0 && k >= uniq_total - 10; k--)
 		{
 			monster_race *r_ptr = &r_info[who[k]];
-			fprintf(fff, _("  %-40s (レベル%3d)\n", "  %-40s (level %3d)\n"), (r_name + r_ptr->name), r_ptr->level); 
+			fprintf(fff, _("  %-40s (レベル%3d)\n", "  %-40s (level %3d)\n"), (r_name + r_ptr->name), (int)r_ptr->level);
 		}
 
 	}
@@ -5241,7 +5243,7 @@ static void show_file_aux_line(cptr str, int cy, cptr shower)
  * Return FALSE on 'q' to exit from a deep, otherwise TRUE.
  * </pre>
  */
-bool show_file(bool show_version, cptr name, cptr what, int line, int mode)
+bool show_file(bool show_version, cptr name, cptr what, int line, BIT_FLAGS mode)
 {
 	int i, n, skey;
 
@@ -5838,7 +5840,7 @@ void process_player_name(bool sf)
 	if (character_generated) strcpy(old_player_base, player_base);
 
 	/* Cannot be too long */
-#if defined(MACINTOSH) || defined(USE_EMX) || defined(ACORN) || defined(VM)
+#if defined(MACINTOSH) || defined(ACORN)
 	if (strlen(p_ptr->name) > 15)
 	{
 		/* Name too long */
@@ -5966,11 +5968,6 @@ void process_player_name(bool sf)
 		/* Rename the savefile, using the player_base */
 		(void)sprintf(temp, "%s", player_base);
 #endif
-
-#ifdef VM
-		/* Hack -- support "flat directory" usage on VM/ESA */
-		(void)sprintf(temp, "%s.sv", player_base);
-#endif /* VM */
 
 		/* Build the filename */
 		path_build(savefile, sizeof(savefile), ANGBAND_DIR_SAVE, temp);
@@ -6179,7 +6176,7 @@ void do_cmd_save_game(int is_autosave)
 	(void)strcpy(p_ptr->died_from, _("(元気に生きている)", "(alive and well)"));
 
 	/* HACK -- don't get sanity blast on updating view */
-	hack_mind = FALSE;
+	is_loading_now = FALSE;
 
 	/* Update stuff */
 	update_stuff();
@@ -6188,7 +6185,7 @@ void do_cmd_save_game(int is_autosave)
 	mproc_init();
 
 	/* HACK -- reset the hackish flag */
-	hack_mind = TRUE;
+	is_loading_now = TRUE;
 }
 
 
@@ -6217,7 +6214,7 @@ void do_cmd_save_and_exit(void)
 long total_points(void)
 {
 	int i, mult = 100;
-	s16b max_dl = 0;
+	DEPTH max_dl = 0;
 	u32b point, point_h, point_l;
 	int arena_win = MIN(p_ptr->arena_number, MAX_ARENA_MONS);
 
@@ -6529,25 +6526,25 @@ static void print_tomb(void)
 		{
 			if (dun_level == 0)
 			{
-				cptr town = p_ptr->town_num ? "街" : "荒野";
+				cptr field_name = p_ptr->town_num ? "街" : "荒野";
 				if (streq(p_ptr->died_from, "途中終了"))
 				{
-					sprintf(tmp, "%sで死んだ", town);
+					sprintf(tmp, "%sで死んだ", field_name);
 				}
 				else
 				{
-					sprintf(tmp, "に%sで殺された", town);
+					sprintf(tmp, "に%sで殺された", field_name);
 				}
 			}
 			else
 			{
 				if (streq(p_ptr->died_from, "途中終了"))
 				{
-					sprintf(tmp, "地下 %d 階で死んだ", dun_level);
+					sprintf(tmp, "地下 %d 階で死んだ", (int)dun_level);
 				}
 				else
 				{
-					sprintf(tmp, "に地下 %d 階で殺された", dun_level);
+					sprintf(tmp, "に地下 %d 階で殺された", (int)dun_level);
 				}
 			}
 			center_string(buf, tmp);

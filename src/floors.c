@@ -30,7 +30,7 @@ void init_saved_floors(bool force)
 	char floor_savefile[1024];
 	int i;
 	int fd = -1;
-	int mode = 0644;
+	BIT_FLAGS mode = 0644;
 
 #ifdef SET_UID
 # ifdef SECURE
@@ -101,7 +101,7 @@ void init_saved_floors(bool force)
 	latest_visit_mark = 1;
 
 	/* A sign to mark temporal files */
-	saved_floor_file_sign = time(NULL);
+	saved_floor_file_sign = (u32b)time(NULL);
 
 	/* No next floor yet */
 	new_floor_id = 0;
@@ -238,7 +238,7 @@ static void kill_saved_floor(saved_floor_type *sf_ptr)
 s16b get_new_floor_id(void)
 {
 	saved_floor_type *sf_ptr = NULL;
-	int i;
+	s16b i;
 
 	/* Look for empty space */
 	for (i = 0; i < MAX_SAVED_FLOORS; i++)
@@ -251,7 +251,7 @@ s16b get_new_floor_id(void)
 	/* None found */
 	if (i == MAX_SAVED_FLOORS)
 	{
-		int oldest = 0;
+		s16b oldest = 0;
 		u32b oldest_visit = 0xffffffffL;
 
 		/* Search for oldest */
@@ -304,7 +304,7 @@ s16b get_new_floor_id(void)
  * @param mode 追加したい所持フラグ
  * @return なし
  */
-void prepare_change_floor_mode(u32b mode)
+void prepare_change_floor_mode(BIT_FLAGS mode)
 {
 	change_floor_mode |= mode;
 }
@@ -358,7 +358,8 @@ static monster_type party_mon[MAX_PARTY_MON]; /*!< フロア移動に保存す�
  */
 static void preserve_pet(void)
 {
-	int num, i;
+	int num;
+	MONSTER_IDX i;
 
 	for (num = 0; num < MAX_PARTY_MON; num++)
 	{
@@ -523,7 +524,8 @@ static void place_pet(void)
 
 	for (i = 0; i < max_num; i++)
 	{
-		int cy = 0, cx = 0, m_idx;
+		POSITION cy = 0, cx = 0;
+		MONSTER_IDX m_idx;
 
 		if (!(party_mon[i].r_idx)) continue;
 
@@ -539,7 +541,8 @@ static void place_pet(void)
 		}
 		else
 		{
-			int j, d;
+			int j;
+			POSITION d;
 
 			for (d = 1; d < 6; d++)
 			{
@@ -689,7 +692,7 @@ static void get_out_monster(void)
 	int dis = 1;
 	int oy = p_ptr->y;
 	int ox = p_ptr->x;
-	int m_idx = cave[oy][ox].m_idx;
+	MONSTER_IDX m_idx = cave[oy][ox].m_idx;
 
 	/* Nothing to do if no monster */
 	if (!m_idx) return;
@@ -863,7 +866,7 @@ void leave_floor(void)
 	feature_type *f_ptr;
 	saved_floor_type *sf_ptr;
 	int quest_r_idx = 0;
-	int i;
+	DUNGEON_IDX i;
 
 	/* Preserve pets and prepare to take these to next floor */
 	preserve_pet();
@@ -887,7 +890,7 @@ void leave_floor(void)
 
 
 	/* Search the quest monster index */
-	for (i = 0; i < max_quests; i++)
+	for (i = 0; i < max_q_idx; i++)
 	{
 		if ((quest[i].status == QUEST_STATUS_TAKEN) &&
 		    ((quest[i].type == QUEST_TYPE_KILL_LEVEL) ||
@@ -1015,8 +1018,6 @@ void leave_floor(void)
 	/* Kill some old saved floors */
 	if (!(change_floor_mode & CFM_SAVE_FLOORS))
 	{
-		int i;
-
 		/* Kill all saved floors */
 		for (i = 0; i < MAX_SAVED_FLOORS; i++)
 			kill_saved_floor(&saved_floors[i]);
@@ -1208,7 +1209,7 @@ void change_floor(void)
 		/* Maintain monsters and artifacts */
 		if (loaded)
 		{
-			int i;
+			IDX i;
 			s32b tmp_last_visit = sf_ptr->last_visit;
 			s32b absence_ticks;
 			int alloc_chance = d_info[dungeon_type].max_m_alloc_chance;
@@ -1552,13 +1553,13 @@ void stair_creation(void)
 	if (up)
 	{
 		cave_set_feat(p_ptr->y, p_ptr->x,
-			(dest_sf_ptr->last_visit && (dest_sf_ptr->dun_level <= dun_level - 1)) ? /* #tang 2 -> 1 */
+			(dest_sf_ptr->last_visit && (dest_sf_ptr->dun_level <= dun_level - 2)) ?
 			feat_state(feat_up_stair, FF_SHAFT) : feat_up_stair);
 	}
 	else
 	{
 		cave_set_feat(p_ptr->y, p_ptr->x,
-			(dest_sf_ptr->last_visit && (dest_sf_ptr->dun_level >= dun_level + 1)) ? /* #tang 2 -> 1 */
+			(dest_sf_ptr->last_visit && (dest_sf_ptr->dun_level >= dun_level + 2)) ?
 			feat_state(feat_down_stair, FF_SHAFT) : feat_down_stair);
 	}
 

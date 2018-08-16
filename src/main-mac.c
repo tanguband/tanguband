@@ -195,7 +195,7 @@
 
 /* Default creator signature */
 #ifndef ANGBAND_CREATOR
-# define ANGBAND_CREATOR 'tangu'
+# define ANGBAND_CREATOR 'tang'
 #endif
 
 
@@ -7201,8 +7201,9 @@ int main(void)
 		long response;
 
 		/* Check for existence of Carbon */
+/* #tang
 		err = Gestalt(gestaltCarbonVersion, &response);
-
+*/
 		if (err != noErr) quit("This program requires Carbon API");
 	}
 
@@ -7272,7 +7273,9 @@ int main(void)
 	 * Remember Mac OS version, in case we have to cope with version-specific
 	 * problems
 	 */
+/* #tang
 	(void)Gestalt(gestaltSystemVersion, &mac_os_version);
+*/
 
 #ifdef USE_SFL_CODE
 	/* Obtain a "Universal Procedure Pointer" */
@@ -7334,12 +7337,15 @@ int main(void)
 	quit_aux = hook_quit;
 	core_aux = hook_core;
 
+/* #tang
 	BackColor(blackColor);
 	ForeColor(whiteColor);
+*/
 
 	/* Show the "watch" cursor */
+/* #tang
 	SetCursor(*(GetCursor(watchCursor)));
-
+*/
 	/* Prepare the menubar */
 	init_menubar();
 
@@ -7358,6 +7364,7 @@ int main(void)
 	while (CheckEvents(TRUE)) /* loop */;
 
 	/* Reset the cursor */
+/* #tang
 #if TARGET_API_MAC_CARBON
 	{
 		Cursor	arrow;
@@ -7367,10 +7374,12 @@ int main(void)
 #else
 	SetCursor( &qd.arrow );
 #endif
-
+*/
 
 	/* Mega-Hack -- Allocate a "lifeboat" */
+/* #tang
 	lifeboat = NewPtr(16384);
+*/
 
 #ifdef USE_QT_SOUND
 

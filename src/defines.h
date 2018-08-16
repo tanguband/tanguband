@@ -48,16 +48,23 @@
  *   "(FAKE_VER_MAJOR-10).(FAKE_VER_MINOR).(FAKE_VER_PATCH)".
  * </pre>
  */
-#define FAKE_VERSION   0
+#define FAKE_VERSION 0
 
-#define FAKE_VER_MAJOR 26 /*!< ゲームのバージョン番号定義(メジャー番号 + 10) */
-#define FAKE_VER_MINOR 5 /*!< ゲームのバージョン番号定義(マイナー番号) */
-#define FAKE_VER_PATCH 2 /*!< ゲームのバージョン番号定義(パッチ番号) */
+#define FAKE_VER_MAJOR 28 /*!< ゲームのバージョン番号定義(メジャー番号 + 10) */
+#define FAKE_VER_MINOR 0 /*!< ゲームのバージョン番号定義(マイナー番号) */
+#define FAKE_VER_PATCH 0 /*!< ゲームのバージョン番号定義(パッチ番号) */
+#define FAKE_VER_EXTRA 0 /*!< ゲームのバージョン番号定義(エクストラ番号) */
 
+
+ /*!
+  * @brief バージョンが開発版が安定版かを返す
+  */
+#define	IS_STABLE_VERSION (FAKE_VER_MINOR % 2 == 0 && FAKE_VER_EXTRA == 0)
 
 /*!
  * @brief セーブファイル上のバージョン定義(メジャー番号) / "Savefile Version Number" for Hengband 1.1.1 and later
  * @details
+ * 当面FAKE_VER_*を参照しておく。
  * <pre>
  * First three digits may be same as the Program Version.  But not
  * always same.  It means that newer version may preserves lower
@@ -68,10 +75,10 @@
  * Upper compatibility is always guaranteed.
  * </pre>
  */
-#define H_VER_MAJOR 2 /*!< セーブファイル上のバージョン定義(メジャー番号) */
-#define H_VER_MINOR 1 /*!< セーブファイル上のバージョン定義(マイナー番号) */
-#define H_VER_PATCH 2 /*!< セーブファイル上のバージョン定義(パッチ番号) */
-#define H_VER_EXTRA 4 /*!< セーブファイル上のバージョン定義(エクストラ番号) */
+#define H_VER_MAJOR (FAKE_VER_MAJOR-10) /*!< セーブファイル上のバージョン定義(メジャー番号) */
+#define H_VER_MINOR FAKE_VER_MINOR /*!< セーブファイル上のバージョン定義(マイナー番号) */
+#define H_VER_PATCH FAKE_VER_PATCH /*!< セーブファイル上のバージョン定義(パッチ番号) */
+#define H_VER_EXTRA FAKE_VER_EXTRA /*!< セーブファイル上のバージョン定義(エクストラ番号) */
 
 #define ANGBAND_2_8_1 /*!< Angband 2.8.1以降から有効な処理分岐を定義 */
 #define ZANGBAND /*!< Zangband 以降から有効な処理分岐を定義 */
@@ -80,55 +87,55 @@
  * @brief generate.cで用いられる基本的なブロック数単位(垂直方向)
  * Number of grids in each block (vertically) Probably hard-coded to 11, see "generate.c"
  */
-#define BLOCK_HGT	11
+#define BLOCK_HGT 11
 
 /*!
  * @brief generate.cで用いられる基本的なブロック数単位(水平方向)
  * Number of grids in each block (horizontally) Probably hard-coded to 11, see "generate.c"
  */
-#define BLOCK_WID	11
+#define BLOCK_WID 11
 
 /*!
  * @brief 表示上の基本的なパネル単位(垂直方向、BLOCK_HGTの倍数で設定すること)
  * Number of grids in each panel (vertically) Must be a multiple of BLOCK_HGT
  */
-#define PANEL_HGT	11
+#define PANEL_HGT 11
 
 /*!
  * @brief 表示上の基本的なパネル単位(水平方向、BLOCK_WIDの倍数で設定すること)
  * Number of grids in each panel (horizontally) Must be a multiple of BLOCK_WID
  */
-#define PANEL_WID	33
+#define PANEL_WID 33
 
 /*!
  * @brief 表示上の基本的なブロック単位(垂直方向、PANEL_HGTの倍数で設定すること)
  * Number of grids used to display the dungeon (vertically). Must be a multiple of 11, probably hard-coded to 22.
  */
-#define SCREEN_HGT      22
+#define SCREEN_HGT 22
 
 /*!
  * @brief 表示上の基本的なブロック単位(水平方向、PANEL_WIDの倍数で設定すること)
  * Number of grids used to display the dungeon (horizontally). Must be a multiple of 33, probably hard-coded to 66.
  */
-#define SCREEN_WID      66
+#define SCREEN_WID 66
 
 /*!
  * @brief 表示上のダンジョンの最大垂直サイズ(SCREEN_HGTの3倍が望ましい)
  * Maximum dungeon height in grids, must be a multiple of SCREEN_HGT, probably hard-coded to SCREEN_HGT * 3.
  */
-#define MAX_HGT         66
+#define MAX_HGT 66
 
 /*!
  * @brief 表示上のダンジョンの最大水平サイズ(SCREEN_WIDの3倍が望ましい)
  * Maximum dungeon width in grids, must be a multiple of SCREEN_WID, probably hard-coded to SCREEN_WID * 3.
  */
-#define MAX_WID         198
+#define MAX_WID 198
 
 /*
  * Quest constants
  */
-#define MIN_RANDOM_QUEST    40 /*<! ランダムクエストを割り当てるクエストIDの開始値 */
-#define MAX_RANDOM_QUEST    49 /*<! ランダムクエストを割り当てるクエストIDの終了値 */
+#define MIN_RANDOM_QUEST 40 /*<! ランダムクエストを割り当てるクエストIDの開始値 */
+#define MAX_RANDOM_QUEST 49 /*<! ランダムクエストを割り当てるクエストIDの終了値 */
 
 /*!
  * @brief 該当IDが固定クエストかどうかを判定する / Check is the quest index is "fixed"
@@ -137,21 +144,21 @@
  */
 #define is_fixed_quest_idx(Q_IDX) (((Q_IDX) < MIN_RANDOM_QUEST) || ((Q_IDX) > MAX_RANDOM_QUEST))
 
-#define QUEST_TOWER1         5 /*<! 塔クエスト(第1階層)に割り振るクエストID */
-#define QUEST_TOWER2         6 /*<! 塔クエスト(第2階層)に割り振るクエストID */
-#define QUEST_TOWER3         7 /*<! 塔クエスト(第3階層)に割り振るクエストID */
-#define QUEST_OBERON         8 /*<! オベロン打倒クエストに割り振るクエストID */
-#define QUEST_SERPENT        9 /*<! サーペント打倒クエストに割り振るクエストID */
+#define QUEST_TOWER1 5 /*<! 塔クエスト(第1階層)に割り振るクエストID */
+#define QUEST_TOWER2 6 /*<! 塔クエスト(第2階層)に割り振るクエストID */
+#define QUEST_TOWER3 7 /*<! 塔クエスト(第3階層)に割り振るクエストID */
+#define QUEST_OBERON 8 /*<! オベロン打倒クエストに割り振るクエストID */
+#define QUEST_SERPENT 9 /*<! サーペント打倒クエストに割り振るクエストID */
 
 /*
  * Arena constants
  */
-#define MAX_ARENA_MONS		41	/*<! 闘技場のイベント件数 -KMW- */
+#define MAX_ARENA_MONS 41 /*<! 闘技場のイベント件数 -KMW- */
 #define ARENA_DEFEATED_OLD_VER (-(MAX_SHORT)) /*<! 旧バージョンの闘技場敗北定義 */
 
 
-#define MAX_STORES      10 /*!< store.c用の店舗の種類最大数 / Total number of stores (see "store.c", etc) */
-#define MAX_BLDG		32 /*!< 施設の種類最大数 / Number of buildings */
+#define MAX_STORES 10 /*!< store.c用の店舗の種類最大数 / Total number of stores (see "store.c", etc) */
+#define MAX_BLDG 32 /*!< 施設の種類最大数 / Number of buildings */
 
 /*
  * Store types
@@ -230,7 +237,7 @@
 #define MUT1_VTELEPORT                  0x00000010L /*!< 突然変異: テレポート / Voluntary teleport */
 #define MUT1_MIND_BLST                  0x00000020L /*!< 突然変異: 精神攻撃 */
 #define MUT1_RADIATION                  0x00000040L /*!< 突然変異: 放射能 */
-#define MUT1_VAMPIRISM                  0x00000080L /*!< 突然変異: 吸血ドレイン */
+#define MUT1_VAMPIRISM                  0x00000080L /*!< 突然変異: 吸血 */
 #define MUT1_SMELL_MET                  0x00000100L /*!< 突然変異: 金属嗅覚 */
 #define MUT1_SMELL_MON                  0x00000200L /*!< 突然変異: 敵臭嗅覚 */
 #define MUT1_BLINK                      0x00000400L /*!< 突然変異: ショート・テレポート */
@@ -319,7 +326,7 @@
 #define MUT3_REGEN                      0x01000000L /*!< 突然変異: 急回復 */
 #define MUT3_ESP                        0x02000000L /*!< 突然変異: テレパシー */
 #define MUT3_LIMBER                     0x04000000L /*!< 突然変異: しなやかな肉体 */
-#define MUT3_ARTHRITIS                  0x08000000L /*!< 突然変異: 間接の痛み */
+#define MUT3_ARTHRITIS                  0x08000000L /*!< 突然変異: 関節の痛み */
 #define MUT3_BAD_LUCK                   0x10000000L /*!< 突然変異: 黒いオーラ(不運) */
 #define MUT3_VULN_ELEM                  0x20000000L /*!< 突然変異: 元素攻撃弱点 */
 #define MUT3_MOTION                     0x40000000L /*!< 突然変異: 正確で力強い動作 */
@@ -327,9 +334,9 @@
 
 
 
-# define MAX_MA 17 /*!< 修行僧マーシャルアーツの技数 / Monk martial arts... */
-# define MA_KNEE 1 /*!< 金的効果ID */
-# define MA_SLOW 2 /*!< 膝蹴り効果ID */
+#define MAX_MA 17 /*!< 修行僧マーシャルアーツの技数 / Monk martial arts... */
+#define MA_KNEE 1 /*!< 金的効果ID */
+#define MA_SLOW 2 /*!< 膝蹴り効果ID */
 
 #define MAX_MIND_POWERS  21 /*!< 超能力の数 / Mindcraft */
 
@@ -436,14 +443,14 @@
  * OPTION: Maximum number of messages to remember (see "io.c")
  * Default: assume maximal memorization of 2048 total messages
  */
-#define MESSAGE_MAX     2048
+#define MESSAGE_MAX  81920
 
 /*
  * OPTION: Maximum space for the message text buffer (see "io.c")
  * Default: assume that each of the 2048 messages is repeated an
  * average of three times, and has an average length of 48
  */
-#define MESSAGE_BUF     32768
+#define MESSAGE_BUF 655360
 
 
 /*
@@ -491,16 +498,17 @@
 /*
  * Misc constants
  */
-#define TOWN_DAWN         10000    /*!< 1日分のターン / Number of ticks from dawn to dawn XXX */
-#define TURNS_PER_TICK    10L      /*!< Number of energy-gain-turns per ticks */
-#define MAX_DAYS          20000    /*!< 内部処理中で保持される最大日数 / Maximum days */
-#define BREAK_GLYPH       550      /*!< 守りのルーンの強靭度 / Rune of protection resistance */
-#define BREAK_MINOR_GLYPH 299      /*!< 爆発のルーンの発動しやすさ / For explosive runes */
-#define BTH_PLUS_ADJ       3       /*!< 武器経験値及びプレイヤーの打撃/射撃能力に応じた修正値倍率 / Adjust BTH per plus-to-hit */
-#define MON_MULT_ADJ  	   8       /*!< モンスターの増殖しにくさの基本倍率 / High value slows multiplication */
-#define MON_SUMMON_ADJ	   2       /*!< 現在未使用 Adjust level of summoned creatures */
-#define MON_DRAIN_LIFE	   2       /*!< モンスターの打撃によるプレイヤーの経験値吸収基本倍率(%) / Percent of player exp drained per hit */
-#define USE_DEVICE    	   3       /*!< 魔道具の最低失敗基準値 x> Harder devices x< Easier devices     */
+#define TOWN_DAWN         10000   /*!< 1日分のターン / Number of ticks from dawn to dawn XXX */
+#define TURNS_PER_TICK    10L     /*!< 時間経過処理を行うターン数の刻み / Number of energy-gain-turns per ticks */
+#define INN_DUNGEON_TURN_ADJ 10   /*!< 宿屋で時間をつぶした場合に増えるdungeon_turnの倍率 */
+#define MAX_DAYS          20000   /*!< 内部処理中で保持される最大日数 / Maximum days */
+#define BREAK_GLYPH       550     /*!< 守りのルーンの強靭度 / Rune of protection resistance */
+#define BREAK_MINOR_GLYPH 299     /*!< 爆発のルーンの発動しやすさ / For explosive runes */
+#define BTH_PLUS_ADJ      3       /*!< 武器経験値及びプレイヤーの打撃/射撃能力に応じた修正値倍率 / Adjust BTH per plus-to-hit */
+#define MON_MULT_ADJ      8       /*!< モンスターの増殖しにくさの基本倍率 / High value slows multiplication */
+#define MON_SUMMON_ADJ    2       /*!< 現在未使用 Adjust level of summoned creatures */
+#define MON_DRAIN_LIFE    2       /*!< モンスターの打撃によるプレイヤーの経験値吸収基本倍率(%) / Percent of player exp drained per hit */
+#define USE_DEVICE        3       /*!< 魔道具の最低失敗基準値 x> Harder devices x< Easier devices     */
 
 
 /* "Biases" for random artifact gen */
@@ -581,25 +589,25 @@
 #define GREAT_OBJ       10
 
 /*!
- * @brief 深層モンスターが生成される基本確率(1/x)
+ * @brief 深層モンスターが生成される(NASTY生成)の基本確率(1/x)
  * @details
  * There is a 1/25 (4%) chance of inflating the requested monster_level
  * during the creation of a monsters (see "get_mon_num()" in "monster.c").
  * Lower values yield harder monsters more often.
  */
 #define NASTY_MON_BASE     25
-#define NASTY_MON_MAX      3	/*! 深層モンスターが1フロアに生成される最大数  */
-#define NASTY_MON_PLUS_MAX 4	/*! 深層モンスターの階層加算最大量 */ /* #tang 25 -> 4 */
+#define NASTY_MON_MAX      3	/*!< 深層モンスターが1フロアに生成される最大数  */
+#define NASTY_MON_PLUS_MAX 4	/*!< 深層モンスターの階層加算最大量 */ /* #tang 25 -> 4 */
 
-#define PENETRATE_INVULNERABILITY 13 /*! 無敵化が破られる確率(1/x) / 1/x chance of hurting even if invulnerable! */
+#define PENETRATE_INVULNERABILITY 13 /*!< 無敵化が破られる確率(1/x) / 1/x chance of hurting even if invulnerable! */
 
 
 
 /*
  * Refueling constants
  */
-#define FUEL_TORCH      5000    /*! 松明の基本寿命値 / Maximum amount of fuel in a torch */
-#define FUEL_LAMP       15000   /*! ランタンの基本寿命値 / Maximum amount of fuel in a lantern */
+#define FUEL_TORCH      5000    /*!< 松明の基本寿命値 / Maximum amount of fuel in a torch */
+#define FUEL_LAMP       15000   /*!< ランタンの基本寿命値 / Maximum amount of fuel in a lantern */
 
 /*
  * More maximum values
@@ -624,19 +632,19 @@
 /*
  * Player constants
  */
-#define PY_MAX_EXP      99999999L       /* Maximum exp */
-#define PY_MAX_GOLD     999999999L      /* Maximum gold */
-#define PY_MAX_LEVEL    50              /* Maximum level */
+#define PY_MAX_EXP      99999999L       /*!< プレイヤー経験値の最大値 / Maximum exp */
+#define PY_MAX_GOLD     999999999L      /*!< プレイヤー所持金の最大値 / Maximum gold */
+#define PY_MAX_LEVEL    50              /*!< プレイヤーレベルの最大値 / Maximum level */
 
 /*
  * Player "food" crucial values
  */
-#define PY_FOOD_MAX     15000   /* Food value (Bloated) */
-#define PY_FOOD_FULL    10000   /* Food value (Normal) */
-#define PY_FOOD_ALERT   2000    /* Food value (Hungry) */
-#define PY_FOOD_WEAK    1000    /* Food value (Weak) */
-#define PY_FOOD_FAINT   500     /* Food value (Fainting) */
-#define PY_FOOD_STARVE  100     /* Food value (Starving) */
+#define PY_FOOD_MAX     15000   /*!< 食べ過ぎ〜満腹の閾値 / Food value (Bloated) */
+#define PY_FOOD_FULL    10000   /*!< 満腹〜平常の閾値 / Food value (Normal) */
+#define PY_FOOD_ALERT   2000    /*!< 平常〜空腹の閾値 / Food value (Hungry) */
+#define PY_FOOD_WEAK    1000    /*!< 空腹〜衰弱の閾値 / Food value (Weak) */
+#define PY_FOOD_FAINT   500     /*!< 衰弱〜衰弱(赤表示/麻痺)の閾値 / Food value (Fainting) */
+#define PY_FOOD_STARVE  100     /*!< 衰弱(赤表示/麻痺)〜飢餓ダメージの閾値 / Food value (Starving) */
 
 /*
  * Player regeneration constants
@@ -648,8 +656,8 @@
 #define PY_REGEN_MNBASE         524     /* Min amount mana regen*2^16 */
 
 /*
- * Possible realms that can be chosen;
- * currently used only by birth.c and tables.c
+ * 職業ごとの選択可能な魔法領域現在の所 bitrh.cとtables.cでのみ使用。
+ * Possible realms that can be chosen currently used only by birth.c and tables.c
  */
 #define CH_NONE         0x00
 #define CH_LIFE         0x01
@@ -724,23 +732,23 @@
  * Note that "INVEN_PACK" is probably hard-coded by its use in savefiles, and
  * by the fact that the screen can only show 23 items plus a one-line prompt.
  */
-#define INVEN_PACK              23
+#define INVEN_PACK      23 /*!< アイテムスロット…所持品(0〜) */
 
 /*
  * Indexes used for various "equipment" slots (hard-coded by savefiles, etc).
  */
-#define INVEN_RARM      24
-#define INVEN_LARM      25
-#define INVEN_BOW       26
-#define INVEN_RIGHT     27
-#define INVEN_LEFT      28
-#define INVEN_NECK      29
-#define INVEN_LITE      30
-#define INVEN_BODY      31
-#define INVEN_OUTER     32
-#define INVEN_HEAD      33
-#define INVEN_HANDS     34
-#define INVEN_FEET      35
+#define INVEN_RARM      24 /*!< アイテムスロット…右手 */
+#define INVEN_LARM      25 /*!< アイテムスロット…左手 */
+#define INVEN_BOW       26 /*!< アイテムスロット…射撃 */
+#define INVEN_RIGHT     27 /*!< アイテムスロット…右手指 */
+#define INVEN_LEFT      28 /*!< アイテムスロット…左手指 */
+#define INVEN_NECK      29 /*!< アイテムスロット…首 */
+#define INVEN_LITE      30 /*!< アイテムスロット…光源 */
+#define INVEN_BODY      31 /*!< アイテムスロット…体 */
+#define INVEN_OUTER     32 /*!< アイテムスロット…体の上 */
+#define INVEN_HEAD      33 /*!< アイテムスロット…頭部 */
+#define INVEN_HANDS     34 /*!< アイテムスロット…腕部 */
+#define INVEN_FEET      35 /*!< アイテムスロット…脚部 */
 
 /*
  * used for get_random_ego()
@@ -869,6 +877,8 @@
 
 /*** Screen Locations ***/
 
+#define VER_INFO_ROW 3   //!< タイトル表記(行)
+
 /*
  * Some screen locations for various display routines
  * Currently, row 8 and 15 are the only "blank" rows.
@@ -985,123 +995,120 @@
  * Originally from UnAngband, and modified into TR-like style in Hengband
  */
 
+#define FF_LOS           0              /*!< 視界が通る地形である */
+#define FF_PROJECT       1              /*!< 飛び道具が通過できる地形である */
+#define FF_MOVE          2              /*!< 移動可能な地形である */
+#define FF_PLACE         3              /*!< モンスター配置をしても良い地形である(cave_empty_bold/cave_empty_gridで利用) */
+#define FF_DROP          4              /*!< アイテムを落としてよい地形である */
+#define FF_SECRET        5              /*!< 隠し扉やトラップが潜んでいる地形である */
+#define FF_NOTICE        6              /*!< 何か興味を引くものがある地形である(シフトキー＋方向で走行中の時に止まる基準) */
+#define FF_REMEMBER      7              /*!< 常に記憶対象となる地形である(記憶喪失時に忘れたりしなくなる) */
+#define FF_OPEN          8              /*!< 開けるコマンドの対象となる地形である */
+#define FF_CLOSE         9              /*!< 閉じるコマンドの対象となる地形である */
+#define FF_BASH          10             /*!< 体当たりコマンドの対象となる地形である */
+#define FF_SPIKE         11             /*!< くさびを打つコマンドの対象となる地形である */
+#define FF_DISARM        12             /*!< 解除コマンドの対象となる地形である */
+#define FF_STORE         13             /*!< 店舗の入口となる地形である */
+#define FF_TUNNEL        14             /*!< 魔王変化などで掘り進められる地形である */
+#define FF_MAY_HAVE_GOLD 15             /*!< 何か財宝を隠した可能性のある地形である？(f_infoに使用している地形なし) */
+#define FF_HAS_GOLD      16             /*!< 財宝を含んだ地形である */
+#define FF_HAS_ITEM      17             /*!< アイテムを含んだ地形である */
+#define FF_DOOR          18             /*!< ドアのある地形である */
+#define FF_TRAP          19             /*!< トラップのある地形である */
+#define FF_STAIRS        20             /*!< 階段のある地形である */
+#define FF_GLYPH         21             /*!< 守りのルーンが張られた地形である */
+#define FF_LESS          22             /*!< 階上に通じる地形である */
+#define FF_MORE          23             /*!< 階下に通じる地形である */
+#define FF_AVOID_RUN     24             /*!< 自動移動機能時に障害として迂回すべき地形である */
+#define FF_FLOOR         25             /*!< 床のある地形である */
+#define FF_WALL          26             /*!< 壁のある地形である */
+#define FF_PERMANENT     27             /*!< 絶対に破壊できない永久地形である */
+/* #define FF_XXX00         28  未定義 */
+/* #define FF_XXX01         29  未定義 */
+/* #define FF_XXX02         30  未定義 */
+#define FF_HIT_TRAP      31             /*!< トラップのある地形である(TRAPと常に重複している？) */
+/* #define FF_BRIDGE        32  未使用 */
+/* #define FF_RIVER         33  未使用 */
+/* #define FF_LAKE          34  未使用 */
+/* #define FF_BRIDGED       35  未使用 */
+/* #define FF_COVERED       36  未使用 */
+#define FF_GLOW          37             /*!< 常に光っている地形である */
+#define FF_ENSECRET      38             /*!< 不明(f_info.txt上で利用している地形がない) */
+#define FF_WATER         39             /*!< 水のある地形である */
+#define FF_LAVA          40             /*!< 溶岩のある地形である */
+#define FF_SHALLOW       41             /*!< 浅い地形である */
+#define FF_DEEP          42             /*!< 深い地形である */
+/* #define FF_FILLED        43 */       /*!< 未使用 */
+#define FF_HURT_ROCK     44             /*!< 岩石溶解の対象となる地形である */
+/* #define FF_HURT_FIRE     45 */       /*!< 未使用 */
+/* #define FF_HURT_COLD     46 */       /*!< 未使用 */
+/* #define FF_HURT_ACID     47 */       /*!< 未使用 */
+/* #define FF_ICE           48 */       /*!< 未使用 */
+/* #define FF_ACID          49 */       /*!< 未使用 */
+/* #define FF_OIL           50 */       /*!< 未使用 */
+/* #define FF_XXX04      51 */          /*!< 未使用 */
+/* #define FF_CAN_CLIMB     52 */       /*!< 未使用 */
+#define FF_CAN_FLY       53             /*!< 飛行可能な地形である */
+#define FF_CAN_SWIM      54             /*!< 泳ぐことが可能な地形である */
+#define FF_CAN_PASS      55             /*!< 通過可能な地形である */
+/* #define FF_CAN_OOZE      56 */       /*!< 未使用 */
+#define FF_CAN_DIG       57             /*!< 掘削コマンドの対象となる地形である */
+/* #define FF_HIDE_ITEM     58  未使用 */
+/* #define FF_HIDE_SNEAK    59  未使用 */
+/* #define FF_HIDE_SWIM     60  未使用 */
+/* #define FF_HIDE_DIG      61  未使用 */
+/* #define FF_KILL_HUGE     62  未使用 */
+/* #define FF_KILL_MOVE     63  未使用 */
+/* #define FF_PICK_TRAP     64  未使用 */
+/* #define FF_PICK_DOOR     65  未使用 */
+/* #define FF_ALLOC         66  未使用 */
+/* #define FF_CHEST         67  未使用 */
+/* #define FF_DROP_1D2      68  未使用 */
+/* #define FF_DROP_2D2      69  未使用 */
+/* #define FF_DROP_GOOD     70  未使用 */
+/* #define FF_DROP_GREAT    71  未使用 */
+/* #define FF_HURT_POIS     72  未使用 */
+/* #define FF_HURT_ELEC     73  未使用 */
+/* #define FF_HURT_WATER    74  未使用 */
+/* #define FF_HURT_BWATER   75  未使用 */
+/* #define FF_USE_FEAT      76  未使用 */
+/* #define FF_GET_FEAT      77  未使用 */
+/* #define FF_GROUND        78  未使用 */
+/* #define FF_OUTSIDE       79  未使用 */
+/* #define FF_EASY_HIDE     80  未使用 */
+/* #define FF_EASY_CLIMB    81  未使用 */
+/* #define FF_MUST_CLIMB    82  未使用 */
+#define FF_TREE          83             /*!< 木の生えた地形である */
+/* #define FF_NEED_TREE     84  未使用 */
+/* #define FF_BLOOD         85  未使用 */
+/* #define FF_DUST          86  未使用 */
+/* #define FF_SLIME         87  未使用 */
+#define FF_PLANT         88             /*!< 植物の生えた地形である */
+/* #define FF_XXX2          89  未定義 */
+/* #define FF_INSTANT       90  未使用 */
+/* #define FF_EXPLODE       91  未使用 */
+/* #define FF_TIMED         92  未使用 */
+/* #define FF_ERUPT         93  未使用 */
+/* #define FF_STRIKE        94  未使用 */
+/* #define FF_SPREAD        95  未使用 */
+#define FF_SPECIAL       96             /*!< クエストやダンジョンに関わる特別な地形である */
+#define FF_HURT_DISI     97             /*!< 分解属性の対象となる地形である */
+#define FF_QUEST_ENTER   98             /*!< クエストの入り口である */
+#define FF_QUEST_EXIT    99             /*!< クエストの出口である */
+#define FF_QUEST         100            /*!< クエストに関する地形である */
+#define FF_SHAFT         101            /*!< 坑道である。(2階層移動する階段である) */
+#define FF_MOUNTAIN      102            /*!< ダンジョンの山地形である */
+#define FF_BLDG          103            /*!< 施設の入り口である */
+#define FF_MINOR_GLYPH   104            /*!< 爆発のルーンのある地形である */
+#define FF_PATTERN       105            /*!< パターンのある地形である */
+#define FF_TOWN          106            /*!< 広域マップ用の街がある地形である */
+#define FF_ENTRANCE      107            /*!< 広域マップ用のダンジョンがある地形である */
+#define FF_MIRROR        108            /*!< 鏡使いの鏡が張られた地形である */
+#define FF_UNPERM        109            /*!< 破壊不能な地形である(K:フラグ向け？) */
+#define FF_TELEPORTABLE  110            /*!< テレポート先の対象となる地形である */
+#define FF_CONVERT       111            /*!< 地形生成処理中の疑似フラグ */
+#define FF_GLASS         112            /*!< ガラス製の地形である */
 
-#define FF_LOS           0
-#define FF_PROJECT       1
-#define FF_MOVE          2
-#define FF_PLACE         3
-#define FF_DROP          4
-#define FF_SECRET        5
-#define FF_NOTICE        6
-#define FF_REMEMBER      7
-#define FF_OPEN          8
-#define FF_CLOSE         9
-#define FF_BASH          10
-#define FF_SPIKE         11
-#define FF_DISARM        12
-#define FF_STORE         13
-#define FF_TUNNEL        14
-#define FF_MAY_HAVE_GOLD 15
-#define FF_HAS_GOLD      16
-#define FF_HAS_ITEM      17
-#define FF_DOOR          18
-#define FF_TRAP          19
-#define FF_STAIRS        20
-#define FF_GLYPH         21
-#define FF_LESS          22
-#define FF_MORE          23
-#define FF_AVOID_RUN     24
-#define FF_FLOOR         25
-#define FF_WALL          26
-#define FF_PERMANENT     27
-/* #define FF_XXX00         28 */
-/* #define FF_XXX01         29 */
-/* #define FF_XXX02         30 */
-#define FF_HIT_TRAP      31
-
-/* #define FF_BRIDGE        32 */
-/* #define FF_RIVER         33 */
-/* #define FF_LAKE          34 */
-/* #define FF_BRIDGED       35 */
-/* #define FF_COVERED       36 */
-#define FF_GLOW          37
-#define FF_ENSECRET      38
-#define FF_WATER         39
-#define FF_LAVA          40
-#define FF_SHALLOW       41
-#define FF_DEEP          42
-/* #define FF_FILLED        43 */
-#define FF_HURT_ROCK     44
-/* #define FF_HURT_FIRE     45 */
-/* #define FF_HURT_COLD     46 */
-/* #define FF_HURT_ACID     47 */
-/* #define FF_ICE           48 */
-/* #define FF_ACID          49 */
-/* #define FF_OIL           50 */
-/* #define FF_XXX04      51 */
-/* #define FF_CAN_CLIMB     52 */
-#define FF_CAN_FLY       53
-#define FF_CAN_SWIM      54
-#define FF_CAN_PASS      55
-/* #define FF_CAN_OOZE      56 */
-#define FF_CAN_DIG       57
-/* #define FF_HIDE_ITEM     58 */
-/* #define FF_HIDE_SNEAK    59 */
-/* #define FF_HIDE_SWIM     60 */
-/* #define FF_HIDE_DIG      61 */
-/* #define FF_KILL_HUGE     62 */
-/* #define FF_KILL_MOVE     63 */
-
-/* #define FF_PICK_TRAP     64 */
-/* #define FF_PICK_DOOR     65 */
-/* #define FF_ALLOC         66 */
-/* #define FF_CHEST         67 */
-/* #define FF_DROP_1D2      68 */
-/* #define FF_DROP_2D2      69 */
-/* #define FF_DROP_GOOD     70 */
-/* #define FF_DROP_GREAT    71 */
-/* #define FF_HURT_POIS     72 */
-/* #define FF_HURT_ELEC     73 */
-/* #define FF_HURT_WATER    74 */
-/* #define FF_HURT_BWATER   75 */
-/* #define FF_USE_FEAT      76 */
-/* #define FF_GET_FEAT      77 */
-/* #define FF_GROUND        78 */
-/* #define FF_OUTSIDE       79 */
-/* #define FF_EASY_HIDE     80 */
-/* #define FF_EASY_CLIMB    81 */
-/* #define FF_MUST_CLIMB    82 */
-#define FF_TREE          83
-/* #define FF_NEED_TREE     84 */
-/* #define FF_BLOOD         85 */
-/* #define FF_DUST          86 */
-/* #define FF_SLIME         87 */
-#define FF_PLANT         88
-/* #define FF_XXX2          89 */
-/* #define FF_INSTANT       90 */
-/* #define FF_EXPLODE       91 */
-/* #define FF_TIMED         92 */
-/* #define FF_ERUPT         93 */
-/* #define FF_STRIKE        94 */
-/* #define FF_SPREAD        95 */
-
-#define FF_SPECIAL       96
-#define FF_HURT_DISI     97
-#define FF_QUEST_ENTER   98
-#define FF_QUEST_EXIT    99
-#define FF_QUEST         100
-#define FF_SHAFT         101
-#define FF_MOUNTAIN      102
-#define FF_BLDG          103
-#define FF_MINOR_GLYPH   104
-#define FF_PATTERN       105
-#define FF_TOWN          106
-#define FF_ENTRANCE      107
-#define FF_MIRROR        108
-#define FF_UNPERM        109
-#define FF_TELEPORTABLE  110
-#define FF_CONVERT       111
-#define FF_GLASS         112
 
 #define FF_FLAG_MAX      113
 #define FF_FLAG_SIZE     (1 + ((FF_FLAG_MAX - 1) / 32))
@@ -1735,17 +1742,17 @@
 #define ACT_BO_FIRE_1           7
 #define ACT_BA_COLD_1           8
 #define ACT_BA_FIRE_1           9
-#define ACT_DRAIN_1             10
+#define ACT_HYPODYNAMIA_1       10
 #define ACT_BA_COLD_2           11
 #define ACT_BA_ELEC_2           12
-#define ACT_DRAIN_2             13
-#define ACT_VAMPIRE_1           14
+#define ACT_HYPODYNAMIA_2       13
+#define ACT_DRAIN_1             14
 #define ACT_BO_MISS_2           15
 #define ACT_BA_FIRE_3           16
 #define ACT_BA_COLD_3           17
 #define ACT_BA_ELEC_3           18
 #define ACT_WHIRLWIND           19
-#define ACT_VAMPIRE_2           20
+#define ACT_DRAIN_2             20
 #define ACT_CALL_CHAOS          21
 #define ACT_ROCKET              22
 #define ACT_DISP_EVIL           23
@@ -2325,7 +2332,7 @@
 #define SV_WAND_SLOW_MONSTER             9
 #define SV_WAND_CONFUSE_MONSTER         10
 #define SV_WAND_FEAR_MONSTER            11
-#define SV_WAND_DRAIN_LIFE              12
+#define SV_WAND_HYPODYNAMIA              12
 #define SV_WAND_POLYMORPH               13
 #define SV_WAND_STINKING_CLOUD          14
 #define SV_WAND_MAGIC_MISSILE           15
@@ -2365,7 +2372,7 @@
 #define SV_ROD_LITE                     15
 #define SV_ROD_SLEEP_MONSTER            16
 #define SV_ROD_SLOW_MONSTER             17
-#define SV_ROD_DRAIN_LIFE               18
+#define SV_ROD_HYPODYNAMIA               18
 #define SV_ROD_POLYMORPH                19
 #define SV_ROD_ACID_BOLT                20
 #define SV_ROD_ELEC_BOLT                21
@@ -2546,7 +2553,7 @@
 #define SV_ROD_MIN_DIRECTION    12 /*!< この値以降の小項目IDを持ったロッドは使用時にターゲットを要求する / Special "sval" limit -- first "aimed" rod */
 
 #define SV_CHEST_MIN_LARGE      4  /*!< この値以降の小項目IDを持った箱は大型の箱としてドロップ数を増やす / Special "sval" limit -- first "large" chest */
-#define SV_CHEST_KANDUME        50 /*!< 箱アイテムの小項目ID: おもちゃのカンヅメ
+#define SV_CHEST_KANDUME        50 /*!< 箱アイテムの小項目ID: おもちゃのカンヅメ */
 
 /*
  * Special "sval" limit -- first "good" magic/prayer book
@@ -2963,109 +2970,110 @@
 /*
  * Spell types used by project(), and related functions.
  */
-#define GF_ELEC         1
-#define GF_POIS         2
-#define GF_ACID         3
-#define GF_COLD         4
-#define GF_FIRE         5
-#define GF_PSY_SPEAR    9
-#define GF_MISSILE      10
-#define GF_ARROW        11
-#define GF_PLASMA       12
+#define GF_ELEC         1			/*!< 魔法効果: 電撃*/
+#define GF_POIS         2			/*!< 魔法効果: 毒*/
+#define GF_ACID         3			/*!< 魔法効果: 酸*/
+#define GF_COLD         4			/*!< 魔法効果: 冷気*/
+#define GF_FIRE         5			/*!< 魔法効果: 火炎*/
+#define GF_PSY_SPEAR    9			/*!< 魔法効果: 光の剣*/
+#define GF_MISSILE      10			/*!< 魔法効果: マジックミサイル*/
+#define GF_ARROW        11			/*!< 魔法効果: 矢*/
+#define GF_PLASMA       12			/*!< 魔法効果: プラズマ*/
 /* Replaced with GF_HOLY_FIRE and GF_HELL_FIRE */
 /* #define GF_HOLY_ORB     13 */
-#define GF_WATER        14
-#define GF_LITE         15
-#define GF_DARK         16
-#define GF_LITE_WEAK    17
-#define GF_DARK_WEAK    18
-#define GF_SHARDS       20
-#define GF_SOUND        21
-#define GF_CONFUSION    22
-#define GF_FORCE        23
-#define GF_INERTIAL      24
-#define GF_MANA         26
-#define GF_METEOR       27
-#define GF_ICE          28
-#define GF_CHAOS        30
-#define GF_NETHER       31
-#define GF_DISENCHANT   32
-#define GF_NEXUS        33
-#define GF_TIME         34
-#define GF_GRAVITY      35
-#define GF_KILL_WALL    40
-#define GF_KILL_DOOR    41
-#define GF_KILL_TRAP    42
-#define GF_MAKE_WALL    45
-#define GF_MAKE_DOOR    46
-#define GF_MAKE_TRAP    47
-#define GF_MAKE_TREE    48
-#define GF_OLD_CLONE    51
-#define GF_OLD_POLY             52
-#define GF_OLD_HEAL             53
-#define GF_OLD_SPEED    54
-#define GF_OLD_SLOW             55
-#define GF_OLD_CONF             56
-#define GF_OLD_SLEEP    57
-#define GF_OLD_DRAIN    58
-#define GF_AWAY_UNDEAD  61
-#define GF_AWAY_EVIL    62
-#define GF_AWAY_ALL     63
-#define GF_TURN_UNDEAD  64
-#define GF_TURN_EVIL    65
-#define GF_TURN_ALL     66
-#define GF_DISP_UNDEAD  67
-#define GF_DISP_EVIL    68
-#define GF_DISP_ALL 69
-#define GF_DISP_DEMON   70      /* New types for Zangband begin here... */
-#define GF_DISP_LIVING  71
-#define GF_ROCKET       72
-#define GF_NUKE         73
-#define GF_MAKE_GLYPH   74
-#define GF_STASIS       75
-#define GF_STONE_WALL   76
-#define GF_DEATH_RAY    77
-#define GF_STUN         78
-#define GF_HOLY_FIRE    79
-#define GF_HELL_FIRE    80
-#define GF_DISINTEGRATE 81
-#define GF_CHARM        82
-#define GF_CONTROL_UNDEAD   83
-#define GF_CONTROL_ANIMAL   84
-#define GF_PSI         85
-#define GF_PSI_DRAIN   86
-#define GF_TELEKINESIS  87
-#define GF_JAM_DOOR     88
-#define GF_DOMINATION   89
-#define GF_DISP_GOOD    90
-#define GF_DRAIN_MANA   91
-#define GF_MIND_BLAST   92
-#define GF_BRAIN_SMASH  93
-#define GF_CAUSE_1      94
-#define GF_CAUSE_2      95
-#define GF_CAUSE_3      96
-#define GF_CAUSE_4      97
-#define GF_HAND_DOOM    98
-#define GF_CAPTURE      99
-#define GF_ANIM_DEAD   100
-#define GF_CONTROL_LIVING   101
-#define GF_IDENTIFY    102
-#define GF_ATTACK      103
-#define GF_ENGETSU     104
-#define GF_GENOCIDE    105
-#define GF_PHOTO       106
-#define GF_CONTROL_DEMON   107
-#define GF_LAVA_FLOW   108
-#define GF_BLOOD_CURSE 109
-#define GF_SEEKER 110
-#define GF_SUPER_RAY 111
-#define GF_STAR_HEAL 112
-#define GF_WATER_FLOW   113
-#define GF_CRUSADE     114
-#define GF_STASIS_EVIL 115
-#define GF_WOUNDS      116
+#define GF_WATER        14			/*!< 魔法効果: 水流*/
+#define GF_LITE         15			/*!< 魔法効果: 閃光*/
+#define GF_DARK         16			/*!< 魔法効果: 暗黒*/
+#define GF_LITE_WEAK    17			/*!< 魔法効果: 弱光*/
+#define GF_DARK_WEAK    18			/*!< 魔法効果: 弱暗*/
+#define GF_SHARDS       20			/*!< 魔法効果: 破片*/
+#define GF_SOUND        21			/*!< 魔法効果: 轟音*/
+#define GF_CONFUSION    22			/*!< 魔法効果: 混乱*/
+#define GF_FORCE        23			/*!< 魔法効果: フォース*/
+#define GF_INERTIAL     24			/*!< 魔法効果: 遅鈍*/
+#define GF_MANA         26			/*!< 魔法効果: 純粋魔力*/
+#define GF_METEOR       27			/*!< 魔法効果: 隕石*/
+#define GF_ICE          28			/*!< 魔法効果: 極寒*/
+#define GF_CHAOS        30			/*!< 魔法効果: カオス*/
+#define GF_NETHER       31			/*!< 魔法効果: 地獄*/
+#define GF_DISENCHANT   32			/*!< 魔法効果: 劣化*/
+#define GF_NEXUS        33			/*!< 魔法効果: 因果混乱*/
+#define GF_TIME         34			/*!< 魔法効果: 時間逆転*/
+#define GF_GRAVITY      35			/*!< 魔法効果: 重力*/
+#define GF_KILL_WALL    40			/*!< 魔法効果: 岩石溶解*/
+#define GF_KILL_DOOR    41			/*!< 魔法効果: ドア破壊*/
+#define GF_KILL_TRAP    42			/*!< 魔法効果: トラップ破壊*/
+#define GF_MAKE_WALL    45			/*!< 魔法効果: 壁生成*/
+#define GF_MAKE_DOOR    46			/*!< 魔法効果: ドア生成*/
+#define GF_MAKE_TRAP    47			/*!< 魔法効果: トラップ生成*/
+#define GF_MAKE_TREE    48			/*!< 魔法効果: 森林生成*/
+#define GF_OLD_CLONE    51			/*!< 魔法効果: クローン・モンスター*/
+#define GF_OLD_POLY     52			/*!< 魔法効果: チェンジ・モンスター*/
+#define GF_OLD_HEAL     53			/*!< 魔法効果: 回復モンスター*/
+#define GF_OLD_SPEED    54			/*!< 魔法効果: スピード・モンスター*/
+#define GF_OLD_SLOW     55			/*!< 魔法効果: スロウ・モンスター*/
+#define GF_OLD_CONF     56			/*!< 魔法効果: パニック・モンスター*/
+#define GF_OLD_SLEEP    57			/*!< 魔法効果: スリープ・モンスター*/
+#define GF_HYPODYNAMIA  58			/*!< 魔法効果: 衰弱*/
+#define GF_AWAY_UNDEAD  61			/*!< 魔法効果: アンデッド・アウェイ*/
+#define GF_AWAY_EVIL    62			/*!< 魔法効果: 邪悪飛ばし*/
+#define GF_AWAY_ALL     63			/*!< 魔法効果: モンスター・アウェイ*/
+#define GF_TURN_UNDEAD  64			/*!< 魔法効果: アンデッド恐慌*/
+#define GF_TURN_EVIL    65			/*!< 魔法効果: 邪悪恐慌*/
+#define GF_TURN_ALL     66			/*!< 魔法効果: モンスター恐慌*/
+#define GF_DISP_UNDEAD  67			/*!< 魔法効果: アンデッド退散*/
+#define GF_DISP_EVIL    68			/*!< 魔法効果: 邪悪退散*/
+#define GF_DISP_ALL     69			/*!< 魔法効果: モンスター退散*/
+/* New types for Zangband begin here... */
+#define GF_DISP_DEMON   70			/*!< 魔法効果: 悪魔退散*/
+#define GF_DISP_LIVING  71			/*!< 魔法効果: 生命退散*/
+#define GF_ROCKET       72			/*!< 魔法効果: ロケット*/
+#define GF_NUKE         73			/*!< 魔法効果: 放射性廃棄物*/
+#define GF_MAKE_GLYPH   74			/*!< 魔法効果: 魔法のルーン生成*/
+#define GF_STASIS       75			/*!< 魔法効果: モンスター拘束*/
+#define GF_STONE_WALL   76			/*!< 魔法効果: 壁生成*/
+#define GF_DEATH_RAY    77			/*!< 魔法効果: 死の光線*/
+#define GF_STUN         78			/*!< 魔法効果: 朦朧*/
+#define GF_HOLY_FIRE    79			/*!< 魔法効果: 聖光*/
+#define GF_HELL_FIRE    80			/*!< 魔法効果: 地獄の劫火*/
+#define GF_DISINTEGRATE 81			/*!< 魔法効果: 分解*/
+#define GF_CHARM        82			/*!< 魔法効果: 魅了*/
+#define GF_CONTROL_UNDEAD  83		/*!< 魔法効果: アンデッド支配*/
+#define GF_CONTROL_ANIMAL  84		/*!< 魔法効果: 動物支配*/
+#define GF_PSI          85			/*!< 魔法効果: サイキック攻撃*/
+#define GF_PSI_DRAIN    86			/*!< 魔法効果: 精神吸収*/
+#define GF_TELEKINESIS  87			/*!< 魔法効果: テレキシネス*/
+#define GF_JAM_DOOR     88			/*!< 魔法効果: 施錠*/
+#define GF_DOMINATION   89			/*!< 魔法効果: 精神支配*/
+#define GF_DISP_GOOD    90			/*!< 魔法効果: 善良退散*/
+#define GF_DRAIN_MANA   91			/*!< 魔法効果: 魔力吸収*/
+#define GF_MIND_BLAST   92			/*!< 魔法効果: 精神攻撃*/
+#define GF_BRAIN_SMASH  93			/*!< 魔法効果: 脳攻撃*/
+#define GF_CAUSE_1      94			/*!< 魔法効果: 軽傷の呪い*/
+#define GF_CAUSE_2      95			/*!< 魔法効果: 重傷の呪い*/
+#define GF_CAUSE_3      96			/*!< 魔法効果: 致命傷の呪い*/
+#define GF_CAUSE_4      97			/*!< 魔法効果: 秘孔を突く*/
+#define GF_HAND_DOOM    98			/*!< 魔法効果: 破滅の手*/
+#define GF_CAPTURE      99			/*!< 魔法効果: 捕縛*/
+#define GF_ANIM_DEAD   100			/*!< 魔法効果: 死者復活*/
+#define GF_CONTROL_LIVING   101		/*!< 魔法効果: 生命支配*/
+#define GF_IDENTIFY    102			/*!< 魔法効果: 鑑定*/
+#define GF_ATTACK      103			/*!< 魔法効果: 白兵*/
+#define GF_ENGETSU     104			/*!< 魔法効果: 円月*/
+#define GF_GENOCIDE    105			/*!< 魔法効果: 抹殺*/
+#define GF_PHOTO       106			/*!< 魔法効果: 撮影*/
+#define GF_CONTROL_DEMON   107		/*!< 魔法効果: デーモン支配*/
+#define GF_LAVA_FLOW   108			/*!< 魔法効果: 溶岩噴出*/
+#define GF_BLOOD_CURSE 109			/*!< 魔法効果: 血の呪い*/
+#define GF_SEEKER      110			/*!< 魔法効果: シーカーレイ*/
+#define GF_SUPER_RAY   111			/*!< 魔法効果: スーパーレイ*/
+#define GF_STAR_HEAL   112			/*!< 魔法効果: 星の癒し*/
+#define GF_WATER_FLOW  113			/*!< 魔法効果: 流水*/
+#define GF_CRUSADE     114			/*!< 魔法効果: 聖戦*/
+#define GF_STASIS_EVIL 115			/*!< 魔法効果: 邪悪拘束*/
+#define GF_WOUNDS      116			/*!< 魔法効果: 創傷*/
 
-#define MAX_GF				117
+#define MAX_GF         117
 
 /*
  * Some things which induce learning
@@ -3203,7 +3211,7 @@
  * Therefore it's very easy to add a lot of new flags; no one need to
  * worry about in which variable a new flag should be put, nor to
  * modify a huge number of files all over the source directory at once
- * to add new flag variables such as flags4, flags5, etc...
+ * to add new flag variables such as flags4, a_ability_flags1, etc...
  *
  * All management of flags is now treated using a set of macros
  * instead of bit operations.
@@ -3818,11 +3826,11 @@
  * Monster bit flags of racial resistances
  * Note: Resist confusion was merged to RFR_NO_CONF
  */
-#define RFR_IM_ACID         0x00000001  /* Resist acid */
-#define RFR_IM_ELEC         0x00000002  /* Resist elec */
-#define RFR_IM_FIRE         0x00000004  /* Resist fire */
-#define RFR_IM_COLD         0x00000008  /* Resist cold */
-#define RFR_IM_POIS         0x00000010  /* Resist poison */
+#define RFR_IM_ACID         0x00000001  /* Immunity acid */
+#define RFR_IM_ELEC         0x00000002  /* Immunity elec */
+#define RFR_IM_FIRE         0x00000004  /* Immunity fire */
+#define RFR_IM_COLD         0x00000008  /* Immunity cold */
+#define RFR_IM_POIS         0x00000010  /* Immunity poison */
 #define RFR_RES_LITE        0x00000020  /* Resist lite */
 #define RFR_RES_DARK        0x00000040  /* Resist dark */
 #define RFR_RES_NETH        0x00000080  /* Resist nether */
@@ -4461,7 +4469,10 @@ extern int PlayerUID;
 #define MUSIC_BASIC_QUEST     15
 #define MUSIC_BASIC_ARENA     16
 #define MUSIC_BASIC_BATTLE    17
-#define MUSIC_BASIC_MAX       18 /*!< BGM定義の最大数 */
+#define MUSIC_BASIC_QUEST_CLEAR 18
+#define MUSIC_BASIC_FINAL_QUEST_CLEAR 19
+#define MUSIC_BASIC_AMBUSH    20
+#define MUSIC_BASIC_MAX       21 /*!< BGM定義の最大数 */
 
 /*** Sound constants ***/
 
@@ -4535,11 +4546,12 @@ extern int PlayerUID;
 #define SOUND_UNUSED    63 /*!< (no sound for gaze attacks) */
 #define SOUND_EXPLODE   64 /*!< Something (or somebody) explodes */
 #define SOUND_GLASS     65 /*!< A glass feature was crashed */
+#define SOUND_REFLECT   66 /*!< A bolt was reflected */
 
 /*
  * Mega-Hack -- maximum known sounds
  */
-#define SOUND_MAX 66 /*!< 効果音定義の最大数 */
+#define SOUND_MAX 67 /*!< 効果音定義の最大数 */
 
 #define MAX_VIRTUE 18 /*!< 徳定義の最大数 */
 
@@ -4720,9 +4732,10 @@ extern int PlayerUID;
 #define PARSE_ERROR_UNDEFINED_TERRAIN_TAG   10
 #define PARSE_ERROR_MAX                     11
 
-#define GINOU_SUDE       0
-#define GINOU_NITOURYU   1
-#define GINOU_RIDING      2
+#define GINOU_SUDE      0
+#define GINOU_NITOURYU  1
+#define GINOU_RIDING    2
+#define GINOU_MAX      10
 
 /* Proficiency level */
 #define EXP_LEVEL_UNSKILLED 0
@@ -4778,6 +4791,10 @@ extern int PlayerUID;
 #define NIKKI_WIZ_TELE    20
 #define NIKKI_NAMED_PET   21
 #define NIKKI_PAT_TELE    22
+#define NIKKI_ART_SCROLL  23
+
+#define NIKKI_WIZARD_LOG  24
+
 
 #define RECORD_NAMED_PET_NAME        0
 #define RECORD_NAMED_PET_UNNAME      1
@@ -5239,6 +5256,10 @@ extern int PlayerUID;
 
 #define MUSIC_DETECT            101
 
+#define SINGING_SONG_EFFECT(P_PTR) ((P_PTR)->magic_num1[0])
+#define INTERUPTING_SONG_EFFECT(P_PTR) ((P_PTR)->magic_num1[1])
+#define SINGING_COUNT(P_PTR) ((P_PTR)->magic_num1[2])
+#define SINGING_SONG_ID(P_PTR) ((P_PTR)->magic_num2[0])
 #define music_singing(X) ((p_ptr->pclass == CLASS_BARD) && (p_ptr->magic_num1[0] == (X)))
 #define music_singing_any() ((p_ptr->pclass == CLASS_BARD) && p_ptr->magic_num1[0])
 
@@ -5473,6 +5494,8 @@ extern int PlayerUID;
 #define IS_TIM_ESP() (p_ptr->tim_esp || music_singing(MUSIC_MIND) || (p_ptr->concent >= CONCENT_TELE_THRESHOLD))
 #define IS_TIM_STEALTH() (p_ptr->tim_stealth || music_singing(MUSIC_STEALTH))
 
+#define P_PTR_KI (p_ptr->magic_num1[0])
+
 /* Multishadow effects is determined by turn */
 #define CHECK_MULTISHADOW() (p_ptr->multishadow && (turn & 1))
 
@@ -5491,7 +5514,7 @@ extern int PlayerUID;
 #define MAX_MACRO_TRIG 200 /*!< 登録を許すマクロ（トリガー）の最大数 */
 
 /* Max size of screen dump buffer */
-#define SCREEN_BUF_SIZE 65536
+#define SCREEN_BUF_MAX_SIZE (4 * 65536)
 
 
 /*
@@ -5579,6 +5602,12 @@ extern int PlayerUID;
 	((p_ptr->realm1 == REALM_HEX) && (p_ptr->magic_num1[0]))
 #define hex_spelling(X) \
 	((p_ptr->realm1 == REALM_HEX) && (p_ptr->magic_num1[0] & (1L << (X))))
+#define CASTING_HEX_FLAGS(P_PTR) ((P_PTR)->magic_num1[0])
+#define CASTING_HEX_NUM(P_PTR) ((P_PTR)->magic_num2[0])
+#define HEX_REVENGE_POWER(P_PTR) ((P_PTR)->magic_num1[2])
+#define HEX_REVENGE_TURN(P_PTR) ((P_PTR)->magic_num2[2])
+#define HEX_REVENGE_TYPE(P_PTR) ((P_PTR)->magic_num2[1])
+
 /* 1st book */
 #define HEX_BLESS             0
 #define HEX_CURE_LIGHT        1
@@ -5658,3 +5687,12 @@ extern int PlayerUID;
 #define DICE_MULT 6
 #define DICE_DIV 7
 #define BASE_DAM 8
+
+/* Cheat Info Type */
+#define CHEAT_OBJECT 0
+#define CHEAT_MONSTER 1
+#define CHEAT_DUNGEON 2
+#define CHEAT_MISC 3
+
+#define COMMAND_ARG_REST_UNTIL_DONE -2   /*!<休憩コマンド引数 … 必要な分だけ回復 */
+#define COMMAND_ARG_REST_FULL_HEALING -1 /*!<休憩コマンド引数 … HPとMPが全回復するまで */

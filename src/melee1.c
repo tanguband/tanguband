@@ -24,7 +24,7 @@
  * and which also do at least 20 damage, or, sometimes, N damage.
  * This is used only to determine "cuts" and "stuns".
  */
-static int monster_critical(int dice, int sides, int dam)
+static int monster_critical(int dice, int sides, HIT_POINT dam)
 {
 	int max = 0;
 	int total = dice * sides;
@@ -77,7 +77,7 @@ static int check_hit(int power, int level, int stun)
 	if (k < 10) return (k < 5);
 
 	/* Calculate the "attack quality" */
-	i = (power + (level * 12)); /* 3 > 12 */
+	i = (power + (level * 12)); /* #tang 3 -> 12 */
 
 	/* Total armor */
 	ac = p_ptr->ac + p_ptr->to_a;
@@ -145,10 +145,9 @@ static cptr desc_moan[] =
  * @param m_idx 打撃を行うモンスターのID
  * @return 実際に攻撃処理を行った場合TRUEを返す
  */
-bool make_attack_normal(int m_idx)
+bool make_attack_normal(MONSTER_IDX m_idx)
 {
 	monster_type *m_ptr = &m_list[m_idx];
-
 	monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
 	int ap_cnt;
@@ -170,7 +169,7 @@ bool make_attack_normal(int m_idx)
 	bool touched = FALSE, fear = FALSE, alive = TRUE;
 	bool explode = FALSE;
 	bool do_silly_attack = (one_in_(2) && p_ptr->image);
-	int get_damage = 0;
+	HIT_POINT get_damage = 0;
 	int abbreviate = 0;
 
 	/* Not allowed to attack */
@@ -210,8 +209,8 @@ bool make_attack_normal(int m_idx)
 	{
 		bool obvious = FALSE;
 
-		int power = 0;
-		int damage = 0;
+		HIT_POINT power = 0;
+		HIT_POINT damage = 0;
 
 		cptr act = NULL;
 
@@ -490,43 +489,43 @@ bool make_attack_normal(int m_idx)
 						  case 1:
 						  case 6:
 						  case 11:
-							act = "「♪お～れはジャイアン～～ガ～キだいしょう～」";
+							act = "「♪お〜れはジャイアン〜〜ガ〜キだいしょう〜」";
 							break;
 						  case 2:
-							act = "「♪て～んかむ～てきのお～とこだぜ～～」";
+							act = "「♪て〜んかむ〜てきのお〜とこだぜ〜〜」";
 							break;
 						  case 3:
-							act = "「♪の～び太スネ夫はメじゃないよ～～」";
+							act = "「♪の〜び太スネ夫はメじゃないよ〜〜」";
 							break;
 						  case 4:
-							act = "「♪け～んかスポ～ツ～どんとこい～」";
+							act = "「♪け〜んかスポ〜ツ〜どんとこい〜」";
 							break;
 						  case 5:
-							act = "「♪うた～も～～う～まいぜ～まかしとけ～」";
+							act = "「♪うた〜も〜〜う〜まいぜ〜まかしとけ〜」";
 							break;
 						  case 7:
-							act = "「♪ま～ちいちば～んのに～んきもの～～」";
+							act = "「♪ま〜ちいちば〜んのに〜んきもの〜〜」";
 							break;
 						  case 8:
-							act = "「♪べんきょうしゅくだいメじゃないよ～～」";
+							act = "「♪べんきょうしゅくだいメじゃないよ〜〜」";
 							break;
 						  case 9:
-							act = "「♪きはやさし～くて～ち～からもち～」";
+							act = "「♪きはやさし〜くて〜ち〜からもち〜」";
 							break;
 						  case 10:
-							act = "「♪かお～も～～スタイルも～バツグンさ～」";
+							act = "「♪かお〜も〜〜スタイルも〜バツグンさ〜」";
 							break;
 						  case 12:
-							act = "「♪がっこうい～ちの～あ～ばれんぼう～～」";
+							act = "「♪がっこうい〜ちの〜あ〜ばれんぼう〜〜」";
 							break;
 						  case 13:
-							act = "「♪ド～ラもドラミもメじゃないよ～～」";
+							act = "「♪ド〜ラもドラミもメじゃないよ〜〜」";
 							break;
 						  case 14:
-							act = "「♪よじげんぽけっと～な～くたって～」";
+							act = "「♪よじげんぽけっと〜な〜くたって〜」";
 							break;
 						  case 15:
-							act = "「♪あし～の～～ながさ～は～まけないぜ～」";
+							act = "「♪あし〜の〜〜ながさ〜は〜まけないぜ〜」";
 							break;
 						}
 #else
@@ -603,7 +602,7 @@ bool make_attack_normal(int m_idx)
 
 				case RBE_SUPERHURT:
 				{
-					if (((randint1(rlev*8+300) > (ac+200)) || one_in_(13)) && !CHECK_MULTISHADOW()) /* rlev*2 > rlev8 */
+					if (((randint1(rlev*8+300) > (ac+200)) || one_in_(13)) && !CHECK_MULTISHADOW()) /* #tang rlev*2 -> rlev8 */
 					{
 						int tmp_damage = damage - (damage * ((ac < 150) ? ac : 150) / 250);
 						msg_print(_("痛恨の一撃！", "It was a critical hit!"));
@@ -635,7 +634,7 @@ bool make_attack_normal(int m_idx)
 					/* Take "poison" effect */
 					if (!(p_ptr->resist_pois || IS_OPPOSE_POIS()) && !CHECK_MULTISHADOW())
 					{
-						if (set_poisoned(p_ptr->poisoned + randint1(rlev * 4) + 5)) /* rlev > rlev*4 */
+						if (set_poisoned(p_ptr->poisoned + randint1(rlev * 4) + 5)) /* #tang rlev -> rlev*4 */
 						{
 							obvious = TRUE;
 						}
@@ -700,7 +699,7 @@ bool make_attack_normal(int m_idx)
 						    (o_ptr->pval))
 						{
 							/* Calculate healed hitpoints */
-							int heal=rlev * 4 * o_ptr->pval; /* rlev > rlev*4 */
+							int heal=rlev * 4 * o_ptr->pval; /* #tang rlev -> rlev*4 */
 							if( o_ptr->tval == TV_STAFF)
 							    heal *=  o_ptr->number;
 
@@ -714,7 +713,7 @@ bool make_attack_normal(int m_idx)
 							obvious = TRUE;
 
 							/* Heal the monster */
-							m_ptr->hp += heal;
+							m_ptr->hp += (HIT_POINT)heal;
 
 							/* Redraw (later) if needed */
 							if (p_ptr->health_who == m_idx) p_ptr->redraw |= (PR_HEALTH);
@@ -1086,7 +1085,7 @@ bool make_attack_normal(int m_idx)
 					/* Increase "blind" */
 					if (!p_ptr->resist_blind && !CHECK_MULTISHADOW())
 					{
-						if (set_blind(p_ptr->blind + 10 + randint1(rlev*4))) /* rlev > rlev*4 */
+						if (set_blind(p_ptr->blind + 10 + randint1(rlev*4))) /* #tang rlev -> rlev*4 */
 						{
 #ifdef JP
 							if (m_ptr->r_idx == MON_DIO) msg_print("どうだッ！この血の目潰しはッ！");
@@ -1114,7 +1113,7 @@ bool make_attack_normal(int m_idx)
 					/* Increase "confused" */
 					if (!p_ptr->resist_conf && !CHECK_MULTISHADOW())
 					{
-						if (set_confused(p_ptr->confused + 3 + randint1(rlev*4))) /* rlev > rlev*4 */
+						if (set_confused(p_ptr->confused + 3 + randint1(rlev*4))) /* #tang rlev -> rlev*4 */
 						{
 							obvious = TRUE;
 						}
@@ -1150,7 +1149,7 @@ bool make_attack_normal(int m_idx)
 					}
 					else
 					{
-						if (set_afraid(p_ptr->afraid + 3 + randint1(rlev*4))) /* rlev > rlev*4 */
+						if (set_afraid(p_ptr->afraid + 3 + randint1(rlev*4))) /* #tang rlev -> rlev*4 */
 						{
 							obvious = TRUE;
 						}
@@ -1188,7 +1187,7 @@ bool make_attack_normal(int m_idx)
 					{
 						if (!p_ptr->paralyzed)
 						{
-							if (set_paralyzed(3 + randint1(rlev*4))) /* rlev > rlev*4 */
+							if (set_paralyzed(3 + randint1(rlev*4))) /* #tang rlev -> rlev*4 */
 							{
 								obvious = TRUE;
 							}
@@ -1391,7 +1390,7 @@ bool make_attack_normal(int m_idx)
 					/* Take "poison" effect */
 					if (!(p_ptr->resist_pois || IS_OPPOSE_POIS()))
 					{
-						if (set_poisoned(p_ptr->poisoned + randint1(rlev*4) + 5)) /* rlev > rlev*4 */
+						if (set_poisoned(p_ptr->poisoned + randint1(rlev*4) + 5)) /* #tang rlev -> rlev*4 */
 						{
 							obvious = TRUE;
 						}
@@ -1578,7 +1577,7 @@ bool make_attack_normal(int m_idx)
 					}
 					else
 					{
-						if (set_slow((p_ptr->slow + 4 + randint0(rlev * 4 / 10)), FALSE)) /* rlev > rlev*4 */
+						if (set_slow((p_ptr->slow + 4 + randint0(rlev * 4 / 10)), FALSE)) /* #tang rlev -> rlev*4 */
 						{
 							obvious = TRUE;
 						}
@@ -1629,7 +1628,7 @@ bool make_attack_normal(int m_idx)
 			/* Handle cut */
 			if (do_cut)
 			{
-				int k = 0;
+				int cut_plus = 0;
 
 				/* Critical hit (zero if non-critical) */
 				tmp = monster_critical(d_dice, d_side, damage);
@@ -1637,24 +1636,24 @@ bool make_attack_normal(int m_idx)
 				/* Roll for damage */
 				switch (tmp)
 				{
-					case 0: k = 0; break;
-					case 1: k = randint1(5); break;
-					case 2: k = randint1(5) + 5; break;
-					case 3: k = randint1(20) + 20; break;
-					case 4: k = randint1(50) + 50; break;
-					case 5: k = randint1(100) + 100; break;
-					case 6: k = 300; break;
-					default: k = 500; break;
+					case 0: cut_plus = 0; break;
+					case 1: cut_plus = randint1(5); break;
+					case 2: cut_plus = randint1(5) + 5; break;
+					case 3: cut_plus = randint1(20) + 20; break;
+					case 4: cut_plus = randint1(50) + 50; break;
+					case 5: cut_plus = randint1(100) + 100; break;
+					case 6: cut_plus = 300; break;
+					default: cut_plus = 500; break;
 				}
 
 				/* Apply the cut */
-				if (k) (void)set_cut(p_ptr->cut + k);
+				if (cut_plus) (void)set_cut(p_ptr->cut + cut_plus);
 			}
 
 			/* Handle stun */
 			if (do_stun)
 			{
-				int k = 0;
+				int stun_plus = 0;
 
 				/* Critical hit (zero if non-critical) */
 				tmp = monster_critical(d_dice, d_side, damage);
@@ -1662,18 +1661,18 @@ bool make_attack_normal(int m_idx)
 				/* Roll for damage */
 				switch (tmp)
 				{
-					case 0: k = 0; break;
-					case 1: k = randint1(5); break;
-					case 2: k = randint1(5) + 10; break;
-					case 3: k = randint1(10) + 20; break;
-					case 4: k = randint1(15) + 30; break;
-					case 5: k = randint1(20) + 40; break;
-					case 6: k = 80; break;
-					default: k = 150; break;
+					case 0: stun_plus = 0; break;
+					case 1: stun_plus = randint1(5); break;
+					case 2: stun_plus = randint1(5) + 10; break;
+					case 3: stun_plus = randint1(10) + 20; break;
+					case 4: stun_plus = randint1(15) + 30; break;
+					case 5: stun_plus = randint1(20) + 40; break;
+					case 6: stun_plus = 80; break;
+					default: stun_plus = 150; break;
 				}
 
 				/* Apply the stun */
-				if (k) (void)set_stun(p_ptr->stun + k);
+				if (stun_plus) (void)set_stun(p_ptr->stun + stun_plus);
 			}
 
 			if (explode)
@@ -1693,7 +1692,7 @@ bool make_attack_normal(int m_idx)
 				{
 					if (!(r_ptr->flagsr & RFR_EFF_IM_FIRE_MASK))
 					{
-						int dam = damroll(2, 6);
+						HIT_POINT dam = damroll(2, 6);
 
 						/* Modify the damage */
 						dam = mon_damage_mod(m_ptr, dam, FALSE);
@@ -1725,7 +1724,7 @@ bool make_attack_normal(int m_idx)
 				{
 					if (!(r_ptr->flagsr & RFR_EFF_IM_ELEC_MASK))
 					{
-						int dam = damroll(2, 6);
+						HIT_POINT dam = damroll(2, 6);
 
 						/* Modify the damage */
 						dam = mon_damage_mod(m_ptr, dam, FALSE);
@@ -1757,7 +1756,7 @@ bool make_attack_normal(int m_idx)
 				{
 					if (!(r_ptr->flagsr & RFR_EFF_IM_COLD_MASK))
 					{
-						int dam = damroll(2, 6);
+						HIT_POINT dam = damroll(2, 6);
 
 						/* Modify the damage */
 						dam = mon_damage_mod(m_ptr, dam, FALSE);
@@ -1790,7 +1789,7 @@ bool make_attack_normal(int m_idx)
 				{
 					if (!(r_ptr->flagsr & RFR_EFF_RES_SHAR_MASK))
 					{
-						int dam = damroll(2, 6);
+						HIT_POINT dam = damroll(2, 6);
 
 						/* Modify the damage */
 						dam = mon_damage_mod(m_ptr, dam, FALSE);
@@ -1828,7 +1827,7 @@ bool make_attack_normal(int m_idx)
 					{
 						if (!(r_ptr->flagsr & RFR_RES_ALL))
 						{
-							int dam = damroll(2, 6);
+							HIT_POINT dam = damroll(2, 6);
 
 							/* Modify the damage */
 							dam = mon_damage_mod(m_ptr, dam, FALSE);
@@ -1862,7 +1861,7 @@ bool make_attack_normal(int m_idx)
 				{
 					if (!(r_ptr->flagsr & RFR_RES_ALL))
 					{
-						int dam = damroll(2, 6);
+						HIT_POINT dam = damroll(2, 6);
 
 						/* Modify the damage */
 						dam = mon_damage_mod(m_ptr, dam, FALSE);
@@ -1892,20 +1891,20 @@ bool make_attack_normal(int m_idx)
 
 				if (hex_spelling(HEX_SHADOW_CLOAK) && alive && !p_ptr->is_dead)
 				{
-					int dam = 1;
-					object_type *o_ptr = &inventory[INVEN_RARM];
+					HIT_POINT dam = 1;
+					object_type *o_armed_ptr = &inventory[INVEN_RARM];
 
 					if (!(r_ptr->flagsr & RFR_RES_ALL || r_ptr->flagsr & RFR_RES_DARK))
 					{
-						if (o_ptr->k_idx)
+						if (o_armed_ptr->k_idx)
 						{
-							int basedam = ((o_ptr->dd + p_ptr->to_dd[0]) * (o_ptr->ds + p_ptr->to_ds[0] + 1));
-							dam = basedam / 2 + o_ptr->to_d + p_ptr->to_d[0];
+							int basedam = ((o_armed_ptr->dd + p_ptr->to_dd[0]) * (o_armed_ptr->ds + p_ptr->to_ds[0] + 1));
+							dam = basedam / 2 + o_armed_ptr->to_d + p_ptr->to_d[0];
 						}
 
 						/* Cursed armor makes damages doubled */
-						o_ptr = &inventory[INVEN_BODY];
-						if ((o_ptr->k_idx) && object_is_cursed(o_ptr)) dam *= 2;
+						o_armed_ptr = &inventory[INVEN_BODY];
+						if ((o_armed_ptr->k_idx) && object_is_cursed(o_armed_ptr)) dam *= 2;
 
 						/* Modify the damage */
 						dam = mon_damage_mod(m_ptr, dam, FALSE);
@@ -1925,7 +1924,7 @@ bool make_attack_normal(int m_idx)
 						else /* monster does not dead */
 						{
 							int j;
-							int flg = PROJECT_STOP | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
+							BIT_FLAGS flg = PROJECT_STOP | PROJECT_GRID | PROJECT_ITEM | PROJECT_KILL;
 							int typ[4][2] = {
 								{ INVEN_HEAD, GF_OLD_CONF },
 								{ INVEN_LARM,  GF_OLD_SLEEP },
@@ -1936,8 +1935,8 @@ bool make_attack_normal(int m_idx)
 							/* Some cursed armours gives an extra effect */
 							for (j = 0; j < 4; j++)
 							{
-								o_ptr = &inventory[typ[j][0]];
-								if ((o_ptr->k_idx) && object_is_cursed(o_ptr) && object_is_armour(o_ptr))
+								o_armed_ptr = &inventory[typ[j][0]];
+								if ((o_armed_ptr->k_idx) && object_is_cursed(o_armed_ptr) && object_is_armour(o_armed_ptr))
 									project(0, 0, m_ptr->fy, m_ptr->fx, (p_ptr->lev * 2), typ[j][1], flg, -1);
 							}
 						}
@@ -2011,11 +2010,11 @@ bool make_attack_normal(int m_idx)
 
 		if (p_ptr->riding && damage)
 		{
-			char m_name[80];
-			monster_desc(m_name, &m_list[p_ptr->riding], 0);
+			char m_steed_name[80];
+			monster_desc(m_steed_name, &m_list[p_ptr->riding], 0);
 			if (rakuba((damage > 200) ? 200 : damage, FALSE))
 			{
-				msg_format(_("%^sから落ちてしまった！", "You have fallen from %s."), m_name);
+				msg_format(_("%^sから落ちてしまった！", "You have fallen from %s."), m_steed_name);
 			}
 		}
 
@@ -2047,11 +2046,11 @@ bool make_attack_normal(int m_idx)
 
 	if ((p_ptr->counter || (p_ptr->special_defense & KATA_MUSOU)) && alive && !p_ptr->is_dead && m_ptr->ml && (p_ptr->csp > 7))
 	{
-		char m_name[80];
-		monster_desc(m_name, m_ptr, 0);
+		char m_target_name[80];
+		monster_desc(m_target_name, m_ptr, 0);
 
 		p_ptr->csp -= 7;
-		msg_format(_("%^sに反撃した！", "Your counterattack to %s!"), m_name);
+		msg_format(_("%^sに反撃した！", "Your counterattack to %s!"), m_target_name);
 		py_attack(m_ptr->fy, m_ptr->fx, HISSATSU_COUNTER);
 		fear = FALSE;
 

@@ -1223,7 +1223,7 @@ const arena_type arena_info[MAX_ARENA_MONS + 2] =
 	{ MON_M_MINDCRAFTER, TV_POTION, SV_POTION_SELF_KNOWLEDGE      },
 	{ MON_GROO,          TV_SCROLL, SV_SCROLL_ACQUIREMENT         },
 	{ MON_RAAL,          TV_SCROLL, SV_SCROLL_STAR_DESTRUCTION    },
-	{ MON_DREADMASTER,   TV_WAND,   SV_WAND_DRAIN_LIFE            },
+	{ MON_DREADMASTER,   TV_WAND,   SV_WAND_HYPODYNAMIA            },
 	{ MON_ULTRA_PALADIN, TV_STAFF,  SV_STAFF_DISPEL_EVIL          },
 	{ MON_BARNEY,        TV_RING,   SV_RING_RES_CHAOS             },
 	{ MON_TROLL_KING,    TV_SCROLL, SV_SCROLL_MASS_GENOCIDE       },
@@ -1461,23 +1461,23 @@ const owner_type owners[MAX_STORES][MAX_OWNERS] =
 		{ "Eddie Beast-Master",         25000,  190, 115,  5,  7, RACE_HALF_ORC},
 		{ "Oglign Dragon-Slayer",       30000,  195, 112,  4,  8, RACE_DWARF},
 		{ "Drew the Skilled",      10000,   210, 115,  6,  6, RACE_HUMAN},
-		{"Orrax Dragonson",        15000,  185, 110,  5,  9, RACE_DRACONIAN},
+		{ "Orrax Dragonson",        15000,  185, 110,  5,  9, RACE_DRACONIAN},
 		{ "Anthrax Disease-Carrier",         25000,  190, 115,  5,  7, RACE_BEASTMAN},
 		{ "Arkhoth the Stout",       30000,  195, 112,  4,  8, RACE_DWARF},
 		{ "Sarlyas the Rotten",      5000,   210, 115,  6,  6, RACE_ZOMBIE},
-		{"Tuethic Bare-Bones",        15000,  185, 110,  5,  9, RACE_SKELETON},
+		{ "Tuethic Bare-Bones",        15000,  185, 110,  5,  9, RACE_SKELETON},
 		{ "Bilious",         25000,  190, 115,  5,  7, RACE_BEASTMAN},
 		{ "Fasgul",       30000,  195, 112,  4,  8, RACE_ZOMBIE},
 		{ "Ellefris the Paladin",      10000,   210, 115,  6,  6, RACE_BARBARIAN},
-		{"K'trrik'k",        15000,  185, 110,  5,  9, RACE_KLACKON},
+		{ "K'trrik'k",        15000,  185, 110,  5,  9, RACE_KLACKON},
 		{ "Drocus Spiderfriend",         25000,  190, 115,  5,  7, RACE_DARK_ELF},
 		{ "Fungus Giant-Slayer",       30000,  195, 112,  4,  8, RACE_DWARF},
 		{ "Delantha",      10000,   210, 115,  6,  6, RACE_ELF},
-		{"Solvistani the Ranger",        15000,  185, 110,  5,  9, RACE_HALF_ELF},
+		{ "Solvistani the Ranger",        15000,  185, 110,  5,  9, RACE_HALF_ELF},
 		{ "Xoril the Slow",         25000,  190, 115,  5,  7, RACE_GOLEM},
 		{ "Aeon Flux",       20000,  195, 112,  4,  8, RACE_HALF_ELF},
 		{ "Nadoc the Strong",      10000,   210, 115,  6,  6, RACE_HOBBIT},
-		{"Eramog the Weak",        15000,  185, 110,  5,  9, RACE_KOBOLD},
+		{ "Eramog the Weak",        15000,  185, 110,  5,  9, RACE_KOBOLD},
 		{ "Eowilith the Fair",         25000,  190, 115,  5,  7, RACE_VAMPIRE},
 		{ "Huimog Balrog-Slayer",       30000,  195, 112,  4,  8, RACE_HALF_ORC},
 		{ "Peadus the Cruel",      5000,   210, 115,  6,  6, RACE_HUMAN},
@@ -5018,7 +5018,7 @@ const option_type option_info[] =
 	{ &view_torch_grids,            FALSE, OPT_PAGE_MAPSCREEN, 1, 7,
 	"view_torch_grids",             _("明かりで照らした場所はそのままにする", "Map remembers all torch-lit grids") },
 
-	{ &view_unsafe_grids,           TRUE, OPT_PAGE_MAPSCREEN, 1, 8,
+	{ &view_unsafe_grids,           FALSE, OPT_PAGE_MAPSCREEN, 1, 8,
 	"view_unsafe_grids",            _("トラップ感知済みでない場所を表示する", "Map marked by detect traps") },
 
 	{ &view_reduce_view,            FALSE, OPT_PAGE_MAPSCREEN, 1, 17,
@@ -5036,7 +5036,7 @@ const option_type option_info[] =
 	{ &hilite_player,               FALSE, OPT_PAGE_MAPSCREEN, 1, 27,
 	"hilite_player",                _("プレイヤーにカーソルを合わせる", "Hilite the player with the cursor") },
 
-	{ &display_path,                TRUE, OPT_PAGE_MAPSCREEN, 2, 8,
+	{ &display_path,                FALSE, OPT_PAGE_MAPSCREEN, 2, 8,
 	"display_path",                 _("魔法や矢の軌跡を表示する", "Display actual path before shooting") },
 
 	/*** Text Display Options ***/
@@ -5044,7 +5044,7 @@ const option_type option_info[] =
 	{ &plain_descriptions,          TRUE,  OPT_PAGE_TEXT, 5, 1,
 	"plain_descriptions",           _("アイテムの記述を簡略にする", "Plain object descriptions") },
 
-	{ &plain_pickup,                TRUE, OPT_PAGE_TEXT, 6, 6,
+	{ &plain_pickup,                FALSE, OPT_PAGE_TEXT, 6, 6,
 	"plain_pickup",                 _("「拾った」メッセージを簡略化する", "Plain pickup messages(japanese only)") },
 
 	{ &always_show_list,            TRUE,  OPT_PAGE_TEXT, 4, 0,
@@ -5053,31 +5053,31 @@ const option_type option_info[] =
 	{ &depth_in_feet,               FALSE, OPT_PAGE_TEXT, 0, 7,
 	"depth_in_feet",                _("ダンジョンの深さをフィートで表示する", "Show dungeon level in feet") },
 
-	{ &show_labels,                 FALSE,  OPT_PAGE_TEXT, 0, 10,
+	{ &show_labels,                 TRUE,  OPT_PAGE_TEXT, 0, 10,
 	"show_labels",                  _("装備一覧で装備場所を表示する", "Show labels in object listings") },
 
 	{ &show_weights,                TRUE,  OPT_PAGE_TEXT, 0, 11,
 	"show_weights",                 _("アイテム一覧で重量を表示する", "Show weights in object listings") },
 
-	{ &show_item_graph,             FALSE,  OPT_PAGE_TEXT, 2, 0,
+	{ &show_item_graph,             TRUE,  OPT_PAGE_TEXT, 2, 0,
 	"show_item_graph",              _("アイテムのシンボルを表示する", "Show items graphics") },
 
-	{ &equippy_chars,               FALSE,  OPT_PAGE_TEXT, 1, 12,
+	{ &equippy_chars,               TRUE,  OPT_PAGE_TEXT, 1, 12,
 	"equippy_chars",                _("ステータスに文字で装備を表示する", "Display 'equippy' chars") },
 
-	{ &display_mutations,           TRUE, OPT_PAGE_TEXT, 5, 0,
+	{ &display_mutations,           FALSE, OPT_PAGE_TEXT, 5, 0,
 	"display_mutations",            _("'C'コマンドで突然変異を表示する", "Display mutations in 'C'haracter Display") },
 
-	{ &compress_savefile,           TRUE, OPT_PAGE_TEXT, 1, 26,
+	{ &compress_savefile,           FALSE, OPT_PAGE_TEXT, 1, 26,
 	"compress_savefile",            _("セーブ・ファイル中のメッセージを圧縮する", "Compress messages in savefiles") },
 
-	{ &abbrev_extra,                TRUE, OPT_PAGE_TEXT, 2, 10,
+	{ &abbrev_extra,                FALSE, OPT_PAGE_TEXT, 2, 10,
 	"abbrev_extra",                 _("アイテムに追加耐性/能力の略称を刻む", "Describe obj's extra resistances by abbreviation") },
 
-	{ &abbrev_all,                  TRUE, OPT_PAGE_TEXT, 2, 11,
+	{ &abbrev_all,                  FALSE, OPT_PAGE_TEXT, 2, 11,
 	"abbrev_all",                   _("アイテムに全ての耐性/能力の略称を刻む", "Describe obj's all resistances by abbreviation") },
 
-	{ &exp_need,                    TRUE, OPT_PAGE_TEXT, 2, 12,
+	{ &exp_need,                    FALSE, OPT_PAGE_TEXT, 2, 12,
 	"exp_need",                     _("次のレベルに必要な経験値を表示する", "Show the experience needed for next level") },
 
 	{ &ignore_unview,               FALSE, OPT_PAGE_TEXT, 2, 13,
@@ -5098,7 +5098,7 @@ const option_type option_info[] =
 	{ &stack_force_notes,           TRUE,  OPT_PAGE_GAMEPLAY, 0, 8,
 	"stack_force_notes",            _("異なる銘のアイテムをまとめる", "Merge inscriptions when stacking") },
 
-	{ &stack_force_costs,           TRUE, OPT_PAGE_GAMEPLAY, 0, 9,
+	{ &stack_force_costs,           FALSE, OPT_PAGE_GAMEPLAY, 0, 9,
 	"stack_force_costs",            _("異なる割引表示のアイテムをまとめる", "Merge discounts when stacking") },
 
 	{ &expand_list,                 TRUE,  OPT_PAGE_GAMEPLAY, 1, 5,
@@ -5110,17 +5110,17 @@ const option_type option_info[] =
 	{ &always_small_levels,         FALSE, OPT_PAGE_GAMEPLAY, 2, 3,
 	"always_small_levels",          _("常に非常に小さいフロアを生成する", "Always create unusually small dungeon levels") },
 
-	{ &empty_levels,                FALSE,  OPT_PAGE_GAMEPLAY, 0, 31,
+	{ &empty_levels,                TRUE,  OPT_PAGE_GAMEPLAY, 0, 31,
 	"empty_levels",                 _("空っぽの「アリーナ」レベルの生成を可能にする", "Allow empty 'arena' levels") },
 
-	{ &bound_walls_perm,            TRUE, OPT_PAGE_GAMEPLAY, 2, 1,
+	{ &bound_walls_perm,            FALSE, OPT_PAGE_GAMEPLAY, 2, 1,
 	"bound_walls_perm",             _("ダンジョンの外壁を永久岩にする", "Boundary walls become 'permanent wall'") },
 
 	{ &last_words,                  TRUE,  OPT_PAGE_GAMEPLAY, 0, 28,
 	"last_words",                   _("キャラクターが死んだ時遺言をのこす", "Leave last words when your character dies") },
 
 #ifdef WORLD_SCORE
-	{ &send_score,                  FALSE,  OPT_PAGE_GAMEPLAY, 4, 6,
+	{ &send_score,                  TRUE,  OPT_PAGE_GAMEPLAY, 4, 6,
 	"send_score",                   _("スコアサーバにスコアを送る", "Send score dump to the world score server") },
 #endif
 	
@@ -6275,18 +6275,18 @@ const activation_type activation_info[] =
 	  _("アシッド・ボール(100)", "ball of acid (100)") },
 	{ "BA_NUKE_1", ACT_BA_NUKE_1, 50, 1000, {12, 0},
 	  _("放射能球(100)", "ball of nuke (100)") },
-	{ "DRAIN_1", ACT_DRAIN_1, 30, 500, {12, 0},
+	{ "HYPODYNAMIA_1", ACT_HYPODYNAMIA_1, 30, 500, {12, 0},
 	  _("窒息攻撃(100)", "a strangling attack (100)") },
-	{ "DRAIN_2", ACT_DRAIN_2, 40, 750, {15, 0},
-	  _("生命力吸収(120)", "drain life (120)") },
-	{ "VAMPIRE_1", ACT_VAMPIRE_1, 40, 1000, {20, 0},
-	  _("吸血ドレイン(3*50)", "vampiric drain (3*50)") },
+	{ "HYPODYNAMIA_2", ACT_HYPODYNAMIA_2, 40, 750, {15, 0},
+	  _("衰弱の矢(120)", "hypodynamic bolt (120)") },
+	{ "DRAIN_1", ACT_DRAIN_1, 40, 1000, {20, 0},
+	  _("吸収の矢(3*50)", "drain bolt (3*50)") },
 	{ "BO_MISS_2", ACT_BO_MISS_2, 40, 1000, {20, 0},
 	  _("矢(150)", "arrows (150)") },
 	{ "WHIRLWIND", ACT_WHIRLWIND, 50, 7500, {25, 0},
 	  _("カマイタチ", "whirlwind attack") },
-	{ "VAMPIRE_2", ACT_VAMPIRE_2, 50, 2500, {40, 0},
-	  _("吸血ドレイン(3*100)", "vampiric drain (3*100)") },
+	{ "DRAIN_2", ACT_DRAIN_2, 50, 2500, {40, 0},
+	  _("吸収の矢(3*100)", "drain bolt (3*100)") },
 	{ "CALL_CHAOS", ACT_CALL_CHAOS, 70, 5000, {35, 0},
 	  _("混沌召来", "call chaos") },
 	{ "ROCKET", ACT_ROCKET, 70, 5000, {20, 0},

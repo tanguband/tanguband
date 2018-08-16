@@ -158,24 +158,31 @@ bool test_hit_fire(int chance, monster_type *m_ptr, int vis, char* o_name)
 {
 	int k, ac;
 	monster_race *r_ptr = &r_info[m_ptr->r_idx];
-	
-	ac = r_ptr->ac;
-	if(m_ptr->r_idx == MON_GOEMON && !MON_CSLEEP(m_ptr)) ac *= 3;
 
 	/* Percentile dice */
-	k = randint0(100);
+	k = randint1(100);
 	
 	/* Snipers with high-concentration reduce instant miss percentage.*/
 	k += p_ptr->concent;
 	
 	/* Hack -- Instant miss or hit */
-	if (k < 10) return (k < 5);
+	if (k <= 5) return (FALSE);
+	if (k > 95) return (TRUE);
 
 	if (p_ptr->pseikaku == SEIKAKU_NAMAKE)
 		if (one_in_(20)) return (FALSE);
 
 	/* Never hit */
 	if (chance <= 0) return (FALSE);
+
+	ac = r_ptr->ac;
+	if (p_ptr->concent)
+	{
+		ac *= (8 - p_ptr->concent);
+		ac /= 8;
+	}
+
+	if(m_ptr->r_idx == MON_GOEMON && !MON_CSLEEP(m_ptr)) ac *= 3;
 
 	/* Invisible monsters are harder to hit */
 	if (!vis) chance = (chance + 1) / 2;
@@ -246,7 +253,7 @@ bool test_hit_norm(int chance, int ac, int vis)
  * @param dam 現在算出中のダメージ値
  * @return クリティカル修正が入ったダメージ値
  */
-s16b critical_shot(int weight, int plus_ammo, int plus_bow, int dam)
+HIT_POINT critical_shot(int weight, int plus_ammo, int plus_bow, HIT_POINT dam)
 {
 	int i, k;
 	object_type *j_ptr =  &inventory[INVEN_BOW];
@@ -304,7 +311,7 @@ s16b critical_shot(int weight, int plus_ammo, int plus_bow, int dam)
  * @param mode オプションフラグ
  * @return クリティカル修正が入ったダメージ値
  */
-s16b critical_norm(int weight, int plus, int dam, s16b meichuu, int mode)
+HIT_POINT critical_norm(int weight, int plus, HIT_POINT dam, s16b meichuu, BIT_FLAGS mode)
 {
 	int i, k;
 	
@@ -357,12 +364,12 @@ s16b critical_norm(int weight, int plus, int dam, s16b meichuu, int mode)
  * @param m_ptr 目標モンスターの構造体参照ポインタ
  * @return スレイング加味後の倍率(/10倍)
  */
-static int mult_slaying(int mult, const u32b* flgs, const monster_type* m_ptr)
+static MULTIPLY mult_slaying(MULTIPLY mult, const BIT_FLAGS* flgs, const monster_type* m_ptr)
 {
 	static const struct slay_table_t {
 		int slay_flag;
-		u32b affect_race_flag;
-		int slay_mult;
+		BIT_FLAGS affect_race_flag;
+		MULTIPLY slay_mult;
 		size_t flag_offset;
 		size_t r_flag_offset;
 	} slay_table[] = {
@@ -418,12 +425,12 @@ static int mult_slaying(int mult, const u32b* flgs, const monster_type* m_ptr)
  * @param m_ptr 目標モンスターの構造体参照ポインタ
  * @return スレイング加味後の倍率(/10倍)
  */
-static int mult_brand(int mult, const u32b* flgs, const monster_type* m_ptr)
+static MULTIPLY mult_brand(MULTIPLY mult, const BIT_FLAGS* flgs, const monster_type* m_ptr)
 {
 	static const struct brand_table_t {
 		int brand_flag;
-		u32b resist_mask;
-		u32b hurt_flag;
+		BIT_FLAGS resist_mask;
+		BIT_FLAGS hurt_flag;
 	} brand_table[] = {
 		{TR_BRAND_ACID, RFR_EFF_IM_ACID_MASK, 0U           },
 		{TR_BRAND_ELEC, RFR_EFF_IM_ELEC_MASK, 0U           },
@@ -485,11 +492,11 @@ static int mult_brand(int mult, const u32b* flgs, const monster_type* m_ptr)
  * Note that most brands and slays are x3, except Slay Animal (x2),\n
  * Slay Evil (x2), and Kill dragon (x5).\n
  */
-s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, int mode, bool thrown)
+s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, BIT_FLAGS mode, bool thrown)
 {
-	int mult = 10;
+	MULTIPLY mult = 10;
 
-	u32b flgs[TR_FLAG_SIZE];
+	BIT_FLAGS flgs[TR_FLAG_SIZE];
 
 	/* Extract the flags */
 	object_flags(o_ptr, flgs);
@@ -560,10 +567,9 @@ s16b tot_dam_aux(object_type *o_ptr, int tdam, monster_type *m_ptr, int mode, bo
  * @param x 対象となるマスのX座標
  * @return なし
  */
-static void discover_hidden_things(int y, int x)
+static void discover_hidden_things(POSITION y, POSITION x)
 {
-	s16b this_o_idx, next_o_idx = 0;
-
+	OBJECT_IDX this_o_idx, next_o_idx = 0;
 	cave_type *c_ptr;
 
 	/* Access the grid */
@@ -633,7 +639,8 @@ static void discover_hidden_things(int y, int x)
  */
 void search(void)
 {
-	int i, chance;
+	DIRECTION i;
+	PERCENTAGE chance;
 
 	/* Start with base search ability */
 	chance = p_ptr->skill_srh;
@@ -663,7 +670,7 @@ void search(void)
  * アイテムを拾った際に「２つのケーキを持っている」\n
  * "You have two cakes." とアイテムを拾った後の合計のみの表示がオリジナル\n
  * だが、違和感が\n
- * あるという指摘をうけたので、「～を拾った、～を持っている」という表示\n
+ * あるという指摘をうけたので、「〜を拾った、〜を持っている」という表示\n
  * にかえてある。そのための配列。\n
  * Add the given dungeon object to the character's inventory.\n
  * Delete the object afterwards.\n
@@ -943,7 +950,7 @@ static int check_hit(int power)
  */
 static void hit_trap_pit(int trap_feat_type)
 {
-	int dam;
+	HIT_POINT dam;
 	cptr trap_name = "";
 	cptr spike_name = "";
 
@@ -1058,13 +1065,13 @@ static void hit_trap_slow(void)
  * @param turn 状態異常の追加ターン量
  * @return なし
  */
-static void hit_trap_set_abnormal_status(cptr trap_message, bool resist, bool (*set_status)(int turn), int turn)
+static void hit_trap_set_abnormal_status(cptr trap_message, bool resist, bool (*set_status)(IDX), IDX turn_aux)
 {
 	msg_print(trap_message);
 
 	if (!resist)
 	{
-		set_status(turn);
+		set_status(turn_aux);
 	}
 }
 
@@ -1103,7 +1110,7 @@ static void hit_trap(bool break_trap)
 			{
 				msg_print(_("落とし戸に落ちた！", "You have fallen through a trap door!"));
 				if ((p_ptr->pseikaku == SEIKAKU_COMBAT) || (inventory[INVEN_BOW].name1 == ART_CRIMSON))
-					msg_print(_("くっそ～！", ""));
+					msg_print(_("くっそ〜！", ""));
 
 				sound(SOUND_FALL);
 				dam = damroll(2, 8);
@@ -1207,7 +1214,7 @@ static void hit_trap(bool break_trap)
 			hit_trap_set_abnormal_status(
 				_("黒いガスに包み込まれた！", "A black gas surrounds you!"),
 				p_ptr->resist_blind,
-				set_blind, p_ptr->blind + randint0(50) + 25);
+				set_blind, p_ptr->blind + (TIME_EFFECT)randint0(50) + 25);
 			break;
 		}
 
@@ -1216,7 +1223,7 @@ static void hit_trap(bool break_trap)
 			hit_trap_set_abnormal_status(
 				_("きらめくガスに包み込まれた！", "A gas of scintillating colors surrounds you!"),
 				p_ptr->resist_conf,
-				set_confused, p_ptr->confused + randint0(20) + 10);
+				set_confused, p_ptr->confused + (TIME_EFFECT)randint0(20) + 10);
 			break;
 		}
 
@@ -1225,7 +1232,7 @@ static void hit_trap(bool break_trap)
 			hit_trap_set_abnormal_status(
 				_("刺激的な緑色のガスに包み込まれた！", "A pungent green gas surrounds you!"),
 				p_ptr->resist_pois || IS_OPPOSE_POIS(),
-				set_poisoned, p_ptr->poisoned + randint0(20) + 10);
+				set_poisoned, p_ptr->poisoned + (TIME_EFFECT)randint0(20) + 10);
 			break;
 		}
 
@@ -1361,7 +1368,7 @@ static void hit_trap(bool break_trap)
  * @return なし
  */
 static void touch_zap_player_aux(monster_type *m_ptr, bool immune, int flags_offset, int r_flags_offset, u32b aura_flag,
-				 int (*dam_func)(int dam, cptr kb_str, int monspell, bool aura), cptr message)
+				 int (*dam_func)(HIT_POINT dam, cptr kb_str, int monspell, bool aura), cptr message)
 {
 	monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
@@ -1412,55 +1419,56 @@ static void touch_zap_player(monster_type *m_ptr)
  */
 static void natural_attack(s16b m_idx, int attack, bool *fear, bool *mdeath)
 {
-	int             k, bonus, chance;
+	HIT_POINT k;
+	int bonus, chance;
 	int             n_weight = 0;
 	monster_type    *m_ptr = &m_list[m_idx];
 	monster_race    *r_ptr = &r_info[m_ptr->r_idx];
 	char            m_name[80];
 
-	int             dss, ddd;
+	int             dice_num, dice_side;
 
 	cptr            atk_desc;
 
 	switch (attack)
 	{
 		case MUT2_SCOR_TAIL:
-			dss = 3;
-			ddd = 7;
+			dice_num = 3;
+			dice_side = 7;
 			n_weight = 5;
 			atk_desc = _("尻尾", "tail");
 
 			break;
 		case MUT2_HORNS:
-			dss = 2;
-			ddd = 6;
+			dice_num = 2;
+			dice_side = 6;
 			n_weight = 15;
 			atk_desc = _("角", "horns");
 
 			break;
 		case MUT2_BEAK:
-			dss = 2;
-			ddd = 4;
+			dice_num = 2;
+			dice_side = 4;
 			n_weight = 5;
 			atk_desc = _("クチバシ", "beak");
 
 			break;
 		case MUT2_TRUNK:
-			dss = 1;
-			ddd = 4;
+			dice_num = 1;
+			dice_side = 4;
 			n_weight = 35;
 			atk_desc = _("象の鼻", "trunk");
 
 			break;
 		case MUT2_TENTACLES:
-			dss = 2;
-			ddd = 5;
+			dice_num = 2;
+			dice_side = 5;
 			n_weight = 5;
 			atk_desc = _("触手", "tentacles");
 
 			break;
 		default:
-			dss = ddd = n_weight = 1;
+			dice_num = dice_side = n_weight = 1;
 			atk_desc = _("未定義の部位", "undefined body part");
 
 	}
@@ -1481,7 +1489,7 @@ static void natural_attack(s16b m_idx, int attack, bool *fear, bool *mdeath)
 		sound(SOUND_HIT);
 		msg_format(_("%sを%sで攻撃した。", "You hit %s with your %s."), m_name, atk_desc);
 
-		k = damroll(ddd, dss);
+		k = damroll(dice_num, dice_side);
 		k = critical_norm(n_weight, bonus, k, (s16b)bonus, 0);
 
 		/* Apply the player damage bonuses */
@@ -1494,10 +1502,9 @@ static void natural_attack(s16b m_idx, int attack, bool *fear, bool *mdeath)
 		k = mon_damage_mod(m_ptr, k, FALSE);
 
 		/* Complex message */
-		if (p_ptr->wizard)
-		{
-			msg_format(_("%d/%d のダメージを与えた。", "You do %d (out of %d) damage."), k, m_ptr->hp);
-		}
+		msg_format_wizard(CHEAT_MONSTER,
+			_("%dのダメージを与えた。(残りHP %d/%d(%d))", "You do %d damage. (left HP %d/%d(%d))"),
+			k, m_ptr->hp - k, m_ptr->maxhp, m_ptr->max_maxhp);
 
 		/* Anger the monster */
 		if (k > 0) anger_monster(m_ptr);
@@ -1552,9 +1559,10 @@ static void natural_attack(s16b m_idx, int attack, bool *fear, bool *mdeath)
  * @details
  * If no "weapon" is available, then "punch" the monster one time.
  */
-static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int mode)
+static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, BIT_FLAGS mode)
 {
-	int		num = 0, k, bonus, chance, vir;
+	int		num = 0, bonus, chance, vir;
+	HIT_POINT k;
 
 	cave_type       *c_ptr = &cave[y][x];
 
@@ -1640,12 +1648,12 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 	{
 		if ((r_ptr->level * 3 + 10) > p_ptr->lev) /* #tang (r_ptr->level + 10) -> (r_ptr->level * 3 + 10) */
 		{
-			int tval = inventory[INVEN_RARM+hand].tval - TV_WEAPON_BEGIN;
-			int sval = inventory[INVEN_RARM+hand].sval;
+			OBJECT_TYPE_VALUE tval = inventory[INVEN_RARM+hand].tval - TV_WEAPON_BEGIN;
+			OBJECT_SUBTYPE_VALUE sval = inventory[INVEN_RARM+hand].sval;
 			int now_exp = p_ptr->weapon_exp[tval][sval];
 			if (now_exp < s_info[p_ptr->pclass].w_max[tval][sval])
 			{
-				int amount = 0;
+				SUB_EXP amount = 0;
 				if (now_exp < WEAPON_EXP_BEGINNER) amount = 400; /* #tang 80 -> 400 */
 				else if (now_exp < WEAPON_EXP_SKILLED) amount = 50; /* #tang 10 -> 50 */
 				else if ((now_exp < WEAPON_EXP_EXPERT) && (p_ptr->lev > 19)) amount = 5; /* #tang 1 -> 5 */
@@ -1876,9 +1884,9 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 				}
 
 				if (p_ptr->special_defense & KAMAE_SUZAKU) weight = 4;
-				if ((p_ptr->pclass == CLASS_FORCETRAINER) && (p_ptr->magic_num1[0]))
+				if ((p_ptr->pclass == CLASS_FORCETRAINER) && P_PTR_KI)
 				{
-					weight += (p_ptr->magic_num1[0]/30);
+					weight += (P_PTR_KI / 30);
 					if (weight > 20) weight = 20;
 				}
 
@@ -1976,7 +1984,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 						mult++;
 					}
 
-					k *= mult;
+					k *= (HIT_POINT)mult;
 
 					/* Ouch! */
 					if (((r_ptr->flagsr & RFR_RES_ALL) ? k/100 : k) > m_ptr->hp)
@@ -2096,11 +2104,9 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 				}
 			}
 
-			/* Complex message */
-			if (p_ptr->wizard || cheat_xtra)
-			{
-				msg_format(_("%d/%d のダメージを与えた。", "You do %d (out of %d) damage."), k, m_ptr->hp);
-			}
+			msg_format_wizard(CHEAT_MONSTER,
+				_("%dのダメージを与えた。(残りHP %d/%d(%d))", "You do %d damage. (left HP %d/%d(%d))"), k,
+				m_ptr->hp - k, m_ptr->maxhp, m_ptr->max_maxhp);
 
 			if (k <= 0) can_drain = FALSE;
 
@@ -2142,8 +2148,8 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 				{
 					if (is_human)
 					{
-						int to_h = o_ptr->to_h;
-						int to_d = o_ptr->to_d;
+						HIT_PROB to_h = o_ptr->to_h;
+						HIT_POINT to_d = o_ptr->to_d;
 						int i, flag;
 
 						flag = 1;
@@ -2296,17 +2302,17 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 			}
 			else if (o_ptr->name1 == ART_G_HAMMER)
 			{
-				monster_type *m_ptr = &m_list[c_ptr->m_idx];
+				monster_type *target_ptr = &m_list[c_ptr->m_idx];
 
-				if (m_ptr->hold_o_idx)
+				if (target_ptr->hold_o_idx)
 				{
-					object_type *q_ptr = &o_list[m_ptr->hold_o_idx];
+					object_type *q_ptr = &o_list[target_ptr->hold_o_idx];
 					char o_name[MAX_NLEN];
 
 					object_desc(o_name, q_ptr, OD_NAME_ONLY);
 					q_ptr->held_m_idx = 0;
 					q_ptr->marked = OM_TOUCHED;
-					m_ptr->hold_o_idx = q_ptr->next_o_idx;
+					target_ptr->hold_o_idx = q_ptr->next_o_idx;
 					q_ptr->next_o_idx = 0;
 					msg_format(_("%sを奪った。", "You snatched %s."), o_name);
 					inven_carry(q_ptr);
@@ -2322,7 +2328,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 
 			if ((o_ptr->tval == TV_POLEARM) && (o_ptr->sval == SV_DEATH_SCYTHE) && one_in_(3))
 			{
-				u32b flgs[TR_FLAG_SIZE];
+				u32b flgs_aux[TR_FLAG_SIZE];
 
 				/* Sound */
 				sound(SOUND_HIT);
@@ -2333,7 +2339,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 				msg_print(_("振り回した大鎌が自分自身に返ってきた！", "Your scythe returns to you!"));
 
 				/* Extract the flags */
-				object_flags(o_ptr, flgs);
+				object_flags(o_ptr, flgs_aux);
 
 				k = damroll(o_ptr->dd + p_ptr->to_dd[hand], o_ptr->ds + p_ptr->to_ds[hand]);
 				{
@@ -2390,13 +2396,13 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 					if (!(p_ptr->resist_pois || IS_OPPOSE_POIS()) && (mult < 25))
 						mult = 25;
 
-					if ((p_ptr->pclass != CLASS_SAMURAI) && (have_flag(flgs, TR_FORCE_WEAPON)) && (p_ptr->csp > (p_ptr->msp / 30)))
+					if ((p_ptr->pclass != CLASS_SAMURAI) && (have_flag(flgs_aux, TR_FORCE_WEAPON)) && (p_ptr->csp > (p_ptr->msp / 30)))
 					{
 						p_ptr->csp -= (1+(p_ptr->msp / 30));
 						p_ptr->redraw |= (PR_MANA);
 						mult = mult * 3 / 2 + 20;
 					}
-					k *= mult;
+					k *= (HIT_POINT)mult;
 					k /= 10;
 				}
 
@@ -2411,7 +2417,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
 						mult++;
 					}
 
-					k *= mult;
+					k *= (HIT_POINT)mult;
 				}
 				k += (p_ptr->to_d[hand] + o_ptr->to_d);
 				if (k < 0) k = 0;
@@ -2461,7 +2467,7 @@ static void py_attack_aux(int y, int x, bool *fear, bool *mdeath, s16b hand, int
  * @details
  * If no "weapon" is available, then "punch" the monster one time.
  */
-bool py_attack(int y, int x, int mode)
+bool py_attack(int y, int x, BIT_FLAGS mode)
 {
 	bool            fear = FALSE;
 	bool            mdeath = FALSE;
@@ -2817,18 +2823,18 @@ bool player_can_enter(s16b feature, u16b mode)
  * @param mpe_mode 移動オプションフラグ
  * @return プレイヤーが死亡やフロア離脱を行わず、実際に移動が可能ならばTRUEを返す。
  */
-bool move_player_effect(int ny, int nx, u32b mpe_mode)
+bool move_player_effect(POSITION ny, POSITION nx, u32b mpe_mode)
 {
 	cave_type *c_ptr = &cave[ny][nx];
 	feature_type *f_ptr = &f_info[c_ptr->feat];
 
 	if (!(mpe_mode & MPE_STAYING))
 	{
-		int oy = p_ptr->y;
-		int ox = p_ptr->x;
+		POSITION oy = p_ptr->y;
+		POSITION ox = p_ptr->x;
 		cave_type *oc_ptr = &cave[oy][ox];
-		int om_idx = oc_ptr->m_idx;
-		int nm_idx = c_ptr->m_idx;
+		IDX om_idx = oc_ptr->m_idx;
+		IDX nm_idx = c_ptr->m_idx;
 
 		/* Move the player */
 		p_ptr->y = ny;
@@ -3101,11 +3107,11 @@ bool trap_can_be_ignored(int feat)
  * any monster which might be in the destination grid.  Previously,\n
  * moving into walls was "free" and did NOT hit invisible monsters.\n
  */
-void move_player(int dir, bool do_pickup, bool break_trap)
+void move_player(DIRECTION dir, bool do_pickup, bool break_trap)
 {
 	/* Find the result of moving */
-	int y = p_ptr->y + ddy[dir];
-	int x = p_ptr->x + ddx[dir];
+	POSITION y = p_ptr->y + ddy[dir];
+	POSITION x = p_ptr->x + ddx[dir];
 
 	/* Examine the destination */
 	cave_type *c_ptr = &cave[y][x];
@@ -3290,13 +3296,13 @@ void move_player(int dir, bool do_pickup, bool break_trap)
 		}
 		else if (MON_MONFEAR(riding_m_ptr))
 		{
-			char m_name[80];
+			char steed_name[80];
 
 			/* Acquire the monster name */
-			monster_desc(m_name, riding_m_ptr, 0);
+			monster_desc(steed_name, riding_m_ptr, 0);
 
 			/* Dump a message */
-			msg_format(_("%sが恐怖していて制御できない。", "%^s is too scared to control."), m_name);
+			msg_format(_("%sが恐怖していて制御できない。", "%^s is too scared to control."), steed_name);
 			oktomove = FALSE;
 			disturb(0, 1);
 		}
@@ -3339,9 +3345,9 @@ void move_player(int dir, bool do_pickup, bool break_trap)
 
 		if (oktomove && MON_STUNNED(riding_m_ptr) && one_in_(2))
 		{
-			char m_name[80];
-			monster_desc(m_name, riding_m_ptr, 0);
-			msg_format(_("%sが朦朧としていてうまく動けない！", "You cannot control stunned %s!"),m_name);
+			char steed_name[80];
+			monster_desc(steed_name, riding_m_ptr, 0);
+			msg_format(_("%sが朦朧としていてうまく動けない！", "You cannot control stunned %s!"), steed_name);
 			oktomove = FALSE;
 			disturb(0, 1);
 		}
@@ -3627,12 +3633,12 @@ static byte chome[] =
 /*
  * The direction we are running
  */
-static byte find_current;
+static DIRECTION find_current;
 
 /*
  * The direction we came from
  */
-static byte find_prevdir;
+static DIRECTION find_prevdir;
 
 /*
  * We are looking for open area
@@ -4111,6 +4117,8 @@ void run_step(int dir)
 		/* Hack -- do not start silly run */
 		if (see_wall(dir, p_ptr->y, p_ptr->x))
 		{
+			sound(SOUND_HITWALL);
+
 			/* Message */
 			msg_print(_("その方向には走れません。", "You cannot run in that direction."));
 

@@ -26,11 +26,11 @@
  * @param mm 移動するべき方角IDを返す参照ポインタ
  * @return 方向が確定した場合TRUE、接近する敵がそもそもいない場合FALSEを返す
  */
-static bool get_enemy_dir(int m_idx, int *mm)
+static bool get_enemy_dir(MONSTER_IDX m_idx, int *mm)
 {
 	int i;
 	int x = 0, y = 0;
-	int t_idx;
+	IDX t_idx;
 	int start;
 	int plus = 1;
 
@@ -61,7 +61,7 @@ static bool get_enemy_dir(int m_idx, int *mm)
 		/* Scan thru all monsters */
 		for (i = start; ((i < start + m_max) && (i > start - m_max)); i+=plus)
 		{
-			int dummy = (i % m_max);
+			IDX dummy = (i % m_max);
 
 			if (!dummy) continue;
 
@@ -194,7 +194,7 @@ static bool get_enemy_dir(int m_idx, int *mm)
  * @param who 打撃を行ったモンスターの参照ID
  * @return なし
  */
-void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
+void mon_take_hit_mon(MONSTER_IDX m_idx, HIT_POINT dam, bool *fear, cptr note, IDX who)
 {
 	monster_type	*m_ptr = &m_list[m_idx];
 
@@ -250,7 +250,7 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
 	}
 
 	/* Hurt it */
-	m_ptr->hp -= dam;
+	m_ptr->hp -= (s16b)dam;
 
 	/* It is dead now... or is it? */
 	if (m_ptr->hp < 0)
@@ -362,8 +362,6 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
 
 	if (p_ptr->riding && (p_ptr->riding == m_idx) && (dam > 0))
 	{
-		char m_name[80];
-
 		/* Extract monster name */
 		monster_desc(m_name, m_ptr, 0);
 
@@ -395,7 +393,7 @@ void mon_take_hit_mon(int m_idx, int dam, bool *fear, cptr note, int who)
  * Note that this function is responsible for about one to five percent\n
  * of the processor use in normal conditions...\n
  */
-static int mon_will_run(int m_idx)
+static bool mon_will_run(MONSTER_IDX m_idx)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 
@@ -404,8 +402,8 @@ static int mon_will_run(int m_idx)
 	monster_race *r_ptr = &r_info[m_ptr->r_idx];
 
 	u16b p_lev, m_lev;
-	u16b p_chp, p_mhp;
-	u16b m_chp, m_mhp;
+	HIT_POINT p_chp, p_mhp;
+	HIT_POINT m_chp, m_mhp;
 	u32b p_val, m_val;
 
 #endif
@@ -436,9 +434,8 @@ static int mon_will_run(int m_idx)
 	m_lev = r_ptr->level + (m_idx & 0x08) + 25;
 
 	/* Optimize extreme cases below */
-
 	if (m_lev > p_lev + 4) return (FALSE);
-	if (m_lev + 4 <= p_lev) return (FALSE);	/* #tang TRUE > FALSE モンスター逃げないように変更 */
+	if (m_lev + 4 <= p_lev) return (FALSE);	/* #tang TRUE -> FALSE モンスター逃げないように変更 */
 
 	/* Examine player health */
 	p_chp = p_ptr->chp;
@@ -453,7 +450,7 @@ static int mon_will_run(int m_idx)
 	m_val = (m_lev * m_mhp) + (m_chp << 2); /* div m_mhp */
 
 	/* Strong players scare strong monsters */
-	if (p_val * m_mhp > m_val * p_mhp) return (FALSE);	/* #tang TRUE > FALSE モンスター逃げないように変更 */
+	if (p_val * m_mhp > m_val * p_mhp) return (FALSE);	/* #tang TRUE -> FALSE モンスター逃げないように変更 */
 
 
 #endif
@@ -471,7 +468,7 @@ static int mon_will_run(int m_idx)
  * @param xp 適したマスのX座標を返す参照ポインタ
  * @return 有効なマスがあった場合TRUEを返す
  */
-static bool get_moves_aux2(int m_idx, int *yp, int *xp)
+static bool get_moves_aux2(MONSTER_IDX m_idx, int *yp, int *xp)
 {
 	int i, y, x, y1, x1, best = 999;
 
@@ -576,7 +573,7 @@ static bool get_moves_aux2(int m_idx, int *yp, int *xp)
  * being close enough to chase directly.  I have no idea what will\n
  * happen if you combine "smell" with low "aaf" values.\n
  */
-static bool get_moves_aux(int m_idx, int *yp, int *xp, bool no_flow)
+static bool get_moves_aux(MONSTER_IDX m_idx, int *yp, int *xp, bool no_flow)
 {
 	int i, y, x, y1, x1, best;
 
@@ -588,8 +585,8 @@ static bool get_moves_aux(int m_idx, int *yp, int *xp, bool no_flow)
 
 	/* Can monster cast attack spell? */
 	if (r_ptr->flags4 & (RF4_ATTACK_MASK) ||
-	    r_ptr->flags5 & (RF5_ATTACK_MASK) ||
-	    r_ptr->flags6 & (RF6_ATTACK_MASK))
+	    r_ptr->a_ability_flags1 & (RF5_ATTACK_MASK) ||
+	    r_ptr->a_ability_flags2 & (RF6_ATTACK_MASK))
 	{
 		/* Can move spell castable grid? */
 		if (get_moves_aux2(m_idx, yp, xp)) return (TRUE);
@@ -695,7 +692,7 @@ static bool get_moves_aux(int m_idx, int *yp, int *xp, bool no_flow)
  * but instead of heading directly for it, the monster should "swerve"\n
  * around the player so that he has a smaller chance of getting hit.\n
  */
-static bool get_fear_moves_aux(int m_idx, int *yp, int *xp)
+static bool get_fear_moves_aux(MONSTER_IDX m_idx, int *yp, int *xp)
 {
 	int y, x, y1, x1, fy, fx, gy = 0, gx = 0;
 	int score = -1;
@@ -910,7 +907,7 @@ static sint *dist_offsets_x[10] =
  *\n
  * Return TRUE if a safe location is available.\n
  */
-static bool find_safety(int m_idx, int *yp, int *xp)
+static bool find_safety(MONSTER_IDX m_idx, int *yp, int *xp)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 
@@ -1004,7 +1001,7 @@ static bool find_safety(int m_idx, int *yp, int *xp)
  *\n
  * Return TRUE if a good location is available.\n
  */
-static bool find_hiding(int m_idx, int *yp, int *xp)
+static bool find_hiding(MONSTER_IDX m_idx, int *yp, int *xp)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	monster_race *r_ptr = &r_info[m_ptr->r_idx];
@@ -1078,7 +1075,7 @@ static bool find_hiding(int m_idx, int *yp, int *xp)
  * @param mm 移動方向を返す方向IDの参照ポインタ
  * @return 有効方向があった場合TRUEを返す
  */
-static bool get_moves(int m_idx, int *mm)
+static bool get_moves(MONSTER_IDX m_idx, int *mm)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	monster_race *r_ptr = &r_info[m_ptr->r_idx];
@@ -1142,7 +1139,7 @@ static bool get_moves(int m_idx, int *mm)
 				}
 			}
 			if (cave[p_ptr->y][p_ptr->x].info & CAVE_ROOM) room -= 2;
-			if (!r_ptr->flags4 && !r_ptr->flags5 && !r_ptr->flags6) room -= 2;
+			if (!r_ptr->flags4 && !r_ptr->a_ability_flags1 && !r_ptr->a_ability_flags2) room -= 2;
 
 			/* Not in a room and strong player */
 			if (room < (8 * (p_ptr->chp + p_ptr->csp)) /
@@ -1448,7 +1445,7 @@ static int check_hit2(int power, int level, int ac, int stun)
  * @param t_idx 目標側モンスターの参照ID
  * @return 実際に打撃処理が行われた場合TRUEを返す
  */
-static bool monst_attack_monst(int m_idx, int t_idx)
+static bool monst_attack_monst(MONSTER_IDX m_idx, IDX t_idx)
 {
 	monster_type    *m_ptr = &m_list[m_idx];
 	monster_type    *t_ptr = &m_list[t_idx];
@@ -1509,8 +1506,8 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 	{
 		bool obvious = FALSE;
 
-		int power = 0;
-		int damage = 0;
+		HIT_POINT power = 0;
+		HIT_POINT damage = 0;
 
 		cptr act = NULL;
 
@@ -1758,7 +1755,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 				break;
 
 			case RBE_SUPERHURT:
-				if ((randint1(rlev*8+250) > (ac+200)) || one_in_(13)) /* rlev*2 > rlev*8 */
+				if ((randint1(rlev*8+250) > (ac+200)) || one_in_(13)) /* #tang rlev*2 -> rlev*8 */
 				{
 					int tmp_damage = damage - (damage * ((ac < 150) ? ac : 150) / 250);
 					damage = MAX(damage, tmp_damage * 2);
@@ -1843,7 +1840,7 @@ static bool monst_attack_monst(int m_idx, int t_idx)
 				break;
 
 			case RBE_DR_LIFE:
-				pt = GF_OLD_DRAIN;
+				pt = GF_HYPODYNAMIA;
 				effect_type = BLOW_EFFECT_TYPE_HEAL;
 				break;
 
@@ -2107,13 +2104,14 @@ static bool check_hp_for_feat_destruction(feature_type *f_ptr, monster_type *m_p
  *\n
  * A "direction" of "5" means "pick a random direction".\n
  */
-static void process_monster(int m_idx)
+static void process_monster(MONSTER_IDX m_idx)
 {
 	monster_type    *m_ptr = &m_list[m_idx];
 	monster_race    *r_ptr = &r_info[m_ptr->r_idx];
 	monster_race    *ap_r_ptr = &r_info[m_ptr->ap_r_idx];
 
-	int             i, d, oy, ox, ny, nx;
+	int             i, d;
+	POSITION	oy, ox, ny, nx;
 
 	int             mm[8];
 
@@ -2417,7 +2415,7 @@ static void process_monster(int m_idx)
 	}
 
 
-	if (r_ptr->flags6 & RF6_SPECIAL)
+	if (r_ptr->a_ability_flags2 & RF6_SPECIAL)
 	{
 		/* Hack -- Ohmu scatters molds! */
 		if (m_ptr->r_idx == MON_OHMU)
@@ -2621,7 +2619,7 @@ static void process_monster(int m_idx)
 				(void)get_moves(m_idx, mm);
 
 				/* Restore the leash */
-				p_ptr->pet_follow_distance = dis;
+				p_ptr->pet_follow_distance = (s16b)dis;
 			}
 		}
 	}
@@ -3094,7 +3092,7 @@ static void process_monster(int m_idx)
 				}
 
 				/* Hack -- Update the new location */
-				c_ptr->m_idx = m_idx;
+				c_ptr->m_idx = (s16b)m_idx;
 
 				/* Move the monster */
 				m_ptr->fy = ny;
@@ -3238,7 +3236,7 @@ static void process_monster(int m_idx)
 						o_ptr->iy = o_ptr->ix = 0;
 
 						/* Memorize monster */
-						o_ptr->held_m_idx = m_idx;
+						o_ptr->held_m_idx = (s16b)m_idx;
 
 						/* Build a stack */
 						o_ptr->next_o_idx = m_ptr->hold_o_idx;
@@ -3393,8 +3391,8 @@ static void process_monster(int m_idx)
  */
 void process_monsters(void)
 {
-	int             i;
-	int             fx, fy;
+	IDX i;
+	POSITION fx, fy;
 
 	bool            test;
 
@@ -3607,7 +3605,7 @@ void process_monsters(void)
  * @return mproc_type モンスターの時限ステータスID
  * @return 残りターン値
  */
-int get_mproc_idx(int m_idx, int mproc_type)
+int get_mproc_idx(MONSTER_IDX m_idx, int mproc_type)
 {
 	s16b *cur_mproc_list = mproc_list[mproc_type];
 	int i;
@@ -3626,9 +3624,9 @@ int get_mproc_idx(int m_idx, int mproc_type)
  * @return mproc_type 追加したいモンスターの時限ステータスID
  * @return なし
  */
-static void mproc_add(int m_idx, int mproc_type)
+static void mproc_add(MONSTER_IDX m_idx, int mproc_type)
 {
-	if (mproc_max[mproc_type] < max_m_idx) mproc_list[mproc_type][mproc_max[mproc_type]++] = m_idx;
+	if (mproc_max[mproc_type] < max_m_idx) mproc_list[mproc_type][mproc_max[mproc_type]++] = (s16b)m_idx;
 }
 
 
@@ -3638,7 +3636,7 @@ static void mproc_add(int m_idx, int mproc_type)
  * @return mproc_type 削除したいモンスターの時限ステータスID
  * @return なし
  */
-static void mproc_remove(int m_idx, int mproc_type)
+static void mproc_remove(MONSTER_IDX m_idx, int mproc_type)
 {
 	int mproc_idx = get_mproc_idx(m_idx, mproc_type);
 	if (mproc_idx >= 0) mproc_list[mproc_type][mproc_idx] = mproc_list[mproc_type][--mproc_max[mproc_type]];
@@ -3652,7 +3650,8 @@ static void mproc_remove(int m_idx, int mproc_type)
 void mproc_init(void)
 {
 	monster_type *m_ptr;
-	int          i, cmi;
+	MONSTER_IDX i;
+	int cmi;
 
 	/* Reset "mproc_max[]" */
 	for (cmi = 0; cmi < MAX_MTIMED; cmi++) mproc_max[cmi] = 0;
@@ -3681,7 +3680,7 @@ void mproc_init(void)
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_csleep(int m_idx, int v)
+bool set_monster_csleep(MONSTER_IDX m_idx, int v)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	bool notice = FALSE;
@@ -3710,7 +3709,7 @@ bool set_monster_csleep(int m_idx, int v)
 	}
 
 	/* Use the value */
-	m_ptr->mtimed[MTIMED_CSLEEP] = v;
+	m_ptr->mtimed[MTIMED_CSLEEP] = (s16b)v;
 
 	if (!notice) return FALSE;
 
@@ -3734,7 +3733,7 @@ bool set_monster_csleep(int m_idx, int v)
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_fast(int m_idx, int v)
+bool set_monster_fast(MONSTER_IDX m_idx, int v)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	bool notice = FALSE;
@@ -3763,7 +3762,7 @@ bool set_monster_fast(int m_idx, int v)
 	}
 
 	/* Use the value */
-	m_ptr->mtimed[MTIMED_FAST] = v;
+	m_ptr->mtimed[MTIMED_FAST] = (s16b)v;
 
 	if (!notice) return FALSE;
 
@@ -3776,7 +3775,7 @@ bool set_monster_fast(int m_idx, int v)
 /*
  * Set "m_ptr->mtimed[MTIMED_SLOW]", notice observable changes
  */
-bool set_monster_slow(int m_idx, int v)
+bool set_monster_slow(MONSTER_IDX m_idx, int v)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	bool notice = FALSE;
@@ -3805,7 +3804,7 @@ bool set_monster_slow(int m_idx, int v)
 	}
 
 	/* Use the value */
-	m_ptr->mtimed[MTIMED_SLOW] = v;
+	m_ptr->mtimed[MTIMED_SLOW] = (s16b)v;
 
 	if (!notice) return FALSE;
 
@@ -3822,7 +3821,7 @@ bool set_monster_slow(int m_idx, int v)
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_stunned(int m_idx, int v)
+bool set_monster_stunned(MONSTER_IDX m_idx, int v)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	bool notice = FALSE;
@@ -3851,7 +3850,7 @@ bool set_monster_stunned(int m_idx, int v)
 	}
 
 	/* Use the value */
-	m_ptr->mtimed[MTIMED_STUNNED] = v;
+	m_ptr->mtimed[MTIMED_STUNNED] = (s16b)v;
 
 	return notice;
 }
@@ -3864,7 +3863,7 @@ bool set_monster_stunned(int m_idx, int v)
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_confused(int m_idx, int v)
+bool set_monster_confused(MONSTER_IDX m_idx, int v)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	bool notice = FALSE;
@@ -3893,7 +3892,7 @@ bool set_monster_confused(int m_idx, int v)
 	}
 
 	/* Use the value */
-	m_ptr->mtimed[MTIMED_CONFUSED] = v;
+	m_ptr->mtimed[MTIMED_CONFUSED] = (s16b)v;
 
 	return notice;
 }
@@ -3906,7 +3905,7 @@ bool set_monster_confused(int m_idx, int v)
  * @param v セットする値
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_monfear(int m_idx, int v)
+bool set_monster_monfear(MONSTER_IDX m_idx, int v)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	bool notice = FALSE;
@@ -3935,7 +3934,7 @@ bool set_monster_monfear(int m_idx, int v)
 	}
 
 	/* Use the value */
-	m_ptr->mtimed[MTIMED_MONFEAR] = v;
+	m_ptr->mtimed[MTIMED_MONFEAR] = (s16b)v;
 
 	if (!notice) return FALSE;
 
@@ -3958,7 +3957,7 @@ bool set_monster_monfear(int m_idx, int v)
  * @param energy_need TRUEならば無敵解除時に行動ターン消費を行う
  * @return 別途更新処理が必要な場合TRUEを返す
  */
-bool set_monster_invulner(int m_idx, int v, bool energy_need)
+bool set_monster_invulner(MONSTER_IDX m_idx, int v, bool energy_need)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	bool notice = FALSE;
@@ -3988,7 +3987,7 @@ bool set_monster_invulner(int m_idx, int v, bool energy_need)
 	}
 
 	/* Use the value */
-	m_ptr->mtimed[MTIMED_INVULNER] = v;
+	m_ptr->mtimed[MTIMED_INVULNER] = (s16b)v;
 
 	if (!notice) return FALSE;
 
@@ -4011,7 +4010,7 @@ static u32b csleep_noise;
  * @param mtimed_idx 更新するモンスターの時限ステータスID
  * @return なし
  */
-static void process_monsters_mtimed_aux(int m_idx, int mtimed_idx)
+static void process_monsters_mtimed_aux(MONSTER_IDX m_idx, int mtimed_idx)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 
@@ -4138,7 +4137,7 @@ static void process_monsters_mtimed_aux(int m_idx, int mtimed_idx)
 		int rlev = r_info[m_ptr->r_idx].level;
 
 		/* Recover from stun */
-		if (set_monster_stunned(m_idx, (randint0(10000) <= rlev * rlev * 16) ? 0 : (MON_STUNNED(m_ptr) - 1))) /* rlev > rlev*4 */
+		if (set_monster_stunned(m_idx, (randint0(10000) <= rlev * rlev * 16) ? 0 : (MON_STUNNED(m_ptr) - 1))) /* #tang rlev -> rlev*4 */
 		{
 			/* Message if visible */
 			if (is_seen(m_ptr))
@@ -4250,7 +4249,7 @@ void process_monsters_mtimed(int mtimed_idx)
  * @param m_idx 魔力消去を受けるモンスターの参照ID
  * @return なし
  */
-void dispel_monster_status(int m_idx)
+void dispel_monster_status(MONSTER_IDX m_idx)
 {
 	monster_type *m_ptr = &m_list[m_idx];
 	char         m_name[80];
@@ -4352,7 +4351,7 @@ bool process_the_world(int num, int who, bool vs_player)
  * @param s_idx 撃破されたモンスター種族の参照ID
  * @return なし
  */
-void monster_gain_exp(int m_idx, int s_idx)
+void monster_gain_exp(MONSTER_IDX m_idx, IDX s_idx)
 {
 	monster_type *m_ptr;
 	monster_race *r_ptr;

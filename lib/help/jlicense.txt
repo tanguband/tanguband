@@ -87,7 +87,7 @@ are included in all such copies.  Other copyrights may also apply.
 
 上述の使用許諾表記は Angband の dual license (後述)によって GPL のみに
 従って配布される可能性を排除するものではありません。現在は GPL に従っ
-て短愚蛮怒を配布する事は不可能ですが、将来的にそれが可能になった時は 
+て変愚蛮怒を配布する事は不可能ですが、将来的にそれが可能になった時は 
 GPL によって配布を受けた者は上述の使用許諾表示に従う義務はありません。
 
 

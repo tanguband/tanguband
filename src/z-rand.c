@@ -70,6 +70,65 @@ u32b Rand_state[RAND_DEG] = {
 };
 
 
+typedef struct {
+	u32b dw[2];
+} u64b;
+
+static u64b u64b_xor(u64b a, u64b b)
+{
+	u64b result;
+
+	result.dw[0] = a.dw[0] ^ b.dw[0];
+	result.dw[1] = a.dw[1] ^ b.dw[1];
+
+	return result;
+}
+
+static u64b u64b_shiftl(u64b x, int k)
+{
+	u64b result;
+
+	if (k < 32) {
+		result.dw[1] = (x.dw[1] << k) | (x.dw[0] >> (32 - k));
+		result.dw[0] = (x.dw[0] << k);
+	}
+	else {
+		result.dw[1] = (x.dw[0] << (k - 32));
+		result.dw[0] = 0;
+	}
+
+	return result;
+}
+
+static u64b u64b_rotl(u64b x, int k)
+{
+	u64b result;
+
+	if (k < 32) {
+		result.dw[0] = (x.dw[0] << k) | (x.dw[1] >> (32 - k));
+		result.dw[1] = (x.dw[1] << k) | (x.dw[0] >> (32 - k));
+	}
+	else {
+		result.dw[0] = (x.dw[0] >> (64 - k)) | (x.dw[1] << (k - 32));
+		result.dw[1] = (x.dw[1] >> (64 - k)) | (x.dw[0] << (k - 32));
+	}
+
+	return result;
+}
+
+static u64b u64b_add(u64b a, u64b b)
+{
+	u64b result;
+
+	result.dw[0] = a.dw[0] + b.dw[0];
+	result.dw[1] = a.dw[1] + b.dw[1];
+
+	if (result.dw[0] < a.dw[0])
+		result.dw[1] ++;
+
+	return result;
+}
+
 /*
  * Initialize Xorshift Algorithm state
  */
@@ -84,6 +143,7 @@ static void Rand_Xorshift_seed(u32b seed, u32b* state)
 	}
 }
 
+#if 0
 /*
  * Xorshift Algorithm
  */
@@ -98,6 +158,23 @@ static u32b Rand_Xorshift(u32b* state)
 	state[3] = (state[3] ^ (state[3] >> 19)) ^ (t ^ (t >> 8));
 
 	return state[3];
+}
+#endif
+
+/*
+ * Xoroshiro128+ Algorithm
+ */
+static u32b Rand_Xoroshiro128plus(u32b* state)
+{
+	const u64b s0 = *((u64b*)state);
+	u64b s1 = *((u64b*)state + 1);
+	const u64b result = u64b_add(s0, s1);
+
+	s1 = u64b_xor(s0, s1);
+	*((u64b*)state) = u64b_xor(u64b_xor(u64b_rotl(s0, 55), s1), u64b_shiftl(s1, 14));
+	*((u64b*)state + 1) = u64b_rotl(s1, 36);
+
+	return result.dw[0];
 }
 
 static const u32b Rand_Xorshift_max = 0xFFFFFFFF;
@@ -115,10 +192,11 @@ void Rand_state_init(void)
 #ifdef RNG_DEVICE
 
 	FILE *fp = fopen(RNG_DEVICE, "r");
+	int n;
 	
 	do {
-		fread(Rand_state, sizeof(Rand_state[0]), 4, fp);
-	} while ((Rand_state[0] | Rand_state[1] | Rand_state[2] | Rand_state[3]) == 0);
+		n = fread(Rand_state, sizeof(Rand_state[0]), 4, fp);
+	} while (n != 4 || (Rand_state[0] | Rand_state[1] | Rand_state[2] | Rand_state[3]) == 0);
 	
 	fclose(fp);
 
@@ -189,7 +267,7 @@ static s32b Rand_div_impl(s32b m, u32b* state)
 	past = scaling * m;
 
 	do {
-		ret = Rand_Xorshift(state);
+		ret = Rand_Xoroshiro128plus(state);
 	} while (ret >= past);
 
 	return ret / scaling;
@@ -285,7 +363,7 @@ s16b randnor(int mean, int stand)
 	s16b high = RANDNOR_NUM;
 
 	/* Paranoia */
-	if (stand < 1) return (mean);
+	if (stand < 1) return (s16b)(mean);
 
 	/* Roll for probability */
 	tmp = (s16b)randint0(32768);
@@ -304,7 +382,7 @@ s16b randnor(int mean, int stand)
 		/* Move left otherwise */
 		else
 		{
-			high = mid;
+			high = (s16b)mid;
 		}
 	}
 
@@ -327,7 +405,7 @@ s16b damroll(int num, int sides)
 {
 	int i, sum = 0;
 	for (i = 0; i < num; i++) sum += randint1(sides);
-	return (sum);
+	return (s16b)(sum);
 }
 
 
@@ -386,7 +464,7 @@ s32b Rand_external(s32b m)
 	if (!initialized)
 	{
 		/* Initialize with new seed */
-		u32b seed = time(NULL);
+		u32b seed = (u32b)time(NULL);
 		Rand_Xorshift_seed(seed, Rand_state_external);
 		initialized = TRUE;
 	}

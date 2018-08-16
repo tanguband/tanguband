@@ -189,7 +189,7 @@
 #define place_outer_noperm_bold(Y, X) \
 { \
 	feature_type *_f_ptr = &f_info[feat_wall_outer]; \
-	if (permanent_wall(_f_ptr)) set_cave_feat(Y, X, feat_state(feat_wall_outer, FF_UNPERM)); \
+	if (permanent_wall(_f_ptr)) set_cave_feat(Y, X, (s16b)feat_state(feat_wall_outer, FF_UNPERM)); \
 	else set_cave_feat(Y,X,feat_wall_outer); \
 	cave[Y][X].info &= ~(CAVE_MASK); \
 	add_cave_info(Y,X,(CAVE_OUTER | CAVE_VAULT)); \
@@ -199,7 +199,7 @@
 #define place_outer_noperm_grid(C) \
 { \
 	feature_type *_f_ptr = &f_info[feat_wall_outer]; \
-	if (permanent_wall(_f_ptr)) (C)->feat = feat_state(feat_wall_outer, FF_UNPERM); \
+	if (permanent_wall(_f_ptr)) (C)->feat = (s16b)feat_state(feat_wall_outer, FF_UNPERM); \
 	else (C)->feat = feat_wall_outer; \
 	(C)->info &= ~(CAVE_MASK); \
 	(C)->info |= (CAVE_OUTER | CAVE_VAULT); \
@@ -282,5 +282,5 @@ extern void rand_dir(int *rdir, int *cdir);
 extern bool get_is_floor(int x, int y);
 extern void set_floor(int x, int y);
 
-extern bool build_tunnel(int row1, int col1, int row2, int col2);
-extern bool build_tunnel2(int x1, int y1, int x2, int y2, int type, int cutoff);
+extern bool build_tunnel(POSITION row1, POSITION col1, POSITION row2, POSITION col2);
+extern bool build_tunnel2(POSITION x1, POSITION y1, POSITION x2, POSITION y2, int type, int cutoff);
