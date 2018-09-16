@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file mspells4.c
  * @brief スペル実行処理 / Spell launch
  * @date 2014/07/14
@@ -4156,5 +4156,5 @@ HIT_POINT monspell_bluemage_damage(int SPELL_NUM, int plev, int TYPE)
 		shoot_ds = o_ptr->ds;
 		shoot_base = o_ptr->to_d;
 	}
-	return monspell_damage_base(SPELL_NUM, hp, plev / 2, FALSE, shoot_dd, shoot_ds, shoot_base, TYPE); /* #tang plev*2 -> plev/2 */
+	return monspell_damage_base(SPELL_NUM, hp, plev * 2, FALSE, shoot_dd, shoot_ds, shoot_base, TYPE); /* #tang plev*2 -> plev/2 */
 }
