@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file store.c
  * @brief 店の処理 / Store commands
  * @date 2014/02/02

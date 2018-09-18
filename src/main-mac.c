@@ -1,4 +1,4 @@
-﻿/* File: main-mac.c */
+/* File: main-mac.c */
 
 /* Purpose: Simple support for MACINTOSH Angband */
 

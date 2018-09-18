@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file snipe.c
  * @brief スナイパー技能の実装 / Sniping
  * @date 2014/01/18

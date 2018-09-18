@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  *  @file flavor.c
  *  @brief オブジェクトの記述処理 / Mbject flavor code
  *  @date 2014/01/03

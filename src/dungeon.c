@@ -1,4 +1,4 @@
-﻿/*!
+/*!
     @file dungeon.c
     @brief Angbandゲームエンジン / Angband game engine
     @date 2013/12/31

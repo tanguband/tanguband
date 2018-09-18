@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file angband.h
  * @brief Angband(短愚蛮怒)メインヘッダファイル
  * Main "Angband" header file

@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file effects.c
  * @brief プレイヤーのステータス管理 / effects of various "objects"
  * @date 2014/01/01

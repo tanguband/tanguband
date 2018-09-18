@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file spells1.c
  * @brief 魔法による遠隔処理の実装 / Spell projection
  * @date 2014/07/10

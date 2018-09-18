@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file mutation.c
  * @brief 突然変異ルールの実装 / Mutation effects (and racial powers)
  * @date 2014/01/11

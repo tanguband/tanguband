@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file xtra1.c
  * @brief 雑多なその他の処理1 / misc code
  * @date 2014/08/17

@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file wizard2.c
  * @brief ウィザードモードの処理(特別処理中心) / Wizard commands
  * @date 2014/09/07

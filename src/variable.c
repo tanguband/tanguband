@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file variable.c
  * @brief グローバル変数定義 / Angband variables
  * @date 2014/10/05

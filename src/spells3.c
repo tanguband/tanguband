@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file spells3.c
  * @brief 魔法効果の実装/ Spell code (part 3)
  * @date 2014/07/26

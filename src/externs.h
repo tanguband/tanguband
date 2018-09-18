@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file externs.h
  * @brief Angband(短愚蛮怒)基本関数、グローバル変数ヘッダファイル / 
  * extern declarations (variables and functions)

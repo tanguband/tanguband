@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file h-system.h
  * @brief 変愚蛮怒用システムヘッダーファイル /
  * The most basic "include" file. This file simply includes other low level header files.

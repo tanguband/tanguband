@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file generate.c
  * @brief ダンジョンの生成 / Dungeon generation
  * @date 2014/01/04

@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file rooms.h
  * @brief 部屋生成処理の定義ヘッダー / Header file for rooms.c, used only in generate.c
  * @date 2014/09/07

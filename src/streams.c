@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file streams.c
  * @brief ダンジョン生成に利用する関数群 / Used by dungeon generation.
  * @date 2014/07/15

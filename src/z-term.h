@@ -1,4 +1,4 @@
-﻿/* File: z-term.h */
+/* File: z-term.h */
 
 /*
  * Copyright (c) 1997 Ben Harrison

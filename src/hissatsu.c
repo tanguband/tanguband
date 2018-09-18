@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file hissatsu.c
  * @brief 剣術の実装 / Blade arts
  * @date 2014/01/17

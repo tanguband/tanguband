@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file types.h
  * @brief グローバルな構造体の定義 / global type declarations
  * @date 2014/08/10

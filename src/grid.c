@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file grid.c
  * @brief ダンジョンの生成処理の基幹部分 / low-level dungeon creation primitives
  * @date 2014/01/04

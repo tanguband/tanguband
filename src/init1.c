@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file init1.c
  * @brief ゲームデータ初期化1 / Initialization (part 1) -BEN-
  * @date 2014/01/28

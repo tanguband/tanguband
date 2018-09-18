@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file monster1.c
  * @brief モンスター情報の記述 / describe monsters (using monster memory)
  * @date 2013/12/11

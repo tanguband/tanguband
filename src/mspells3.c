@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file mspells3.c
  * @brief 青魔法の処理実装 / Blue magic
  * @date 2014/01/15

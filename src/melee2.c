@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file melee2.c
  * @brief モンスターの特殊技能と移動処理/ Monster spells and movement
  * @date 2014/01/17

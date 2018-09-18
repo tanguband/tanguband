@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file tables.c
  * @brief ゲーム情報テーブル / Angband Tables
  * @date 2014/07/23

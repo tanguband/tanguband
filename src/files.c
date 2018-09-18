@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file files.c
  * @brief ファイル入出力管理 / Purpose: code dealing with files (and death)
  * @date 2014/01/28

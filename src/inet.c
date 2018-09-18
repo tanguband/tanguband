@@ -1,4 +1,4 @@
-﻿/* File: inet.c */
+/* File: inet.c */
 
 #include "angband.h"
 

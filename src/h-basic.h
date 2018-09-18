@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file h-basic.h
  * @brief 変愚時追加された基本事項のヘッダーファイル /
  * The most basic "include" file. This file simply includes other low level header files.

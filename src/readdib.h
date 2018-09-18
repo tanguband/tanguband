@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * @file readdib.h
  * @brief ビットマップファイル読み取り処理のヘッダファイル
  * This package provides a routine to read a DIB file and set up the device dependent version of the image.
